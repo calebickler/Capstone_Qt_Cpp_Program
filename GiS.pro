@@ -13,8 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    CPU.cpp
 
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+win32: LIBS += -L$$PWD/Libraries/sigar-bin/lib/ -lsigar-x86-winnt
+
+INCLUDEPATH += $$PWD/Libraries/sigar-bin/include
+DEPENDPATH += $$PWD/Libraries/sigar-bin/include
