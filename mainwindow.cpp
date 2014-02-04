@@ -2,6 +2,13 @@
 #include "ui_mainwindow.h"
 #include <QTimer>
 
+std::string memUsage;
+char* temp = new char[500];
+CPU cpu;
+std::string cpuUse;
+QString qcpuUse;
+QString qmemUse;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -20,8 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateProg() {
     //Get memory Usage
-    std::string memUsage;
-    char* temp = new char[500];
+
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
@@ -30,20 +36,18 @@ void MainWindow::updateProg() {
     memUsage.append("Memory Usage: ");
     memUsage.append(temp);
     memUsage.append("%");
-    QString memory = QString::fromStdString(memUsage);
+    qmemUse = QString::fromStdString(memUsage);
     //memUsage
     //Get CPU Usage
-    CPU cpu;
-    std::string cpuUse;
     cpuUse = "";
     cpu.getUsage();
-    sprintf(temp,"%1.lf",cpu.cpuUsage);
+    sprintf(temp,"%d",(int)(cpu.cpuUsage+.5));
     cpuUse.append("CPU Usage: ");
     cpuUse.append(temp);
     cpuUse.append("%");
-    QString qcpuUse = QString::fromStdString(cpuUse);
+    qcpuUse = QString::fromStdString(cpuUse);
     //cpuUsage
-    ui->MemoryUse->setText(memory);
+    ui->MemoryUse->setText(qmemUse);
     ui->CPUuse->setText(qcpuUse);
     ui->CPUtemp->setText("CPU temp: updated");
     ui->CPUspeed->setText("CPU speed: updated");
