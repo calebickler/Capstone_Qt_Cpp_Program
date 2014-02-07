@@ -1,23 +1,48 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTimer>
+#include "Memory.h"
+#include "CPUusage.h"
+#include "CPUusagethread.h"
+#include "CPUspeed.h"
+#include "CPUspeedthread.h"
+#include "settings.h"
 
-std::string memUsage;
-char* temp = new char[500];
-CPU cpu;
+//local function prototypes
+std::string intToString(int i);
+std::string doubleToString(double i);
+//prototypes
+
+//variable stubs
 std::string cpuUse;
+std::string memUsage;
+std::string cpuSpeed;
+Memory mem;
+Settings set;
 QString qcpuUse;
 QString qmemUse;
+QString qcpuSpeed;
+CPUusagethread cpuUthread;
+CPUspeedthread cpuSthread;
+
+//variables
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    //if metric is on start thread
+    if(set.cpuUse)
+        cpuUthread.start();
+    if(set.cpuSpeed)
+        cpuSthread.start();
+    //end threads
+
     ui->setupUi(this);
     setStyleSheet("background-color: black;");
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
-    timer->start(750);
+    timer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -26,29 +51,32 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateProg() {
-    //Get memory Usage
+//get metric usage
+    mem.getUsage();
+//push metrics into string & Qstring
 
-    MEMORYSTATUSEX status;
-    status.dwLength = sizeof(status);
-    GlobalMemoryStatusEx(&status);
-    memUsage = "";
-    sprintf(temp,"%ld",status.dwMemoryLoad);
-    memUsage.append("Memory Usage: ");
-    memUsage.append(temp);
-    memUsage.append("%");
+    memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
     qmemUse = QString::fromStdString(memUsage);
-    //memUsage
-    //Get CPU Usage
-    cpuUse = "";
-    cpu.getUsage();
-    sprintf(temp,"%d",(int)(cpu.cpuUsage+.5));
-    cpuUse.append("CPU Usage: ");
-    cpuUse.append(temp);
-    cpuUse.append("%");
+    cpuUse = "CPU Usage: " + intToString((int)cpuUthread.cpuUsage+.5) + "%";
     qcpuUse = QString::fromStdString(cpuUse);
-    //cpuUsage
+    cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
+    qcpuSpeed = QString::fromStdString(cpuSpeed);
+//set label text
     ui->MemoryUse->setText(qmemUse);
     ui->CPUuse->setText(qcpuUse);
     ui->CPUtemp->setText("CPU temp: updated");
-    ui->CPUspeed->setText("CPU speed: updated");
+    ui->CPUspeed->setText(qcpuSpeed);
+}
+
+std::string intToString(int i)
+{
+    char* temp = new char[20];
+    sprintf(temp,"%d",i);
+    return temp;
+}
+
+std::string doubleToString(double i){
+    char* temp = new char[20];
+    sprintf(temp,"%.1lf",i);
+    return temp;
 }
