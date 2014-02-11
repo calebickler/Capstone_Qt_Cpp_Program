@@ -6,6 +6,7 @@ CPUusage::CPUusage(){
 
 void CPUusage::getUsage(void)
 {
+    cpuLast = cpuUsage;
     double x = 0;
     double high = 0;
     sigar_t *sigar_cpu;

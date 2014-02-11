@@ -1,7 +1,6 @@
 #ifndef CPUSPEED_H
 #define CPUSPEED_H
 #include <stdlib.h>
-#include <time.h>
 class CPUspeed
 {
 public:
@@ -9,7 +8,7 @@ public:
     void getSpeed(void);
     double cpuSpeed;
 private:
-    clock_t start;
+    double start;
     double duration;
 };
 

@@ -17,6 +17,7 @@ class CPUusage{
 public:
     CPUusage();
     double cpuUsage;
+    double cpuLast;
     void getUsage(void);
 };
 

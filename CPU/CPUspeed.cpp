@@ -1,9 +1,11 @@
 #include "CPUspeed.h"
 #include <QDebug.h>
 #include <windows.h>
+#include <time.h>
+#define KHZ 1000
 #define MHZ 1000
 #define GHZ 1000
-#define TIMESLICE MHZ*GHZ
+#define TIMESLICE KHZ*MHZ*GHZ
 
 CPUspeed::CPUspeed()
 {

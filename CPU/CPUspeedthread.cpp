@@ -11,8 +11,9 @@ void CPUspeedthread::run()
     CPUspeed cpu;
     while(true)
     {
+        cpuSpeed = 0;
         cpu.getSpeed();
         cpuSpeed = cpu.cpuSpeed;
-        Sleep(1000);//once a minute
+        Sleep(60000);//once a minute
     }
 }

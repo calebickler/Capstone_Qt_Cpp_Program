@@ -54,12 +54,14 @@ void MainWindow::updateProg() {
 //get metric usage
     mem.getUsage();
 //push metrics into string & Qstring
-
     memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
     qmemUse = QString::fromStdString(memUsage);
     cpuUse = "CPU Usage: " + intToString((int)cpuUthread.cpuUsage+.5) + "%";
     qcpuUse = QString::fromStdString(cpuUse);
-    cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
+    if(cpuSthread.cpuSpeed == 0)
+        cpuSpeed = "Calculating...(cpu usage will spike)";
+    else
+        cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
     qcpuSpeed = QString::fromStdString(cpuSpeed);
 //set label text
     ui->MemoryUse->setText(qmemUse);
@@ -77,6 +79,6 @@ std::string intToString(int i)
 
 std::string doubleToString(double i){
     char* temp = new char[20];
-    sprintf(temp,"%lf",i);
+    sprintf(temp,"%.3lf",i);
     return temp;
 }

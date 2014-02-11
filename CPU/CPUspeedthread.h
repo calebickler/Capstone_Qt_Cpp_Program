@@ -7,7 +7,7 @@ class CPUspeedthread : public QThread
 {
 public:
     CPUspeedthread();
-    long cpuSpeed;
+    double cpuSpeed;
     void run();
 };
 
