@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTimer>
-#include "Memory.h"
-#include "CPUusage.h"
-#include "CPUusagethread.h"
-#include "CPUspeed.h"
-#include "CPUspeedthread.h"
-#include "settings.h"
+#include "Memory\Memory.h"
+#include "CPU\CPUusage.h"
+#include "CPU\CPUusagethread.h"
+#include "CPU\CPUspeed.h"
+#include "CPU\CPUspeedthread.h"
+#include "Settings\settings.h"
 
 //local function prototypes
 std::string intToString(int i);
@@ -77,6 +77,6 @@ std::string intToString(int i)
 
 std::string doubleToString(double i){
     char* temp = new char[20];
-    sprintf(temp,"%.1lf",i);
+    sprintf(temp,"%lf",i);
     return temp;
 }

@@ -14,20 +14,20 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    Memory.cpp \
-    CPUusage.cpp \
-    CPUusagethread.cpp \
-    settings.cpp \
-    CPUspeedthread.cpp \
-    CPUspeed.cpp
+    Memory\Memory.cpp \
+    CPU\CPUusage.cpp \
+    CPU\CPUusagethread.cpp \
+    Settings\settings.cpp \
+    CPU\CPUspeedthread.cpp \
+    CPU\CPUspeed.cpp
 
 HEADERS  += mainwindow.h \
-    CPUusage.h \
-    Memory.h \
-    CPUusagethread.h \
-    settings.h \
-    CPUspeedthread.h \
-    CPUspeed.h
+    CPU\CPUusage.h \
+    Memory\Memory.h \
+    CPU\CPUusagethread.h \
+    Settings\settings.h \
+    CPU\CPUspeedthread.h \
+    CPU\CPUspeed.h
 
 FORMS    += mainwindow.ui
 
