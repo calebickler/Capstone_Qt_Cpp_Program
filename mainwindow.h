@@ -17,9 +17,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
 private slots:
     void updateProg();
+
+    void on_actionNumeric_Display_triggered();
+
+    void on_actionNumeric_Display_2_triggered();
+
+    void on_actionNumeric_Display_3_triggered();
+
+    void on_actionNumeric_Display_4_triggered();
 
 private:
     Ui::MainWindow *ui;

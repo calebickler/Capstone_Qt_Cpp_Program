@@ -39,10 +39,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //end threads
 
     ui->setupUi(this);
-    setStyleSheet("background-color: black;");
+    //setStyleSheet("background-color: black;");
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(1000);
+
+    updateProg();
 }
 
 MainWindow::~MainWindow()
@@ -51,23 +53,34 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateProg() {
-//get metric usage
-    mem.getUsage();
-//push metrics into string & Qstring
-    memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
-    qmemUse = QString::fromStdString(memUsage);
-    cpuUse = "CPU Usage: " + intToString((int)cpuUthread.cpuUsage+.5) + "%";
-    qcpuUse = QString::fromStdString(cpuUse);
-    if(cpuSthread.cpuSpeed == 0)
-        cpuSpeed = "Calculating...(cpu usage will spike)";
-    else
-        cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
-    qcpuSpeed = QString::fromStdString(cpuSpeed);
-//set label text
-    ui->MemoryUse->setText(qmemUse);
-    ui->CPUuse->setText(qcpuUse);
-    ui->CPUtemp->setText("CPU temp: updated");
-    ui->CPUspeed->setText(qcpuSpeed);
+    ui->mainList->clear();
+    //memory
+    if(set.memUse) {
+        mem.getUsage();
+        memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
+        qmemUse = QString::fromStdString(memUsage);
+        ui->mainList->addItem(qmemUse);
+        //ui->MemoryUse->setText();
+    }
+    //cpu use
+    if(set.cpuUse) {
+        cpuUse = "CPU Usage: " + intToString((int)cpuUthread.cpuUsage+.5) + "%";
+        qcpuUse = QString::fromStdString(cpuUse);
+        ui->mainList->addItem(qcpuUse);
+    }
+    //cpuspeed
+    if(set.cpuSpeed) {
+        if(cpuSthread.cpuSpeed == 0)
+            cpuSpeed = "Calculating...(cpu usage will spike)";
+        else
+            cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
+        qcpuSpeed = QString::fromStdString(cpuSpeed);
+        ui->mainList->addItem(qcpuSpeed);
+    }
+    //cputemp
+    if(set.cpuTemp) {
+        ui->mainList->addItem("CPU temp: updated");
+    }
 }
 
 std::string intToString(int i)
@@ -81,4 +94,44 @@ std::string doubleToString(double i){
     char* temp = new char[20];
     sprintf(temp,"%.3lf",i);
     return temp;
+}
+
+void MainWindow::on_actionNumeric_Display_triggered()
+{
+    if (set.memUse) {
+        set.memUse = false;
+    }
+    else {
+        set.memUse = true;
+    }
+}
+
+void MainWindow::on_actionNumeric_Display_2_triggered()
+{
+    if (set.cpuUse) {
+        set.cpuUse = false;
+    }
+    else {
+        set.cpuUse = true;
+    }
+}
+
+void MainWindow::on_actionNumeric_Display_3_triggered()
+{
+    if (set.cpuSpeed) {
+        set.cpuSpeed = false;
+    }
+    else {
+        set.cpuSpeed = true;
+    }
+}
+
+void MainWindow::on_actionNumeric_Display_4_triggered()
+{
+    if (set.cpuTemp) {
+        set.cpuTemp = false;
+    }
+    else {
+        set.cpuTemp = true;
+    }
 }
