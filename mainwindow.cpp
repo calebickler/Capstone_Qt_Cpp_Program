@@ -24,6 +24,7 @@ QString qmemUse;
 QString qcpuSpeed;
 CPUusagethread cpuUthread;
 CPUspeedthread cpuSthread;
+QTimer *timer;
 
 //variables
 
@@ -40,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     //setStyleSheet("background-color: black;");
-    QTimer *timer = new QTimer(this);
+    timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(1000);
 
@@ -54,32 +55,34 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateProg() {
     ui->mainList->clear();
-    //memory
-    if(set.memUse) {
-        mem.getUsage();
-        memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
-        qmemUse = QString::fromStdString(memUsage);
-        ui->mainList->addItem(qmemUse);
-        //ui->MemoryUse->setText();
-    }
-    //cpu use
-    if(set.cpuUse) {
-        cpuUse = "CPU Usage: " + intToString((int)cpuUthread.cpuUsage+.5) + "%";
-        qcpuUse = QString::fromStdString(cpuUse);
-        ui->mainList->addItem(qcpuUse);
-    }
-    //cpuspeed
-    if(set.cpuSpeed) {
-        if(cpuSthread.cpuSpeed == 0)
-            cpuSpeed = "Calculating...(cpu usage will spike)";
-        else
-            cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
-        qcpuSpeed = QString::fromStdString(cpuSpeed);
-        ui->mainList->addItem(qcpuSpeed);
-    }
-    //cputemp
-    if(set.cpuTemp) {
-        ui->mainList->addItem("CPU temp: updated");
+    if (set.collecting) {
+        //memory
+        if(set.memUse) {
+            mem.getUsage();
+            memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
+            qmemUse = QString::fromStdString(memUsage);
+            ui->mainList->addItem(qmemUse);
+            //ui->MemoryUse->setText();
+        }
+        //cpu use
+        if(set.cpuUse) {
+            cpuUse = "CPU Usage: " + intToString((int)cpuUthread.cpuUsage+.5) + "%";
+            qcpuUse = QString::fromStdString(cpuUse);
+            ui->mainList->addItem(qcpuUse);
+        }
+        //cpuspeed
+        if(set.cpuSpeed) {
+            if(cpuSthread.cpuSpeed == 0)
+                cpuSpeed = "Calculating...(cpu usage will spike)";
+            else
+                cpuSpeed = "CPU Speed: " + doubleToString(cpuSthread.cpuSpeed) + "Ghz";
+            qcpuSpeed = QString::fromStdString(cpuSpeed);
+            ui->mainList->addItem(qcpuSpeed);
+        }
+        //cputemp
+        if(set.cpuTemp) {
+            ui->mainList->addItem("CPU temp: updated");
+        }
     }
 }
 
@@ -104,6 +107,7 @@ void MainWindow::on_actionNumeric_Display_triggered()
     else {
         set.memUse = true;
     }
+    updateProg();
 }
 
 void MainWindow::on_actionNumeric_Display_2_triggered()
@@ -114,6 +118,7 @@ void MainWindow::on_actionNumeric_Display_2_triggered()
     else {
         set.cpuUse = true;
     }
+    updateProg();
 }
 
 void MainWindow::on_actionNumeric_Display_3_triggered()
@@ -124,6 +129,7 @@ void MainWindow::on_actionNumeric_Display_3_triggered()
     else {
         set.cpuSpeed = true;
     }
+    updateProg();
 }
 
 void MainWindow::on_actionNumeric_Display_4_triggered()
@@ -134,4 +140,46 @@ void MainWindow::on_actionNumeric_Display_4_triggered()
     else {
         set.cpuTemp = true;
     }
+    updateProg();
+}
+
+void MainWindow::on_actionStart_triggered()
+{
+    if (!set.collecting) {
+        set.collecting = true;
+    }
+    updateProg();
+}
+
+void MainWindow::on_actionStop_triggered()
+{
+    if (set.collecting) {
+        set.collecting = false;
+    }
+    updateProg();
+}
+
+void MainWindow::on_action5_Low_triggered()
+{
+    timer->start(1500);
+}
+
+void MainWindow::on_action4_triggered()
+{
+    timer->start(1250);
+}
+
+void MainWindow::on_action3_Medium_triggered()
+{
+    timer->start(1000);
+}
+
+void MainWindow::on_action2_triggered()
+{
+    timer->start(750);
+}
+
+void MainWindow::on_action1_High_triggered()
+{
+    timer->start(500);
 }

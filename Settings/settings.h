@@ -5,7 +5,7 @@ class Settings
 {
 public:
     Settings();
-    bool cpuUse, cpuTemp, cpuSpeed, gpuTemp, memUse, update;
+    bool cpuUse, cpuTemp, cpuSpeed, gpuTemp, memUse, collecting;
 };
 
 #endif // SETTINGS_H
