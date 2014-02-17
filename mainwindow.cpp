@@ -7,6 +7,7 @@
 #include "CPU\CPUspeed.h"
 #include "CPU\CPUspeedthread.h"
 #include "Settings\settings.h"
+#include "displaysettings.h"
 
 //local function prototypes
 std::string intToString(int i);
@@ -25,7 +26,7 @@ QString qcpuSpeed;
 CPUusagethread cpuUthread;
 CPUspeedthread cpuSthread;
 QTimer *timer;
-
+displaysettings *display;
 //variables
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -38,13 +39,12 @@ MainWindow::MainWindow(QWidget *parent) :
     if(set.cpuSpeed)
         cpuSthread.start();
     //end threads
-
+    display = new displaysettings(this);
     ui->setupUi(this);
     //setStyleSheet("background-color: black;");
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
-    timer->start(1000);
-
+    timer->start(500);
     updateProg();
 }
 
@@ -83,6 +83,7 @@ void MainWindow::updateProg() {
         if(set.cpuTemp) {
             ui->mainList->addItem("CPU temp: updated");
         }
+        ui->mainList->setStyleSheet(display->style);
     }
 }
 
@@ -182,4 +183,11 @@ void MainWindow::on_action2_triggered()
 void MainWindow::on_action1_High_triggered()
 {
     timer->start(500);
+}
+
+void MainWindow::on_actionDisplay_Settings_triggered()
+{
+    display->tempstyle = ui->mainList->styleSheet();
+    display->setModal(false);
+    display->show();
 }

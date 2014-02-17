@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "displaysettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -42,8 +43,15 @@ private slots:
 
     void on_action1_High_triggered();
 
+    void on_actionDisplay_Settings_triggered();
+
+    void on_actionDisplay_Settings_destroyed();
+
+    void on_actionDisplay_Settings_changed();
+
 private:
     Ui::MainWindow *ui;
+    displaysettings *display;
 };
 
 

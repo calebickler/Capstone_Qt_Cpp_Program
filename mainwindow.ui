@@ -88,13 +88,31 @@ color: rgb(112, 255, 102)</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">backgroundcolor: black</string>
+    <string notr="true">color: rgb(0, 0, 0);
+alternate-background-color: rgb(200, 200, 200);
+border-color: rgb(55, 55, 55);
+background-color: rgb(0, 0, 0);
+selection-background-color: rgb(212, 212, 212);</string>
    </property>
    <widget class="QMenu" name="menuFile">
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(200, 200, 200);
+border-color: rgb(0,0,0);
+border-width: 1px;
+border-style: inset;</string>
+    </property>
     <property name="title">
      <string>Menu</string>
     </property>
     <widget class="QMenu" name="menuRefresh_Rate">
+     <property name="geometry">
+      <rect>
+       <x>475</x>
+       <y>153</y>
+       <width>130</width>
+       <height>156</height>
+      </rect>
+     </property>
      <property name="title">
       <string>Refresh Rate</string>
      </property>
@@ -113,6 +131,12 @@ color: rgb(112, 255, 102)</string>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAdd">
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(200, 200, 200);
+border-color: rgb(0,0,0);
+border-width: 1px;
+border-style: inset;</string>
+    </property>
     <property name="title">
      <string>Add</string>
     </property>
@@ -184,7 +208,7 @@ color: rgb(112, 255, 102)</string>
   </action>
   <action name="action4">
    <property name="text">
-    <string>4.</string>
+    <string>4. ----------</string>
    </property>
   </action>
   <action name="action3_Medium">
@@ -194,7 +218,7 @@ color: rgb(112, 255, 102)</string>
   </action>
   <action name="action2">
    <property name="text">
-    <string>2. </string>
+    <string>2. ----------</string>
    </property>
   </action>
   <action name="action1_High">
