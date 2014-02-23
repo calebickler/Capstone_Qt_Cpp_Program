@@ -18,11 +18,13 @@ std::string doubleToString(double i);
 std::string cpuUse;
 std::string memUsage;
 std::string cpuSpeed;
+std::string cpuTemp;
 Memory mem;
 Settings set;
 QString qcpuUse;
 QString qmemUse;
 QString qcpuSpeed;
+QString qcpuTemp;
 CPUusagethread cpuUthread;
 CPUspeedthread cpuSthread;
 QTimer *timer;
@@ -81,7 +83,12 @@ void MainWindow::updateProg() {
         }
         //cputemp
         if(set.cpuTemp) {
-            ui->mainList->addItem("CPU temp: updated");
+            QProcess *process = new QProcess(this);
+            process->start("C:\\ComputerScience\\Capstone\\GiS\\CPU\\cpuTemp.exe");
+            process->waitForFinished();
+            cpuTemp = "CPU Temp: " + intToString(process->exitCode()) + "°C";
+            qcpuTemp = QString::fromStdString(cpuTemp);
+            ui->mainList->addItem(qcpuTemp);
         }
         ui->mainList->setStyleSheet(display->style);
     }
