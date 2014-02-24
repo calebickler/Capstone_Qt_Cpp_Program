@@ -88,7 +88,7 @@ void MainWindow::updateProg() {
         //cputemp
         if(set.cpuTemp) {
             QProcess *process = new QProcess(this);
-            process->start("C:\\ComputerScience\\Capstone\\GiS\\CPU\\cpuTemp.exe");
+            process->start("cpuTemp.exe");
             process->waitForFinished();
             cpuTemp = "CPU Temp: " + intToString(process->exitCode()) + "°C";
             qcpuTemp = QString::fromStdString(cpuTemp);
