@@ -8,6 +8,8 @@
 #include "CPU\CPUspeedthread.h"
 #include "Settings\settings.h"
 #include "displaysettings.h"
+#include "GPU\GPUtemp.h"
+
 
 //local function prototypes
 std::string intToString(int i);
@@ -19,12 +21,15 @@ std::string cpuUse;
 std::string memUsage;
 std::string cpuSpeed;
 std::string cpuTemp;
+std::string gpuTemp;
 Memory mem;
 Settings set;
+GPUtemp gpu;
 QString qcpuUse;
 QString qmemUse;
 QString qcpuSpeed;
 QString qcpuTemp;
+QString qgpuTemp;
 CPUusagethread cpuUthread;
 CPUspeedthread cpuSthread;
 QTimer *timer;
@@ -64,7 +69,6 @@ void MainWindow::updateProg() {
             memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
             qmemUse = QString::fromStdString(memUsage);
             ui->mainList->addItem(qmemUse);
-            //ui->MemoryUse->setText();
         }
         //cpu use
         if(set.cpuUse) {
@@ -89,6 +93,13 @@ void MainWindow::updateProg() {
             cpuTemp = "CPU Temp: " + intToString(process->exitCode()) + "°C";
             qcpuTemp = QString::fromStdString(cpuTemp);
             ui->mainList->addItem(qcpuTemp);
+        }
+        //gputemp
+        if(set.gpuTemp) {
+            gpu.getTemp();
+            gpuTemp = "GPU Temp: " + intToString(gpu.gputemp) + "°C";
+            qgpuTemp = QString::fromStdString(gpuTemp);
+            ui->mainList->addItem(qgpuTemp);
         }
         ui->mainList->setStyleSheet(display->style);
     }

@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     Settings\settings.cpp \
     CPU\CPUspeedthread.cpp \
     CPU\CPUspeed.cpp \
-    displaysettings.cpp
+    displaysettings.cpp \
+    GPU\GPUtemp.cpp
 
 HEADERS  += mainwindow.h \
     CPU\CPUusage.h \
@@ -29,12 +30,18 @@ HEADERS  += mainwindow.h \
     Settings\settings.h \
     CPU\CPUspeedthread.h \
     CPU\CPUspeed.h \
-    displaysettings.h
+    displaysettings.h \
+    GPU\GPUtemp.h
 
 FORMS    += mainwindow.ui \
     displaysettings.ui
 
-win32: LIBS += -L$$PWD/Libraries/sigar-bin/lib/ -lsigar-x86-winnt
+win32: LIBS += -L$$PWD/Libraries/Sigar/sigar-bin/lib/ -lsigar-x86-winnt
 
-INCLUDEPATH += $$PWD/Libraries/sigar-bin/include
-DEPENDPATH += $$PWD/Libraries/sigar-bin/include
+INCLUDEPATH += $$PWD/Libraries/Sigar/sigar-bin/include
+DEPENDPATH += $$PWD/Libraries/Sigar/sigar-bin/include
+
+win32: LIBS += -L$$PWD/Libraries/Nvidia/x86/ -lnvapi
+
+INCLUDEPATH += $$PWD/Libraries/Nvidia/x86
+DEPENDPATH += $$PWD/Libraries/Nvidia/x86
