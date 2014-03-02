@@ -9,4 +9,9 @@ Settings::Settings()
     gpuTemp = true;
     memUse = true;
     collecting = true;
+    HLcpuUse = true;
+    HLmemUsage = true;
+    HLcpuSpeed = true;
+    HLcpuTemp = true;
+    HLgpuTemp = true;
 }

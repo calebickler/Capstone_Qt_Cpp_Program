@@ -21,6 +21,8 @@ public:
 private slots:
     void updateProg();
 
+    void updateHighLow();
+
     void on_actionNumeric_Display_triggered();
 
     void on_actionNumeric_Display_2_triggered();
@@ -48,6 +50,18 @@ private slots:
     void on_actionDisplay_Settings_destroyed();
 
     void on_actionDisplay_Settings_changed();
+
+    void on_actionSession_High_Low_triggered();
+
+    void on_actionSession_High_Low_2_triggered();
+
+    void on_actionSession_High_Low_3_triggered();
+
+    void on_actionSession_High_Low_4_triggered();
+
+    void on_actionSession_High_Low_5_triggered();
+
+    void on_actionNumeric_Display_5_triggered();
 
 private:
     Ui::MainWindow *ui;

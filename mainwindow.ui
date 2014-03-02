@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>608</width>
-    <height>457</height>
+    <width>708</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,8 +23,8 @@ color: rgb(112, 255, 102)</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>611</width>
-      <height>411</height>
+      <width>701</width>
+      <height>531</height>
      </rect>
     </property>
     <property name="font">
@@ -83,7 +83,7 @@ color: rgb(112, 255, 102)</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>608</width>
+     <width>708</width>
      <height>21</height>
     </rect>
    </property>
@@ -172,10 +172,19 @@ border-style: inset;</string>
      <addaction name="actionSession_High_Low_4"/>
      <addaction name="actionGraph_Display_4"/>
     </widget>
+    <widget class="QMenu" name="menuGPU_Temp">
+     <property name="title">
+      <string>GPU Temp</string>
+     </property>
+     <addaction name="actionNumeric_Display_5"/>
+     <addaction name="actionSession_High_Low_5"/>
+     <addaction name="actionGraph_Display_5"/>
+    </widget>
     <addaction name="menuMemory_Useage"/>
     <addaction name="menuCPU_Useage"/>
     <addaction name="menuCPU_Speed"/>
     <addaction name="menuCPU_Temp"/>
+    <addaction name="menuGPU_Temp"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAdd"/>
@@ -282,6 +291,21 @@ border-style: inset;</string>
    </property>
   </action>
   <action name="actionGraph_Display_4">
+   <property name="text">
+    <string>Graph Display</string>
+   </property>
+  </action>
+  <action name="actionNumeric_Display_5">
+   <property name="text">
+    <string>Numeric Display</string>
+   </property>
+  </action>
+  <action name="actionSession_High_Low_5">
+   <property name="text">
+    <string>Session High + Low</string>
+   </property>
+  </action>
+  <action name="actionGraph_Display_5">
    <property name="text">
     <string>Graph Display</string>
    </property>
