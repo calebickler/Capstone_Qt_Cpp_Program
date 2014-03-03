@@ -2,6 +2,8 @@
 #include "ui_displaysettings.h"
 #include "qcolordialog.h"
 #include "qdebug.h"
+#include <QFile>
+#include <QTextStream>
 
 QString font;
 QString back;
@@ -82,5 +84,18 @@ void displaysettings::on_pushButton_2_clicked()
 
 void displaysettings::on_buttonBox_accepted()
 {
+    QString fileName = "displaysettings.ini";
 
+    QFile mFile(fileName);
+
+    if(!mFile.open(QFile::WriteOnly | QFile::Text))
+    {
+        qDebug() << "Could not write to file.\n";
+        return;
+    }
+    QTextStream out(&mFile);
+    out << style;
+
+    mFile.flush();
+    mFile.close();
 }

@@ -9,7 +9,8 @@
 #include "Settings\settings.h"
 #include "displaysettings.h"
 #include "GPU\GPUtemp.h"
-
+#include <QFile>
+#include <QTextStream>
 
 //local function prototypes
 std::string intToString(int i);
@@ -48,8 +49,6 @@ int HgpuTemp;
 int LgpuTemp;
 //variables
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -72,6 +71,44 @@ MainWindow::MainWindow(QWidget *parent) :
     LcpuSpeed = 1000000;
     LcpuTemp = 1000;
     LgpuTemp = 1000;
+    //load display settings//
+    QString fileName = "displaysettings.ini";
+    QFile mFile(fileName);
+    if(!mFile.open(QFile::ReadOnly | QFile::Text))
+    {
+        qDebug() << "Could not read file.\n";
+        return;
+    }
+
+    QTextStream in(&mFile);
+    QString mText = in.readAll();
+    ui->mainList->setStyleSheet(mText);
+    display->style = mText;
+
+    mFile.close();
+
+    //load on/off settings
+    fileName = "settings.ini";
+    QFile mFile2(fileName);
+    if(!mFile2.open(QFile::ReadOnly | QFile::Text))
+    {
+        qDebug() << "Could not read file.\n";
+        return;
+    }
+
+    QTextStream in2(&mFile2);
+    set.cpuSpeed = in2.readLine().toULong();
+    set.cpuUse = in2.readLine().toULong();
+    set.cpuTemp = in2.readLine().toULong();
+    set.memUse = in2.readLine().toULong();
+    set.gpuTemp = in2.readLine().toULong();
+    set.HLcpuUse = in2.readLine().toULong();
+    set.HLmemUsage = in2.readLine().toULong();
+    set.HLcpuSpeed = in2.readLine().toULong();
+    set.HLcpuTemp  = in2.readLine().toULong();
+    set.HLgpuTemp = in2.readLine().toULong();
+
+    mFile.close();
 }
 
 MainWindow::~MainWindow()
@@ -169,6 +206,42 @@ void MainWindow::updateProg() {
             ui->mainList->addItem(QString::fromStdString(low));
         }
 
+        if(set.updated) {
+            set.updated = false;
+            QString fileName = "settings.ini";
+
+            QFile mFile(fileName);
+
+            if(!mFile.open(QFile::WriteOnly | QFile::Text))
+            {
+                qDebug() << "Could not write to file.\n";
+                return;
+            }
+            QTextStream out(&mFile);
+            out << set.cpuSpeed;
+            out << "\n";
+            out << set.cpuUse;
+            out << "\n";
+            out << set.cpuTemp;
+            out << "\n";
+            out << set.memUse;
+            out << "\n";
+            out << set.gpuTemp;
+            out << "\n";
+            out << set.HLcpuUse;
+            out << "\n";
+            out << set.HLmemUsage;
+            out << "\n";
+            out << set.HLcpuSpeed;
+            out << "\n";
+            out << set.HLcpuTemp;
+            out << "\n";
+            out << set.HLgpuTemp;
+
+            mFile.flush();
+            mFile.close();
+        }
+
         ui->mainList->setStyleSheet(display->style);
     }
     updateHighLow();
@@ -232,6 +305,7 @@ void MainWindow::on_actionNumeric_Display_triggered()
     else {
         set.memUse = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -243,6 +317,7 @@ void MainWindow::on_actionNumeric_Display_2_triggered()
     else {
         set.cpuUse = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -254,6 +329,7 @@ void MainWindow::on_actionNumeric_Display_3_triggered()
     else {
         set.cpuSpeed = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -265,6 +341,7 @@ void MainWindow::on_actionNumeric_Display_4_triggered()
     else {
         set.cpuTemp = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -276,6 +353,7 @@ void MainWindow::on_actionNumeric_Display_5_triggered()
     else {
         set.gpuTemp = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -338,6 +416,7 @@ void MainWindow::on_actionSession_High_Low_triggered()
     else {
         set.HLmemUsage = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -349,6 +428,7 @@ void MainWindow::on_actionSession_High_Low_2_triggered()
     else {
         set.HLcpuUse = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -360,6 +440,7 @@ void MainWindow::on_actionSession_High_Low_3_triggered()
     else {
         set.HLcpuSpeed = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -371,6 +452,7 @@ void MainWindow::on_actionSession_High_Low_4_triggered()
     else {
         set.HLcpuTemp = true;
     }
+    set.updated = true;
     updateProg();
 }
 
@@ -382,6 +464,7 @@ void MainWindow::on_actionSession_High_Low_5_triggered()
     else {
         set.HLgpuTemp = true;
     }
+    set.updated = true;
     updateProg();
 }
 
