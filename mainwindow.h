@@ -47,10 +47,6 @@ private slots:
 
     void on_actionDisplay_Settings_triggered();
 
-    void on_actionDisplay_Settings_destroyed();
-
-    void on_actionDisplay_Settings_changed();
-
     void on_actionSession_High_Low_triggered();
 
     void on_actionSession_High_Low_2_triggered();
