@@ -1,23 +1,26 @@
 #include "CPUspeed.h"
-#include <QDebug.h>
-#include <windows.h>
-#include <time.h>
-#define KHZ 1000
-#define MHZ 1000
-#define GHZ 1000
-#define TIMESLICE KHZ*MHZ*GHZ
+#include <QProcess>
 
 CPUspeed::CPUspeed()
 {
-        cpuSpeed = 0;
+    cpuSpeed = 0;
+    HcpuSpeed = 0;
+    LcpuSpeed = 1000000;
 }
 
 void CPUspeed::getSpeed(void)
 {
-    int i = 0;
-    start = clock();//start clock
-    while(i<TIMESLICE){i++;}//1Ghz worth of calculations
-    duration = clock() - start;//number of clocks it took to do calculations
-    cpuSpeed = duration/CLOCKS_PER_SEC;//clocks/second
+    QProcess *process = new QProcess();
+    process->start("cpuSpeed.exe");
+    process->waitForFinished();
+    cpuSpeed = (double) process->exitCode();
+    cpuSpeed = (cpuSpeed / 1000);
+
+    if (cpuSpeed > HcpuSpeed) {
+        HcpuSpeed = cpuSpeed;
+    }
+    if (cpuSpeed < LcpuSpeed) {
+        LcpuSpeed = cpuSpeed;
+    }
 
 }

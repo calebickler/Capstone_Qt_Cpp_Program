@@ -10,6 +10,8 @@ class Memory{
 public:
     Memory();
     long memoryUsage;
+    int HmemUsage;
+    int LmemUsage;
     void getUsage(void);
 };
 #endif // MEMORY_H

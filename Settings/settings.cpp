@@ -5,6 +5,7 @@ Settings::Settings()
     cpuSpeed = 1;
     cpuUse = 1;
     cpuTemp = 1;
+    cpuCoreTemp = 1;
     gpuTemp = 1;
     memUse = 1;
     collecting = 1;

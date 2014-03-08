@@ -18,7 +18,7 @@ SOURCES += main.cpp\
     CPU\CPUusage.cpp \
     CPU\CPUusagethread.cpp \
     Settings\settings.cpp \
-    CPU\CPUspeedthread.cpp \
+    CPU\CPUtemp.cpp \
     CPU\CPUspeed.cpp \
     displaysettings.cpp \
     GPU\GPUtemp.cpp
@@ -28,7 +28,7 @@ HEADERS  += mainwindow.h \
     Memory\Memory.h \
     CPU\CPUusagethread.h \
     Settings\settings.h \
-    CPU\CPUspeedthread.h \
+    CPU\CPUtemp.h \
     CPU\CPUspeed.h \
     displaysettings.h \
     GPU\GPUtemp.h

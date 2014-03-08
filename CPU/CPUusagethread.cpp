@@ -4,6 +4,8 @@
 CPUusagethread::CPUusagethread()
 {
     cpuUsage = 0;
+    HcpuUse = 0;
+    LcpuUse = 1000;
 }
 
 void CPUusagethread::run()
@@ -12,7 +14,13 @@ void CPUusagethread::run()
     while(true)
     {
         cpu.getUsage();
-        cpuUsage = cpu.cpuUsage;
+        cpuUsage = (int)cpu.cpuUsage + .5;
+        if (cpuUsage > HcpuUse) {
+            HcpuUse = cpuUsage;
+        }
+        if (cpuUsage < LcpuUse) {
+            LcpuUse = cpuUsage;
+        }
         Sleep(500);
     }
 }

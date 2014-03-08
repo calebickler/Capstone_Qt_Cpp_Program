@@ -6,7 +6,9 @@ class CPUusagethread : public QThread
 {
 public:
     CPUusagethread();
-    long cpuUsage;
+    int cpuUsage;
+    int HcpuUse;
+    int LcpuUse;
     void run();
 };
 

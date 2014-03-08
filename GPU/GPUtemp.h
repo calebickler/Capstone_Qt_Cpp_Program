@@ -6,6 +6,8 @@ class GPUtemp
 public:
     GPUtemp();
     int gputemp;
+    int HgpuTemp;
+    int LgpuTemp;
     void getTemp(void);
 };
 

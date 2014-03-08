@@ -8,6 +8,8 @@ int gputemp;
 GPUtemp::GPUtemp()
 {
     gputemp = 0;
+    HgpuTemp = 0;
+    LgpuTemp = 1000;
 }
 
 void GPUtemp::getTemp(void)
@@ -33,6 +35,12 @@ void GPUtemp::getTemp(void)
        thermal.version =NV_GPU_THERMAL_SETTINGS_VER;
        ret = NvAPI_GPU_GetThermalSettings(phys,0, &thermal);
 
-       gputemp = thermal.sensor[0].currentTemp;
+   gputemp = thermal.sensor[0].currentTemp;
 
+   if (gputemp > HgpuTemp) {
+       HgpuTemp = gputemp;
+   }
+   if (gputemp < LgpuTemp) {
+       LgpuTemp = gputemp;
+   }
 }

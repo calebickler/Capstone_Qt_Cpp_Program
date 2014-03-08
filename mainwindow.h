@@ -21,8 +21,6 @@ public:
 private slots:
     void updateProg();
 
-    void updateHighLow();
-
     void on_actionNumeric_Display_triggered();
 
     void on_actionNumeric_Display_2_triggered();
@@ -58,6 +56,8 @@ private slots:
     void on_actionSession_High_Low_5_triggered();
 
     void on_actionNumeric_Display_5_triggered();
+
+    void on_actionNumeric_Display_6_triggered();
 
 private:
     Ui::MainWindow *ui;
