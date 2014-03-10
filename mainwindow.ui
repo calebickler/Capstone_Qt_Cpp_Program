@@ -14,17 +14,26 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: black;
-color: rgb(112, 255, 102)</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: black;
+color: rgb(112, 255, 102)</string>
+   </property>
    <widget class="QListWidget" name="mainList">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>821</width>
-      <height>731</height>
+      <width>8000</width>
+      <height>8000</height>
      </rect>
     </property>
     <property name="font">
@@ -88,18 +97,14 @@ color: rgb(112, 255, 102)</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: rgb(0, 0, 0);
-alternate-background-color: rgb(200, 200, 200);
-border-color: rgb(55, 55, 55);
-background-color: rgb(0, 0, 0);
-selection-background-color: rgb(212, 212, 212);</string>
+    <string notr="true"/>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(200, 200, 200);
-border-color: rgb(0,0,0);
-border-width: 1px;
-border-style: inset;</string>
+     <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);
+border: 1px solid rgb(150, 150, 150);
+selection-background-color: rgb(212, 212, 212);</string>
     </property>
     <property name="title">
      <string>Menu</string>
@@ -112,6 +117,9 @@ border-style: inset;</string>
        <width>130</width>
        <height>156</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
      <property name="title">
       <string>Refresh Rate</string>
@@ -132,10 +140,10 @@ border-style: inset;</string>
    </widget>
    <widget class="QMenu" name="menuAdd">
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(200, 200, 200);
-border-color: rgb(0,0,0);
-border-width: 1px;
-border-style: inset;</string>
+     <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);
+border: 1px solid rgb(150, 150, 150);
+selection-background-color: rgb(212, 212, 212);</string>
     </property>
     <property name="title">
      <string>Add</string>
@@ -187,10 +195,13 @@ border-style: inset;</string>
      <addaction name="actionNumeric_Display_6"/>
     </widget>
     <addaction name="menuMemory_Useage"/>
+    <addaction name="separator"/>
     <addaction name="menuCPU_Useage"/>
     <addaction name="menuCPU_Speed"/>
+    <addaction name="separator"/>
     <addaction name="menuCPU_Temp"/>
     <addaction name="menuCPU_Core_Temps"/>
+    <addaction name="separator"/>
     <addaction name="menuGPU_Temp"/>
    </widget>
    <addaction name="menuFile"/>
