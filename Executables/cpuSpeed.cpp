@@ -37,7 +37,6 @@ int main()
 	{
 		pLocator->Release();
 		cout << "Unable to connect to \"CIMV2\": " << std::hex << hRes << endl;
-		while (true) {}
 		return 1;
 	}
 
@@ -47,7 +46,6 @@ int main()
 		pLocator->Release();
 		pService->Release();
 		cout << "Unable to retrive desktop monitors: " << std::hex << hRes << endl;
-		while (true) {}
 		return 1;
 	}
 
