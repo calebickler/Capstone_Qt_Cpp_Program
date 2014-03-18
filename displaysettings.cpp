@@ -4,12 +4,15 @@
 #include "qdebug.h"
 #include <QFile>
 #include <QTextStream>
+#include <string>
 
 QString font;
 QString back;
 QString graph;
 QString style;
 QString tempstyle;
+QString button1, button2, button3;
+bool fromsettings;
 
 displaysettings::displaysettings(QWidget *parent) :
     QDialog(parent),
@@ -47,6 +50,7 @@ void displaysettings::on_pushButton_clicked()
     colorstyle.append("); border: 1px solid black;");
     font.append(");");
     ui->pushButton->setStyleSheet(QString::fromStdString(colorstyle));
+    button1 = QString::fromStdString(colorstyle);
     style = font + back + graph;
 }
 
@@ -79,7 +83,22 @@ void displaysettings::on_pushButton_2_clicked()
     colorstyle.append("); border: 1px solid black;");
     back.append(");");
     ui->pushButton_2->setStyleSheet(QString::fromStdString(colorstyle));
+    button2 = QString::fromStdString(colorstyle);
     style = font + back + graph;
+}
+void displaysettings::update()
+{
+    if(fromsettings)
+    {
+        ui->pushButton->setStyleSheet(button1);
+        ui->pushButton_2->setStyleSheet(button2);
+        ui->pushButton_3->setStyleSheet(button3);
+        font = QString::fromStdString((button1.toStdString().substr(11, button1.toStdString().find(";"))));
+        font.append(";");
+        back = QString::fromStdString((button2.toStdString().substr(0, button2.toStdString().find(";"))));
+        back.append(";");
+        graph = button3;
+    }
 }
 
 void displaysettings::on_buttonBox_accepted()
@@ -95,6 +114,12 @@ void displaysettings::on_buttonBox_accepted()
     }
     QTextStream out(&mFile);
     out << style;
+    out << "\n";
+    out << button1;
+    out << "\n";
+    out << button2;
+    out << "\n";
+    out << button3;
 
     mFile.flush();
     mFile.close();

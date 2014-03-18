@@ -67,10 +67,14 @@ MainWindow::MainWindow(QWidget *parent) :
         return;
     }
 
+    display->fromsettings = 1;
     QTextStream in(&mFile);
-    QString mText = in.readAll();
+    QString mText = in.readLine();
     ui->mainList->setStyleSheet(mText);
     display->style = mText;
+    display->button1 = in.readLine();
+    display->button2 = in.readLine();
+    display->button3 = in.readLine();
 
     mFile.close();
 
@@ -241,9 +245,13 @@ void MainWindow::updateProg() {
 
         //gputemp
         if(set.gpuTemp) {
+            if(gpu.gputemp > 999 || gpu.gputemp < 0)
+                set.gpuTemp = 0;
+            else{
             gpuTemp = "GPU Temp: " + intToString(gpu.gputemp) + "°C";
             qgpuTemp = QString::fromStdString(gpuTemp);
             ui->mainList->addItem(qgpuTemp);
+            }
         }
         //gputemp HighLow
         if(set.HLgpuTemp) {
@@ -423,6 +431,7 @@ void MainWindow::on_actionDisplay_Settings_triggered()
 {
     display->tempstyle = ui->mainList->styleSheet();
     display->setModal(false);
+    display->update();
     display->show();
 }
 

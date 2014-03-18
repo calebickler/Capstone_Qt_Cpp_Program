@@ -13,12 +13,16 @@ class displaysettings : public QDialog
 
 public:
     explicit displaysettings(QWidget *parent = 0);
+    void update();
     ~displaysettings();
     QString font, graph, back;
     QString style, tempstyle;
+    QString button1, button2, button3;
+    bool fromsettings;
 
 
 private slots:
+
     void on_pushButton_clicked();
 
     void on_buttonBox_accepted();
