@@ -11,6 +11,8 @@
 #include "GPU\GPUtemp.h"
 #include <QFile>
 #include <QTextStream>
+#include <QMessageBox>
+#include <QDir>
 
 //local function prototypes
 std::string intToString(int i);
@@ -41,6 +43,10 @@ QString qgpuTemp;
 
 QTimer *timer;
 displaysettings *display;
+QProcess *OHM;
+boolean loaded = true;
+boolean OHMoff = false;
+boolean OHMmessage = true;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,7 +62,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(500);
-    updateProg();
 
     //load display settings//
     QString fileName = "displaysettings.ini";
@@ -101,14 +106,65 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mFile.close();
 
+    //open hardware monitor
+    //XML editing
+    //rewrite entire file emitting any of our settings
+    //open config
+    QFile OHMconfig("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
+    if(!OHMconfig.open(QFile::ReadWrite | QFile::Text))
+    {
+       qDebug() << "Could not read file.\n";
+       return;
+    }
+    QTextStream OHMts(&OHMconfig);
+    //create temp file
+    QFile OHMnewConfig("debug/OpenHardwareMonitor/temp.txt");
+    if(!OHMnewConfig.open(QFile::ReadWrite | QFile::Text))
+    {
+       qDebug() << "Could not read file.\n";
+       return;
+    }
+    QTextStream OHMconNew(&OHMnewConfig);
+    //put approprite lines into temp
+    OHMconNew << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+    OHMconNew << "<configuration>\n";
+    OHMconNew << "  <appSettings>\n";
+    OHMconNew << "    <add key=\"minTrayMenuItem\" value=\"true\" />\n";
+    OHMconNew << "    <add key=\"startMinMenuItem\" value=\"true\" />\n";
+    OHMconNew.flush();
+    QString line;
+    int count = 0;
+    while(!OHMts.atEnd()) {
+        line = OHMts.readLine() + "\n";
+        if ((count > 2) && (line != "    <add key=\"minTrayMenuItem\" value=\"false\" />\n") && (line != "    <add key=\"startMinMenuItem\" value=\"false\" />\n") &&
+                (line != "    <add key=\"minTrayMenuItem\" value=\"true\" />\n") && (line != "    <add key=\"startMinMenuItem\" value=\"true\" />\n")) {
+            OHMconNew << line;
+            OHMconNew.flush();
+        }
+        count++;
+    }
+    OHMconfig.remove();
+    OHMnewConfig.rename("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
+    OHMnewConfig.close();
+    OHMconfig.close();
 
+    qDebug() << QDir().absolutePath();
+
+    //check to see if running
     QProcess *process = new QProcess();
-    process->start("OpenHardwareMonitor.exe");
+    process->start("cpuSpeed.exe");
     process->waitForFinished();
+    if (process->exitCode() < 1) {
+        OHM = new QProcess();
+        OHM->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
+        loaded = false;
+    }
+    updateProg();
 }
 
 MainWindow::~MainWindow()
 {
+    OHM->close();
     delete ui;
 }
 
@@ -160,7 +216,18 @@ void MainWindow::updateProg() {
         if (set.cpuSpeed || set.HLcpuSpeed) {
             ui->mainList->addItem(" ");
             cspeed.getSpeed();
+            if (cspeed.cpuSpeed < 1) {
+                if (loaded) {
+                    OHMoff = true;
+                    OHMmessage = true;
+                }
+            }
+            else {
+                loaded = true;
+                OHMoff = false;
+            }
         }
+
         //cpuspeed
         if(set.cpuSpeed) {
             cpuSpeed = "CPU Speed: " + doubleToString(cspeed.cpuSpeed) + "Ghz";
@@ -179,6 +246,16 @@ void MainWindow::updateProg() {
 
         if (set.cpuTemp || set.HLcpuTemp || set.cpuCoreTemp) {
             ctemp.getTemp();
+            if (ctemp.cpuHighTemp < 1) {
+                if (loaded) {
+                    OHMoff = true;
+                    OHMmessage = true;
+                }
+            }
+            else {
+                loaded = true;
+                OHMoff = false;
+            }
         }
         if (set.cpuTemp || set.HLcpuTemp) {
             ui->mainList->addItem(" ");
@@ -297,6 +374,33 @@ void MainWindow::updateProg() {
             mFile.close();
         }
 
+        if (OHMoff) {
+            QProcess *process = new QProcess();
+            process->start("cpuSpeed.exe");
+            process->waitForFinished();
+            if (process->exitCode() > 0) {
+                OHMoff = false;
+                set.cpuSpeed = true;
+                set.HLcpuSpeed = true;
+                set.HLcpuTemp = true;
+                set.cpuCoreTemp = true;
+                set.cpuTemp = true;
+            }
+            if (OHMmessage) {
+                qDebug() << "ohm is off";
+                set.cpuSpeed = false;
+                set.HLcpuSpeed = false;
+                set.HLcpuTemp = false;
+                set.cpuCoreTemp = false;
+                set.cpuTemp = false;
+                QMessageBox::information(
+                    this,
+                    tr("GiS"),
+                    tr("Open Hardware Monitor has closed. This process is needed to provide you with all posible metrics. To get them back you can either:\n1. Restart GiS\n2. Re-open Open Hardware Monitor (Note: Open Hardware Monitor process will not stop when GiS is closed if this is chosen)") );
+                OHMmessage = false;
+            }
+        }
+
         ui->mainList->setStyleSheet(display->style);
     }
 }
@@ -344,7 +448,7 @@ void MainWindow::on_actionNumeric_Display_3_triggered()
         set.cpuSpeed = false;
     }
     else {
-        set.cpuSpeed = true;
+        if (!OHMoff) {set.cpuSpeed = true;}
     }
     set.updated = true;
     updateProg();
@@ -356,7 +460,7 @@ void MainWindow::on_actionNumeric_Display_4_triggered()
         set.cpuTemp = false;
     }
     else {
-        set.cpuTemp = true;
+        if (!OHMoff) {set.cpuTemp = true;}
     }
     set.updated = true;
     updateProg();
@@ -368,7 +472,7 @@ void MainWindow::on_actionNumeric_Display_6_triggered()  //show indivudal cores
         set.cpuCoreTemp = false;
     }
     else {
-        set.cpuCoreTemp = true;
+        if (!OHMoff) {set.cpuCoreTemp = true;}
     }
     set.updated = true;
     updateProg();
@@ -465,7 +569,7 @@ void MainWindow::on_actionSession_High_Low_3_triggered()
         set.HLcpuSpeed = false;
     }
     else {
-        set.HLcpuSpeed = true;
+        if (!OHMoff) {set.HLcpuSpeed = true;}
     }
     set.updated = true;
     updateProg();
@@ -477,7 +581,7 @@ void MainWindow::on_actionSession_High_Low_4_triggered()
         set.HLcpuTemp = false;
     }
     else {
-        set.HLcpuTemp = true;
+        if (!OHMoff) {set.HLcpuTemp = true;}
     }
     set.updated = true;
     updateProg();

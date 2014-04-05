@@ -19,7 +19,7 @@ void CPUspeed::getSpeed(void)
     if (cpuSpeed > HcpuSpeed) {
         HcpuSpeed = cpuSpeed;
     }
-    if (cpuSpeed < LcpuSpeed) {
+    if (cpuSpeed < LcpuSpeed && cpuSpeed > 0) {
         LcpuSpeed = cpuSpeed;
     }
 
