@@ -2,12 +2,19 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "Libraries/Nvidia/nvapi.h"
+#include <QDebug>
 
-int gputemp;
+int gputemp1;
+int gputemp2;
+int gputemp3;
+int numgpu;
 
 GPUtemp::GPUtemp()
 {
-    gputemp = 0;
+    gputemp1 = 0;
+    gputemp2 = 0;
+    gputemp3 = 0;
+    numgpu;
     HgpuTemp = 0;
     LgpuTemp = 1000;
 }
@@ -34,13 +41,22 @@ void GPUtemp::getTemp(void)
 
        thermal.version =NV_GPU_THERMAL_SETTINGS_VER;
        ret = NvAPI_GPU_GetThermalSettings(phys,0, &thermal);
-
-   gputemp = thermal.sensor[0].currentTemp;
-
-   if (gputemp > HgpuTemp) {
-       HgpuTemp = gputemp;
+       numgpu = cnt;
+   if(cnt > 0)
+   {
+       gputemp1 = thermal.sensor[0].currentTemp;
+       if(cnt > 1)
+       {
+           gputemp2 = thermal.sensor[1].currentTemp;
+           if(cnt > 2)
+                gputemp3 = thermal.sensor[2].currentTemp;
+       }
    }
-   if (gputemp < LgpuTemp) {
-       LgpuTemp = gputemp;
+
+   if (gputemp1 > HgpuTemp) {
+       HgpuTemp = gputemp1;
+   }
+   if (gputemp1 < LgpuTemp) {
+       LgpuTemp = gputemp1;
    }
 }

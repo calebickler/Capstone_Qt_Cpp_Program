@@ -47,6 +47,7 @@ QProcess *OHM;
 boolean loaded = true;
 boolean OHMoff = false;
 boolean OHMmessage = true;
+boolean fromfile = false;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -103,6 +104,8 @@ MainWindow::MainWindow(QWidget *parent) :
     set.HLcpuSpeed = in2.readLine().toULong();
     set.HLcpuTemp  = in2.readLine().toULong();
     set.HLgpuTemp = in2.readLine().toULong();
+    set.refresh = in2.readLine().toULong();
+    fromfile = true;
 
     mFile.close();
 
@@ -172,8 +175,12 @@ void MainWindow::updateProg() {
     //highlows
     std::string high;
     std::string low;
-
     ui->mainList->clear();
+    if(fromfile)
+    {
+        timer->start(set.refresh);
+        fromfile = false;
+    }
     if (set.collecting) {
 
         if (set.memUse || set.HLmemUsage) {
@@ -322,12 +329,24 @@ void MainWindow::updateProg() {
 
         //gputemp
         if(set.gpuTemp) {
-            if(gpu.gputemp > 999 || gpu.gputemp < 0)
+            if(gpu.gputemp1 > 999 || gpu.gputemp1 < 0)
                 set.gpuTemp = 0;
             else{
-            gpuTemp = "GPU Temp: " + intToString(gpu.gputemp) + "°C";
-            qgpuTemp = QString::fromStdString(gpuTemp);
-            ui->mainList->addItem(qgpuTemp);
+                gpuTemp = "GPU 1 Temp: " + intToString(gpu.gputemp1) + "°C";
+                qgpuTemp = QString::fromStdString(gpuTemp);
+                ui->mainList->addItem(qgpuTemp);
+                if(gpu.numgpu > 1)
+                {
+                    gpuTemp = "GPU 2 Temp: " + intToString(gpu.gputemp2) + "°C";
+                    qgpuTemp = QString::fromStdString(gpuTemp);
+                    ui->mainList->addItem(qgpuTemp);
+                    if(gpu.numgpu > 2)
+                    {
+                        gpuTemp = "GPU 3 Temp: " + intToString(gpu.gputemp3) + "°C";
+                        qgpuTemp = QString::fromStdString(gpuTemp);
+                        ui->mainList->addItem(qgpuTemp);
+                    }
+                }
             }
         }
         //gputemp HighLow
@@ -369,6 +388,8 @@ void MainWindow::updateProg() {
             out << set.HLcpuTemp;
             out << "\n";
             out << set.HLgpuTemp;
+            out << "\n";
+            out << set.refresh;
 
             mFile.flush();
             mFile.close();
@@ -508,26 +529,36 @@ void MainWindow::on_actionStop_triggered()
 
 void MainWindow::on_action5_Low_triggered()
 {
+    set.refresh = 1500;
+    set.updated = true;
     timer->start(1500);
 }
 
 void MainWindow::on_action4_triggered()
 {
+    set.refresh = 1250;
+    set.updated = true;
     timer->start(1250);
 }
 
 void MainWindow::on_action3_Medium_triggered()
 {
+    set.refresh = 1000;
+    set.updated = true;
     timer->start(1000);
 }
 
 void MainWindow::on_action2_triggered()
 {
+    set.refresh = 750;
+    set.updated = true;
     timer->start(750);
 }
 
 void MainWindow::on_action1_High_triggered()
 {
+    set.refresh = 500;
+    set.updated = true;
     timer->start(500);
 }
 
