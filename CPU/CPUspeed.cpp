@@ -1,5 +1,6 @@
 #include "CPUspeed.h"
 #include <QProcess>
+#include <QTcpSocket>
 
 CPUspeed::CPUspeed()
 {
@@ -22,5 +23,4 @@ void CPUspeed::getSpeed(void)
     if (cpuSpeed < LcpuSpeed && cpuSpeed > 0) {
         LcpuSpeed = cpuSpeed;
     }
-
 }

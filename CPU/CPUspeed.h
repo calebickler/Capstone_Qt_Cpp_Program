@@ -1,5 +1,6 @@
 #ifndef CPUSPEED_H
 #define CPUSPEED_H
+
 class CPUspeed
 {
 public:

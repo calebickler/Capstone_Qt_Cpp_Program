@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,7 +22,8 @@ SOURCES += main.cpp\
     CPU\CPUtemp.cpp \
     CPU\CPUspeed.cpp \
     displaysettings.cpp \
-    GPU\GPUtemp.cpp
+    GPU\GPUtemp.cpp \
+    OHM.cpp
 
 HEADERS  += mainwindow.h \
     CPU\CPUusage.h \
@@ -31,7 +33,8 @@ HEADERS  += mainwindow.h \
     CPU\CPUtemp.h \
     CPU\CPUspeed.h \
     displaysettings.h \
-    GPU\GPUtemp.h
+    GPU\GPUtemp.h \
+    OHM.h
 
 FORMS    += mainwindow.ui \
     displaysettings.ui

@@ -9,6 +9,7 @@
 #include "Settings\settings.h"
 #include "displaysettings.h"
 #include "GPU\GPUtemp.h"
+#include "OHM.h"
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
@@ -33,6 +34,7 @@ CPUtemp ctemp;
 CPUspeed cspeed;
 GPUtemp gpu;
 Settings set;
+OHM ohm;
 
 //strings
 QString qcpuUse;
@@ -43,7 +45,7 @@ QString qgpuTemp;
 
 QTimer *timer;
 displaysettings *display;
-QProcess *OHM;
+QProcess *OHMpro;
 boolean loaded = true;
 boolean OHMoff = false;
 boolean OHMmessage = true;
@@ -158,8 +160,8 @@ MainWindow::MainWindow(QWidget *parent) :
     process->start("cpuSpeed.exe");
     process->waitForFinished();
     if (process->exitCode() < 1) {
-        OHM = new QProcess();
-        OHM->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
+        OHMpro = new QProcess();
+        OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
         loaded = false;
     }
     updateProg();
@@ -167,7 +169,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    OHM->close();
+    OHMpro->close();
     delete ui;
 }
 
@@ -175,6 +177,7 @@ void MainWindow::updateProg() {
     //highlows
     std::string high;
     std::string low;
+    ohm.update();
     ui->mainList->clear();
     if(fromfile)
     {
