@@ -2,26 +2,28 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "Libraries/Nvidia/nvapi.h"
+#include "Libraries/AMD/include/adl_defines.h"
+#include "Libraries/AMD/include/adl_sdk.h"
+#include "Libraries/AMD/include/adl_structures.h"
 #include <QDebug>
 
-int gputemp1;
-int gputemp2;
-int gputemp3;
+int gputemps;
 int numgpu;
+int gpuType;
+ADLTemperature adlt;
 
 GPUtemp::GPUtemp()
 {
-    gputemp1 = 0;
-    gputemp2 = 0;
-    gputemp3 = 0;
-    numgpu;
+    gputemps[0] = 0;
+    numgpu = 0;
     HgpuTemp = 0;
     LgpuTemp = 1000;
 }
 
 void GPUtemp::getTemp(void)
 {
-    NvAPI_Status ret = NVAPI_OK;
+
+       NvAPI_Status ret = NVAPI_OK;
 
        NvDisplayHandle hDisplay_a[NVAPI_MAX_PHYSICAL_GPUS*2] = {0};
 
@@ -42,21 +44,32 @@ void GPUtemp::getTemp(void)
        thermal.version =NV_GPU_THERMAL_SETTINGS_VER;
        ret = NvAPI_GPU_GetThermalSettings(phys,0, &thermal);
        numgpu = cnt;
-   if(cnt > 0)
+       if (cnt > 0)
+           gpuType = 0;
+       else if(adlt.iTemperature < 999 && adlt.iTemperature > 0)
+           gpuType = 1;
+       else
+           gpuType = 2;
+   if(gpuType == 0)
    {
-       gputemp1 = thermal.sensor[0].currentTemp;
-       if(cnt > 1)
+       for(int i = 0; i < cnt ;i++)
        {
-           gputemp2 = thermal.sensor[1].currentTemp;
-           if(cnt > 2)
-                gputemp3 = thermal.sensor[2].currentTemp;
+           gputemps[i] = thermal.sensor[i].currentTemp;
        }
-   }
+    }
+    else if(gpuType == 1)
+    {
+        gputemps[0] = adlt.iTemperature;
+    }
+    else
+    {
+        gputemps[0] = 9999;
+    }
 
-   if (gputemp1 > HgpuTemp) {
-       HgpuTemp = gputemp1;
+   if (gputemps[0] > HgpuTemp) {
+       HgpuTemp = gputemps[0];
    }
-   if (gputemp1 < LgpuTemp) {
-       LgpuTemp = gputemp1;
+   if (gputemps[0] < LgpuTemp) {
+       LgpuTemp = gputemps[0];
    }
 }

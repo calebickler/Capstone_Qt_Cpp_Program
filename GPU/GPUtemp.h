@@ -5,13 +5,12 @@ class GPUtemp
 {
 public:
     GPUtemp();
-    int gputemp1;
-    int gputemp2;
-    int gputemp3;
+    int gputemps[20];
     int numgpu;
     int HgpuTemp;
     int LgpuTemp;
     void getTemp(void);
+    int gpuType;
 };
 
 #endif // GPUTEMP_H

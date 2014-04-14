@@ -332,23 +332,20 @@ void MainWindow::updateProg() {
 
         //gputemp
         if(set.gpuTemp) {
-            if(gpu.gputemp1 > 999 || gpu.gputemp1 < 0)
-                set.gpuTemp = 0;
-            else{
-                gpuTemp = "GPU 1 Temp: " + intToString(gpu.gputemp1) + "°C";
+            if(gpu.gputemps[0] == 9999)
+            {
+                gpuTemp = "GPU not found. Please turn off.";
                 qgpuTemp = QString::fromStdString(gpuTemp);
                 ui->mainList->addItem(qgpuTemp);
-                if(gpu.numgpu > 1)
+            }
+            else{
+                int j;
+                for(int i = 0; i < gpu.numgpu; i++)
                 {
-                    gpuTemp = "GPU 2 Temp: " + intToString(gpu.gputemp2) + "°C";
+                    j = i + 1;
+                    gpuTemp = "GPU " + intToString(j) + " Temp: " + intToString(gpu.gputemps[i]) + "°C";
                     qgpuTemp = QString::fromStdString(gpuTemp);
                     ui->mainList->addItem(qgpuTemp);
-                    if(gpu.numgpu > 2)
-                    {
-                        gpuTemp = "GPU 3 Temp: " + intToString(gpu.gputemp3) + "°C";
-                        qgpuTemp = QString::fromStdString(gpuTemp);
-                        ui->mainList->addItem(qgpuTemp);
-                    }
                 }
             }
         }
