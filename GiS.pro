@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     CPU\CPUspeed.cpp \
     displaysettings.cpp \
     GPU\GPUtemp.cpp \
-    OHM.cpp
+    OHM.cpp \
+    keyboard.cpp
 
 HEADERS  += mainwindow.h \
     CPU\CPUusage.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     CPU\CPUspeed.h \
     displaysettings.h \
     GPU\GPUtemp.h \
-    OHM.h
+    OHM.h \
+    keyboard.h
 
 FORMS    += mainwindow.ui \
     displaysettings.ui

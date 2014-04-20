@@ -10,10 +10,13 @@
 #include "displaysettings.h"
 #include "GPU\GPUtemp.h"
 #include "OHM.h"
+#include "keyboard.h"
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
-#include <QDir>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsItem>
 
 //local function prototypes
 std::string intToString(int i);
@@ -35,6 +38,7 @@ CPUspeed cspeed;
 GPUtemp gpu;
 Settings set;
 OHM ohm;
+keyboard keys;
 
 //strings
 QString qcpuUse;
@@ -50,10 +54,13 @@ boolean OHMoff = false;
 boolean OHMmessage = true;
 boolean fromfile = false;
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
     //if metric is on start thread
     if(set.cpuUse)
         cpuUthread.start();
@@ -152,10 +159,10 @@ MainWindow::MainWindow(QWidget *parent) :
     OHMnewConfig.close();
     OHMconfig.close();
 
-    qDebug() << QDir().absolutePath();
 
     OHMpro = new QProcess();
     OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
+
 
     QProcess *WMIserver = new QProcess();
     WMIserver->start("WMIserver.exe");
@@ -172,6 +179,9 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateProg() {
+    keys.update();
+    ui->keyboardView->setScene(keys.scene);
+
     //highlows
     std::string high;
     std::string low;

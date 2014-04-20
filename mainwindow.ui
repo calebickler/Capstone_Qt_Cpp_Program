@@ -86,6 +86,16 @@ color: rgb(112, 255, 102)</string>
      </property>
     </item>
    </widget>
+   <widget class="QGraphicsView" name="keyboardView">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>10</y>
+      <width>371</width>
+      <height>181</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
