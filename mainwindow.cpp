@@ -46,7 +46,6 @@ QString qgpuTemp;
 QTimer *timer;
 displaysettings *display;
 QProcess *OHMpro;
-boolean loaded = true;
 boolean OHMoff = false;
 boolean OHMmessage = true;
 boolean fromfile = false;
@@ -155,21 +154,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qDebug() << QDir().absolutePath();
 
-    //check to see if running
-    QProcess *process = new QProcess();
-    process->start("cpuSpeed.exe");
-    process->waitForFinished();
-    if (process->exitCode() < 1) {
-        OHMpro = new QProcess();
-        OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
-        loaded = false;
-    }
+    OHMpro = new QProcess();
+    OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
+
+    QProcess *WMIserver = new QProcess();
+    WMIserver->start("WMIserver.exe");
+
     updateProg();
 }
 
 MainWindow::~MainWindow()
 {
     OHMpro->close();
+    QProcess *cleanup = new QProcess();
+    cleanup->start("RefreshNotificationArea.exe");
     delete ui;
 }
 
@@ -225,15 +223,15 @@ void MainWindow::updateProg() {
 
         if (set.cpuSpeed || set.HLcpuSpeed) {
             ui->mainList->addItem(" ");
-            cspeed.getSpeed();
+            cspeed.getSpeed(ohm.CPUspeed);
             if (cspeed.cpuSpeed < 1) {
-                if (loaded) {
+                if (ohm.loaded) {
                     OHMoff = true;
+                    ohm.loaded = false;
                     OHMmessage = true;
                 }
             }
             else {
-                loaded = true;
                 OHMoff = false;
             }
         }
@@ -255,24 +253,23 @@ void MainWindow::updateProg() {
 
 
         if (set.cpuTemp || set.HLcpuTemp || set.cpuCoreTemp) {
-            ctemp.getTemp();
-            if (ctemp.cpuHighTemp < 1) {
-                if (loaded) {
+            ctemp.getTemp(ohm.CPUtemp);
+            /*if (ctemp.cpuHighTemp < 1) {
+                if (ohm.loaded) {
                     OHMoff = true;
                     OHMmessage = true;
+                    ohm.loaded = false;
                 }
             }
             else {
-                loaded = true;
                 OHMoff = false;
-            }
+            }*/
         }
         if (set.cpuTemp || set.HLcpuTemp) {
             ui->mainList->addItem(" ");
         }
         //cputemp
         if(set.cpuTemp) {
-            ctemp.getTemp();
             cpuTemp = "CPU Temp: " + intToString(ctemp.cpuHighTemp) + "°C";
             qcpuTemp = QString::fromStdString(cpuTemp);
             ui->mainList->addItem(qcpuTemp);
@@ -396,17 +393,6 @@ void MainWindow::updateProg() {
         }
 
         if (OHMoff) {
-            QProcess *process = new QProcess();
-            process->start("cpuSpeed.exe");
-            process->waitForFinished();
-            if (process->exitCode() > 0) {
-                OHMoff = false;
-                set.cpuSpeed = true;
-                set.HLcpuSpeed = true;
-                set.HLcpuTemp = true;
-                set.cpuCoreTemp = true;
-                set.cpuTemp = true;
-            }
             if (OHMmessage) {
                 qDebug() << "ohm is off";
                 set.cpuSpeed = false;
@@ -417,7 +403,7 @@ void MainWindow::updateProg() {
                 QMessageBox::information(
                     this,
                     tr("GiS"),
-                    tr("Open Hardware Monitor has closed. This process is needed to provide you with all posible metrics. To get them back you can either:\n1. Restart GiS\n2. Re-open Open Hardware Monitor (Note: Open Hardware Monitor process will not stop when GiS is closed if this is chosen)") );
+                    tr("Open Hardware Monitor has closed. This process is needed to provide you with all posible metrics. To get them back you can either:\n1. Restart GiS\n2. Re-open Open Hardware Monitor (Note: Open Hardware Monitor process will not stop when GiS is closed if this is chosen)\nThen, add back the metrics you want.") );
                 OHMmessage = false;
             }
         }
@@ -469,7 +455,7 @@ void MainWindow::on_actionNumeric_Display_3_triggered()
         set.cpuSpeed = false;
     }
     else {
-        if (!OHMoff) {set.cpuSpeed = true;}
+        set.cpuSpeed = true;
     }
     set.updated = true;
     updateProg();
@@ -481,7 +467,7 @@ void MainWindow::on_actionNumeric_Display_4_triggered()
         set.cpuTemp = false;
     }
     else {
-        if (!OHMoff) {set.cpuTemp = true;}
+        set.cpuTemp = true;
     }
     set.updated = true;
     updateProg();
@@ -493,7 +479,7 @@ void MainWindow::on_actionNumeric_Display_6_triggered()  //show indivudal cores
         set.cpuCoreTemp = false;
     }
     else {
-        if (!OHMoff) {set.cpuCoreTemp = true;}
+        set.cpuCoreTemp = true;
     }
     set.updated = true;
     updateProg();
@@ -600,7 +586,7 @@ void MainWindow::on_actionSession_High_Low_3_triggered()
         set.HLcpuSpeed = false;
     }
     else {
-        if (!OHMoff) {set.HLcpuSpeed = true;}
+        set.HLcpuSpeed = true;
     }
     set.updated = true;
     updateProg();
@@ -612,7 +598,7 @@ void MainWindow::on_actionSession_High_Low_4_triggered()
         set.HLcpuTemp = false;
     }
     else {
-        if (!OHMoff) {set.HLcpuTemp = true;}
+        set.HLcpuTemp = true;
     }
     set.updated = true;
     updateProg();

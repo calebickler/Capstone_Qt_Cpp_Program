@@ -25,104 +25,114 @@ IWbemServices* pService;
 void init();
 int getSpeed();
 void getTemp();
+void listenPort(int port);
 
 int temps[10];
+boolean tempIntel;
+boolean speedIntel;
+
+public ref class Threaded
+{
+public:
+	int port;
+	Threaded(int portIn) {
+		port = portIn;
+	}
+	void listenPort() {
+		try
+		{
+			IPAddress^ localAddr = IPAddress::Parse("127.0.0.1");
+
+			TcpListener^ server = gcnew TcpListener(localAddr, port);
+
+			server->Start();
+
+			array<Byte>^bytes = gcnew array<Byte>(256);
+			String^ data = nullptr;
+
+			while (true)
+			{
+
+				TcpClient^ client = server->AcceptTcpClient();
+
+				data = nullptr;
+
+
+				NetworkStream^ stream = client->GetStream();
+				Int32 i;
+
+
+				while (i = stream->Read(bytes, 0, bytes->Length))
+				{
+
+
+					data = Text::Encoding::ASCII->GetString(bytes, 0, i);
+
+
+					getTemp();
+
+					array<Byte>^msg;
+
+					msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(getSpeed()) + "    ");
+					stream->Write(msg, 0, 4);
+
+
+					msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(" " + temps[0]) + "    ");
+					stream->Write(msg, 0, 4);
+
+					for (int i = 1; i < 10; i++) {
+						if (temps[i] > 0) {
+							msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(" " + temps[i]) + "    ");
+							stream->Write(msg, 0, 4);
+						}
+					}
+				}
+				client->Close();
+			}
+		}
+		catch (Exception^ e)
+		{
+			exit(1);
+		}
+	}
+};
 
 int main(array<System::String ^> ^args)
 {
+	FreeConsole();
 	init();
-	//ShowWindow(hWnd, 0);
-	try
-	{
 
-		IPAddress^ localAddr = IPAddress::Parse("127.0.0.1");
+	Threaded^ threadWork = gcnew Threaded(10540);
+	Thread^ oThread = gcnew Thread(gcnew ThreadStart(threadWork, &Threaded::listenPort));
+	oThread->Start();
 
-		// TcpListener* server = new TcpListener(port);
-		TcpListener^ server = gcnew TcpListener(localAddr, 10543);
+	Threaded^ threadWork2 = gcnew Threaded(10541);
+	Thread^ oThread2 = gcnew Thread(gcnew ThreadStart(threadWork2, &Threaded::listenPort));
+	oThread2->Start();
 
-		// Start listening for client requests.
-		server->Start();
+	Threaded^ threadWork3 = gcnew Threaded(10542);
+	Thread^ oThread3 = gcnew Thread(gcnew ThreadStart(threadWork3, &Threaded::listenPort));
+	oThread3->Start();
 
-		// Buffer for reading data 
-		array<Byte>^bytes = gcnew array<Byte>(256);
-		String^ data = nullptr;
+	Threaded^ threadWork4 = gcnew Threaded(10543);
+	Thread^ oThread4 = gcnew Thread(gcnew ThreadStart(threadWork4, &Threaded::listenPort));
+	oThread4->Start();
 
-		// Enter the listening loop. 
-		while (true)
-		{
-			Console::Write("Waiting for a connection... ");
+	Threaded^ threadWork5 = gcnew Threaded(10544);
+	Thread^ oThread5 = gcnew Thread(gcnew ThreadStart(threadWork5, &Threaded::listenPort));
+	oThread5->Start();
 
-			// Perform a blocking call to accept requests. 
-			// You could also user server.AcceptSocket() here.
-			TcpClient^ client = server->AcceptTcpClient();
-			Console::WriteLine("Connected!");
-			data = nullptr;
 
-			// Get a stream Object* for reading and writing
-			NetworkStream^ stream = client->GetStream();
-			Int32 i;
-
-			// Loop to receive all the data sent by the client. 
-			while (i = stream->Read(bytes, 0, bytes->Length))
-			{
-
-				// Translate data bytes to a ASCII String*.
-				data = Text::Encoding::ASCII->GetString(bytes, 0, i);
-				Console::WriteLine("Received: {0}", data);
-
-				// Process the data sent by the client.
-				getTemp();
-
-				array<Byte>^msg;
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(getSpeed()) + "    ");
-				stream->Write(msg, 0, 4);
-				Console::WriteLine(msg->Length);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[0])+ "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[1]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[2]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[3]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[4]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[5]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[6]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[7]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[8]) + "    ");
-				stream->Write(msg, 0, 3);
-
-				msg = Text::Encoding::ASCII->GetBytes(System::Convert::ToString(temps[9]) + "    ");
-				stream->Write(msg, 0, 3);
-			}
-
-			// Shutdown and end connection
-			client->Close();
-		}
-	}
-	catch (SocketException^ e)
-	{
-		Console::WriteLine("SocketException: {0}", e);
-	}
-
-    return 0;
+	return 0;
 }
 
 void init() {
+	tempIntel = true;
+	speedIntel = true;
+	for (int i = 0; i < 10; i++) {
+		temps[i] = 0;
+	}
+
 	using std::cout;
 	using std::cin;
 	using std::endl;
@@ -154,60 +164,133 @@ void init() {
 
 void getTemp() {
 	IEnumWbemClassObject* pEnumeratorTemp = NULL;
-	if (FAILED(hRes = pService->ExecQuery(L"WQL", L"select * from Sensor where Identifier like '/intelcpu/0/temperature/_'", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumeratorTemp)))
-	{
-		pLocator->Release();
-		pService->Release();
-		cout << "Unable to retrive " << std::hex << hRes << endl;
+	if (tempIntel) {
+		if (FAILED(hRes = pService->ExecQuery(L"WQL", L"select * from Sensor where Identifier like '/intelcpu/0/temperature/_'", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumeratorTemp)))
+		{
+			pLocator->Release();
+			pService->Release();
+			cout << "Unable to retrive " << std::hex << hRes << endl;
+		}
+		int count = 0;
+		IWbemClassObject* clsObj = NULL;
+		int numElems;
+		while ((hRes = pEnumeratorTemp->Next(WBEM_INFINITE, 1, &clsObj, (ULONG*)&numElems)) != WBEM_S_FALSE)
+		{
+			if (FAILED(hRes)){
+				break;
+			}
+
+			VARIANT vRet;
+			VariantInit(&vRet);
+			if (SUCCEEDED(clsObj->Get(L"Value", 0, &vRet, NULL, NULL)))
+			{
+				if (count < 10) {
+					temps[count] = vRet.fltVal;
+				}
+				count++;
+			}
+			clsObj->Release();
+		}
 	}
-	int count = 0;
-	IWbemClassObject* clsObj = NULL;
-	int numElems;
-	while ((hRes = pEnumeratorTemp->Next(WBEM_INFINITE, 1, &clsObj, (ULONG*)&numElems)) != WBEM_S_FALSE)
-	{
-		if (FAILED(hRes)){
-			break;
+	if (temps[0] == 0) {
+		tempIntel = false;
+
+		if (FAILED(hRes = pService->ExecQuery(L"WQL", L"select * from Sensor where Identifier like '/amdcpu/0/temperature/_'", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumeratorTemp)))
+		{
+			pLocator->Release();
+			pService->Release();
+			cout << "Unable to retrive " << std::hex << hRes << endl;
+		}
+		int count = 0;
+		IWbemClassObject* clsObj = NULL;
+		int numElems;
+		while ((hRes = pEnumeratorTemp->Next(WBEM_INFINITE, 1, &clsObj, (ULONG*)&numElems)) != WBEM_S_FALSE)
+		{
+			if (FAILED(hRes)){
+				break;
+			}
+
+			VARIANT vRet;
+			VariantInit(&vRet);
+			if (SUCCEEDED(clsObj->Get(L"Value", 0, &vRet, NULL, NULL)))
+			{
+				if (count < 10) {
+					temps[count] = vRet.fltVal;
+				}
+				count++;
+			}
+			clsObj->Release();
 		}
 
-		VARIANT vRet;
-		VariantInit(&vRet);
-		if (SUCCEEDED(clsObj->Get(L"Value", 0, &vRet, NULL, NULL)))
-		{
-			if (count < 10) {
-				temps[count] = vRet.fltVal;
-			}
-			count++;
+		if (temps[0] == 0) {
+			tempIntel = true;
 		}
-		clsObj->Release();
 	}
+	
 }
 
 int getSpeed() {
-	IEnumWbemClassObject* pEnumeratorSpeed = NULL;
-	if (FAILED(hRes = pService->ExecQuery(L"WQL", L"select * from Sensor where Identifier like '/intelcpu/0/clock/1'", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumeratorSpeed)))
-	{
-		pLocator->Release();
-		pService->Release();
-		cout << "Unable to retrive " << std::hex << hRes << endl;
-	}
 	int cpuSpeed = 0;
+	IEnumWbemClassObject* pEnumeratorSpeed = NULL;
 
-	IWbemClassObject* clsObj = NULL;
-	int numElems;
-	while ((hRes = pEnumeratorSpeed->Next(WBEM_INFINITE, 1, &clsObj, (ULONG*)&numElems)) != WBEM_S_FALSE)
-	{
-		if (FAILED(hRes)){
-			break;
-		}
-
-		VARIANT vRet;
-		VariantInit(&vRet);
-		if (SUCCEEDED(clsObj->Get(L"Value", 0, &vRet, NULL, NULL)))
+	if (speedIntel) {
+		if (FAILED(hRes = pService->ExecQuery(L"WQL", L"select * from Sensor where Identifier like '/intelcpu/0/clock/1'", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumeratorSpeed)))
 		{
-			cpuSpeed = vRet.fltVal;
-			VariantClear(&vRet);
+			pLocator->Release();
+			pService->Release();
+			cout << "Unable to retrive " << std::hex << hRes << endl;
 		}
-		clsObj->Release();
+
+		IWbemClassObject* clsObj = NULL;
+		int numElems;
+		while ((hRes = pEnumeratorSpeed->Next(WBEM_INFINITE, 1, &clsObj, (ULONG*)&numElems)) != WBEM_S_FALSE)
+		{
+			if (FAILED(hRes)){
+				break;
+			}
+
+			VARIANT vRet;
+			VariantInit(&vRet);
+			if (SUCCEEDED(clsObj->Get(L"Value", 0, &vRet, NULL, NULL)))
+			{
+				cpuSpeed = vRet.fltVal;
+				VariantClear(&vRet);
+			}
+			clsObj->Release();
+		}
+	}
+	if (cpuSpeed == 0) {
+		speedIntel = false;
+
+		if (FAILED(hRes = pService->ExecQuery(L"WQL", L"select * from Sensor where Identifier like '/amdcpu/0/clock/1'", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumeratorSpeed)))
+		{
+			pLocator->Release();
+			pService->Release();
+			cout << "Unable to retrive " << std::hex << hRes << endl;
+		}
+		int cpuSpeed = 0;
+
+		IWbemClassObject* clsObj = NULL;
+		int numElems;
+		while ((hRes = pEnumeratorSpeed->Next(WBEM_INFINITE, 1, &clsObj, (ULONG*)&numElems)) != WBEM_S_FALSE)
+		{
+			if (FAILED(hRes)){
+				break;
+			}
+
+			VARIANT vRet;
+			VariantInit(&vRet);
+			if (SUCCEEDED(clsObj->Get(L"Value", 0, &vRet, NULL, NULL)))
+			{
+				cpuSpeed = vRet.fltVal;
+				VariantClear(&vRet);
+			}
+			clsObj->Release();
+		}
+
+		if (cpuSpeed == 0) {
+			speedIntel = true;
+		}
 	}
 	return cpuSpeed;
 }

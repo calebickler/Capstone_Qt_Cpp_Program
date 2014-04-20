@@ -9,13 +9,10 @@ CPUspeed::CPUspeed()
     LcpuSpeed = 1000000;
 }
 
-void CPUspeed::getSpeed(void)
+void CPUspeed::getSpeed(int speed)
 {
-    QProcess *process = new QProcess();
-    process->start("cpuSpeed.exe");
-    process->waitForFinished();
-    cpuSpeed = (double) process->exitCode();
-    cpuSpeed = (cpuSpeed / 1000);
+    double dSpeed = speed;
+    cpuSpeed = (dSpeed / 1000);
 
     if (cpuSpeed > HcpuSpeed) {
         HcpuSpeed = cpuSpeed;

@@ -8,7 +8,7 @@ public:
     double cpuSpeed;
     double HcpuSpeed;
     double LcpuSpeed;
-    void getSpeed(void);
+    void getSpeed(int speed);
 };
 
 #endif // CPUSPEED_H

@@ -5,8 +5,9 @@ class OHM
 {
 public:
     OHM();
+    bool loaded;
     int CPUspeed;
-    int CPUtemp[20];
+    int CPUtemp[10];
     void update();
 };
 #endif // OHM_H
