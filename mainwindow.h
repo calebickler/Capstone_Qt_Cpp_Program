@@ -59,6 +59,8 @@ private slots:
 
     void on_actionNumeric_Display_6_triggered();
 
+    void on_actionKeyboard_Log_triggered();
+
 private:
     Ui::MainWindow *ui;
     displaysettings *display;

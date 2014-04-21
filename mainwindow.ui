@@ -213,6 +213,7 @@ selection-background-color: rgb(212, 212, 212);</string>
     <addaction name="menuCPU_Core_Temps"/>
     <addaction name="separator"/>
     <addaction name="menuGPU_Temp"/>
+    <addaction name="actionKeyboard_Log"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAdd"/>
@@ -341,6 +342,11 @@ selection-background-color: rgb(212, 212, 212);</string>
   <action name="actionNumeric_Display_6">
    <property name="text">
     <string>Numeric Display</string>
+   </property>
+  </action>
+  <action name="actionKeyboard_Log">
+   <property name="text">
+    <string>Keyboard Log</string>
    </property>
   </action>
  </widget>

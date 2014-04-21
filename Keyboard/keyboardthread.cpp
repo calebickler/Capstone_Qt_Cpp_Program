@@ -20,7 +20,6 @@ void KeyboardThread::run()
     double duration = 0;
     while(true)
     {
-        qDebug() << keys;
         keys = "";
         j = 0;
         k.i = 0;

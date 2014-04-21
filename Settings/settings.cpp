@@ -14,6 +14,7 @@ Settings::Settings()
     HLcpuSpeed = 1;
     HLcpuTemp = 1;
     HLgpuTemp = 1;
+    Keyboard = 1;
     updated = 0;
     refresh = 500;
 }

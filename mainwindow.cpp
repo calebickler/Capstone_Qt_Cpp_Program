@@ -10,7 +10,8 @@
 #include "displaysettings.h"
 #include "GPU\GPUtemp.h"
 #include "OHM.h"
-#include "keyboard.h"
+#include "keyboardg.h"
+#include "Keyboard/keyboardthread.h"
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
@@ -33,12 +34,13 @@ std::string gpuTemp;
 //classes
 Memory mem;
 CPUusagethread cpuUthread;
+KeyboardThread keyboardThread;
 CPUtemp ctemp;
 CPUspeed cspeed;
 GPUtemp gpu;
 Settings set;
 OHM ohm;
-keyboard keys;
+keyboardg keys;
 
 //strings
 QString qcpuUse;
@@ -62,8 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     //if metric is on start thread
-    if(set.cpuUse)
-        cpuUthread.start();
+    cpuUthread.start();
+    keyboardThread.start();
     //end threads
     display = new displaysettings(this);
     ui->setupUi(this);
@@ -113,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent) :
     set.HLcpuTemp  = in2.readLine().toULong();
     set.HLgpuTemp = in2.readLine().toULong();
     set.refresh = in2.readLine().toULong();
+    set.Keyboard = in2.readLine().toULong();
     fromfile = true;
 
     mFile.close();
@@ -179,14 +182,18 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateProg() {
-    keys.update();
-    ui->keyboardView->setScene(keys.scene);
 
     //highlows
     std::string high;
     std::string low;
     ohm.update();
     ui->mainList->clear();
+    if(set.Keyboard)
+    {
+        ui->mainList->addItem(keyboardThread.keys);
+        //keys.update();
+        //ui->keyboardView->setScene(keys.scene);
+    }
     if(fromfile)
     {
         timer->start(set.refresh);
@@ -397,6 +404,8 @@ void MainWindow::updateProg() {
             out << set.HLgpuTemp;
             out << "\n";
             out << set.refresh;
+            out << "\n";
+            out << set.Keyboard;
 
             mFile.flush();
             mFile.close();
@@ -629,3 +638,15 @@ void MainWindow::on_actionSession_High_Low_5_triggered()
 
 
 
+
+void MainWindow::on_actionKeyboard_Log_triggered()
+{
+    if(set.Keyboard){
+        set.Keyboard = false;
+    }
+    else {
+    set.Keyboard = true;
+    }
+    set.updated = true;
+    updateProg();
+}
