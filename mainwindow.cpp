@@ -10,7 +10,7 @@
 #include "displaysettings.h"
 #include "GPU\GPUtemp.h"
 #include "OHM.h"
-#include "keyboardg.h"
+#include "Keyboard/keyboard.h"
 #include "Keyboard/keyboardthread.h"
 #include <QFile>
 #include <QTextStream>
@@ -40,7 +40,6 @@ CPUspeed cspeed;
 GPUtemp gpu;
 Settings set;
 OHM ohm;
-keyboardg keys;
 
 //strings
 QString qcpuUse;
@@ -191,8 +190,9 @@ void MainWindow::updateProg() {
     if(set.Keyboard)
     {
         ui->mainList->addItem(keyboardThread.keys);
-        //keys.update();
-        //ui->keyboardView->setScene(keys.scene);
+
+        keyboardThread.draw();
+        ui->keyboardView->setScene(keyboardThread.scene);
     }
     if(fromfile)
     {
