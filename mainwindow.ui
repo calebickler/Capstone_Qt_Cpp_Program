@@ -89,10 +89,10 @@ color: rgb(112, 255, 102)</string>
    <widget class="QGraphicsView" name="keyboardView">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>320</x>
       <y>10</y>
-      <width>371</width>
-      <height>181</height>
+      <width>491</width>
+      <height>151</height>
      </rect>
     </property>
    </widget>

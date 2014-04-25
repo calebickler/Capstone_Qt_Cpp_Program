@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     displaysettings.cpp \
     GPU\GPUtemp.cpp \
     OHM.cpp \
-    keyboardg.cpp \
     Keyboard/keyboard.cpp \
     Keyboard/keyboardthread.cpp
 
@@ -38,7 +37,6 @@ HEADERS  += mainwindow.h \
     displaysettings.h \
     GPU\GPUtemp.h \
     OHM.h \
-    keyboardg.h \
     Keyboard/keyboard.h \
     Keyboard/keyboardthread.h
 
