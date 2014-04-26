@@ -61,6 +61,16 @@ private slots:
 
     void on_actionKeyboard_Log_triggered();
 
+    void on_KeyboardTime2_triggered();
+
+    void on_KeyboardTime4_triggered();
+
+    void on_KeyboardTime6_triggered();
+
+    void on_KeyboardTime8_triggered();
+
+    void on_KeyboardTime10_triggered();
+
 private:
     Ui::MainWindow *ui;
     displaysettings *display;

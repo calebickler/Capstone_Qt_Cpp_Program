@@ -13,6 +13,7 @@ public:
     QString keys;
     void draw();
     QGraphicsScene *scene;
+    void setTime(int);
 };
 
 #endif // KEYBOARDTHREAD_H

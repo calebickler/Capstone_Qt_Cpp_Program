@@ -89,11 +89,20 @@ color: rgb(112, 255, 102)</string>
    <widget class="QGraphicsView" name="keyboardView">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>10</y>
+      <x>310</x>
+      <y>70</y>
       <width>491</width>
       <height>151</height>
      </rect>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="dragMode">
+     <enum>QGraphicsView::NoDrag</enum>
     </property>
    </widget>
   </widget>
@@ -122,8 +131,8 @@ selection-background-color: rgb(212, 212, 212);</string>
     <widget class="QMenu" name="menuRefresh_Rate">
      <property name="geometry">
       <rect>
-       <x>475</x>
-       <y>153</y>
+       <x>430</x>
+       <y>161</y>
        <width>130</width>
        <height>156</height>
       </rect>
@@ -215,8 +224,25 @@ selection-background-color: rgb(212, 212, 212);</string>
     <addaction name="menuGPU_Temp"/>
     <addaction name="actionKeyboard_Log"/>
    </widget>
+   <widget class="QMenu" name="menuKeyboard">
+    <property name="title">
+     <string>Keyboard</string>
+    </property>
+    <widget class="QMenu" name="menuRefresh_Time">
+     <property name="title">
+      <string>Refresh Time</string>
+     </property>
+     <addaction name="KeyboardTime2"/>
+     <addaction name="KeyboardTime4"/>
+     <addaction name="KeyboardTime6"/>
+     <addaction name="KeyboardTime8"/>
+     <addaction name="KeyboardTime10"/>
+    </widget>
+    <addaction name="menuRefresh_Time"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAdd"/>
+   <addaction name="menuKeyboard"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -347,6 +373,31 @@ selection-background-color: rgb(212, 212, 212);</string>
   <action name="actionKeyboard_Log">
    <property name="text">
     <string>Keyboard Log</string>
+   </property>
+  </action>
+  <action name="KeyboardTime2">
+   <property name="text">
+    <string>2 Seconds</string>
+   </property>
+  </action>
+  <action name="KeyboardTime4">
+   <property name="text">
+    <string>4 Seconds</string>
+   </property>
+  </action>
+  <action name="KeyboardTime6">
+   <property name="text">
+    <string>6 Seconds</string>
+   </property>
+  </action>
+  <action name="KeyboardTime8">
+   <property name="text">
+    <string>8 Seconds</string>
+   </property>
+  </action>
+  <action name="KeyboardTime10">
+   <property name="text">
+    <string>10 Seconds</string>
    </property>
   </action>
  </widget>

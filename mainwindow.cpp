@@ -187,10 +187,9 @@ void MainWindow::updateProg() {
     std::string low;
     ohm.update();
     ui->mainList->clear();
+
     if(set.Keyboard)
     {
-        ui->mainList->addItem(keyboardThread.keys);
-
         keyboardThread.draw();
         ui->keyboardView->setScene(keyboardThread.scene);
     }
@@ -643,10 +642,39 @@ void MainWindow::on_actionKeyboard_Log_triggered()
 {
     if(set.Keyboard){
         set.Keyboard = false;
+        ui->menuKeyboard->setEnabled(false);
+        ui->keyboardView->setVisible(false);
     }
     else {
-    set.Keyboard = true;
+        set.Keyboard = true;
+        ui->menuKeyboard->setEnabled(true);
+        ui->keyboardView->setVisible(true);
     }
     set.updated = true;
     updateProg();
+}
+
+void MainWindow::on_KeyboardTime2_triggered()
+{
+    keyboardThread.setTime(2000);
+}
+
+void MainWindow::on_KeyboardTime4_triggered()
+{
+    keyboardThread.setTime(4000);
+}
+
+void MainWindow::on_KeyboardTime6_triggered()
+{
+    keyboardThread.setTime(6000);
+}
+
+void MainWindow::on_KeyboardTime8_triggered()
+{
+    keyboardThread.setTime(8000);
+}
+
+void MainWindow::on_KeyboardTime10_triggered()
+{
+    keyboardThread.setTime(10000);
 }

@@ -77,3 +77,7 @@ void KeyboardThread::draw() {
 
     scene->addItem(keypic);
 }
+
+void KeyboardThread::setTime(int time) {
+    refresh = time;
+}
