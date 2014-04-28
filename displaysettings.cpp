@@ -12,7 +12,7 @@ QString graph;
 QString style;
 QString tempstyle;
 QString button1, button2, button3;
-bool fromsettings;
+int fromsettings = 0;
 
 displaysettings::displaysettings(QWidget *parent) :
     QDialog(parent),
@@ -30,7 +30,7 @@ void displaysettings::on_pushButton_clicked()
 {
     QColor bgColor;
     std::string colorstyle;
-    char* temp = new char[100];
+    char* temp = new char[200];
     bgColor = QColorDialog::getColor(Qt::white, this);
     colorstyle = "background-color: rgb(";
     font = "color: rgb(";
@@ -63,7 +63,7 @@ void displaysettings::on_pushButton_2_clicked()
 {
     QColor bgColor;
     std::string colorstyle;
-    char* temp = new char[100];
+    char* temp = new char[200];
     bgColor = QColorDialog::getColor(Qt::white, this);
     colorstyle = "background-color: rgb(";
     back = "background-color: rgb(";
@@ -88,7 +88,7 @@ void displaysettings::on_pushButton_2_clicked()
 }
 void displaysettings::update()
 {
-    if(fromsettings)
+    if(fromsettings == 1)
     {
         ui->pushButton->setStyleSheet(button1);
         ui->pushButton_2->setStyleSheet(button2);

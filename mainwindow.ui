@@ -131,8 +131,8 @@ selection-background-color: rgb(212, 212, 212);</string>
     <widget class="QMenu" name="menuRefresh_Rate">
      <property name="geometry">
       <rect>
-       <x>430</x>
-       <y>161</y>
+       <x>-1251</x>
+       <y>153</y>
        <width>130</width>
        <height>156</height>
       </rect>
@@ -266,36 +266,57 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="action5_Low">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>5. Low</string>
    </property>
   </action>
   <action name="action4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>4. ----------</string>
    </property>
   </action>
   <action name="action3_Medium">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>3. Medium</string>
    </property>
   </action>
   <action name="action2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>2. ----------</string>
    </property>
   </action>
   <action name="action1_High">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>1. High</string>
    </property>
   </action>
   <action name="actionNumeric_Display">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Numeric Display</string>
    </property>
   </action>
   <action name="actionSession_High_Low">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Session High + Low</string>
    </property>
@@ -306,11 +327,17 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionNumeric_Display_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Numeric Display</string>
    </property>
   </action>
   <action name="actionSession_High_Low_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Session High + Low</string>
    </property>
@@ -321,11 +348,17 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionNumeric_Display_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Numeric Display</string>
    </property>
   </action>
   <action name="actionSession_High_Low_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Session High + Low</string>
    </property>
@@ -336,11 +369,17 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionNumeric_Display_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Numeric Display</string>
    </property>
   </action>
   <action name="actionSession_High_Low_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Session High + Low</string>
    </property>
@@ -351,11 +390,17 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionNumeric_Display_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Numeric Display</string>
    </property>
   </action>
   <action name="actionSession_High_Low_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Session High + Low</string>
    </property>
@@ -366,36 +411,57 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionNumeric_Display_6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Numeric Display</string>
    </property>
   </action>
   <action name="actionKeyboard_Log">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Keyboard Log</string>
    </property>
   </action>
   <action name="KeyboardTime2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>2 Seconds</string>
    </property>
   </action>
   <action name="KeyboardTime4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>4 Seconds</string>
    </property>
   </action>
   <action name="KeyboardTime6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>6 Seconds</string>
    </property>
   </action>
   <action name="KeyboardTime8">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>8 Seconds</string>
    </property>
   </action>
   <action name="KeyboardTime10">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>10 Seconds</string>
    </property>
