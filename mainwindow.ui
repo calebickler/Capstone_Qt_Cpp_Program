@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>819</width>
-    <height>666</height>
+    <width>887</width>
+    <height>836</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,13 +105,26 @@ color: rgb(112, 255, 102)</string>
      <enum>QGraphicsView::NoDrag</enum>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="testGraphView">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>280</y>
+      <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>819</width>
+     <width>887</width>
      <height>21</height>
     </rect>
    </property>

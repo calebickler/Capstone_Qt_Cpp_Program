@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     GPU\GPUtemp.cpp \
     OHM.cpp \
     Keyboard/keyboard.cpp \
-    Keyboard/keyboardthread.cpp
+    Keyboard/keyboardthread.cpp \
+    Graph/Graph.cpp
 
 HEADERS  += mainwindow.h \
     CPU\CPUusage.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
     GPU\GPUtemp.h \
     OHM.h \
     Keyboard/keyboard.h \
-    Keyboard/keyboardthread.h
+    Keyboard/keyboardthread.h \
+    Graph/Graph.h
 
 FORMS    += mainwindow.ui \
     displaysettings.ui

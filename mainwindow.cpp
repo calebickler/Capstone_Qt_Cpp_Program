@@ -6,6 +6,7 @@
 #include "CPU\CPUusagethread.h"
 #include "CPU\CPUspeed.h"
 #include "CPU\CPUtemp.h"
+#include "Graph\Graph.h"
 #include "Settings\settings.h"
 #include "displaysettings.h"
 #include "GPU\GPUtemp.h"
@@ -41,6 +42,7 @@ CPUspeed cspeed;
 GPUtemp gpu;
 Settings set;
 OHM ohm;
+Graph testGraph("Test Graph", 0, 100);
 
 //strings
 QString qcpuUse;
@@ -50,7 +52,7 @@ QString qcpuTemp;
 QString qgpuTemp;
 
 //metric storage array for graphing
-int memArr[MAX];
+double memArr[MAX];
 int cpuUseArr[MAX];
 double cpuSpeedArr[MAX];
 int cpuTempArr[MAX];
@@ -68,6 +70,7 @@ QProcess *OHMpro;
 boolean OHMoff = false;
 boolean OHMmessage = true;
 boolean fromfile = false;
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -206,6 +209,9 @@ void MainWindow::updateProg() {
     std::string low;
     ohm.update();
     ui->mainList->clear();
+
+    testGraph.draw(memArr,10, mu, Qt::green, Qt::red);
+    ui->testGraphView->setScene(testGraph.scene);
 
     if(set.Keyboard)
     {
