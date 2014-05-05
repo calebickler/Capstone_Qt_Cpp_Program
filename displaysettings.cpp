@@ -11,8 +11,11 @@ QString back;
 QString graph;
 QString style;
 QString tempstyle;
+QColor fontcolor;
+QColor kHighlight;
 QString button1, button2, button3;
 int fromsettings = 0;
+int fromkey = 0;
 
 displaysettings::displaysettings(QWidget *parent) :
     QDialog(parent),
@@ -32,6 +35,7 @@ void displaysettings::on_pushButton_clicked()
     std::string colorstyle;
     char* temp = new char[200];
     bgColor = QColorDialog::getColor(Qt::white, this);
+    fontcolor = bgColor;
     colorstyle = "background-color: rgb(";
     font = "color: rgb(";
     sprintf(temp, "%d", bgColor.red());
@@ -99,6 +103,11 @@ void displaysettings::update()
         back.append(";");
         graph = button3;
     }
+    if(fromkey == 1)
+    {
+        on_buttonBox_accepted();
+        fromkey = 0;
+    }
 }
 
 void displaysettings::on_buttonBox_accepted()
@@ -120,6 +129,10 @@ void displaysettings::on_buttonBox_accepted()
     out << button2;
     out << "\n";
     out << button3;
+    out << "\n";
+    out << fontcolor.name();
+    out << "\n";
+    out << kHighlight.name();
 
     mFile.flush();
     mFile.close();

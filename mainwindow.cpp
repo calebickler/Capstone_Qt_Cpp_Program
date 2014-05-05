@@ -19,6 +19,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsItem>
+#include <QColorDialog>
 #define MAX 10
 
 //local function prototypes
@@ -90,7 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(500);
     ui->KeyboardTime10->setChecked(1);//check keyboard refresh
-
     //load display settings//
     QString fileName = "displaysettings.ini";
     QFile mFile(fileName);
@@ -112,6 +112,10 @@ MainWindow::MainWindow(QWidget *parent) :
     display->button1 = in.readLine();
     display->button2 = in.readLine();
     display->button3 = in.readLine();
+    display->fontcolor.setNamedColor(in.readLine());
+    display->kHighlight.setNamedColor(in.readLine());
+    keyboardThread.setHighlight(display->kHighlight);
+    keyboardThread.hfromset = 1;
 
     mFile.close();
 
@@ -204,6 +208,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateProg() {
 
+    keyboardThread.setLineColor(display->fontcolor);
     //highlows
     std::string high;
     std::string low;
@@ -852,4 +857,13 @@ void MainWindow::on_KeyboardTime10_triggered()
     ui->KeyboardTime6->setChecked(0);
     ui->KeyboardTime8->setChecked(0);
     ui->KeyboardTime10->setChecked(1);
+}
+
+void MainWindow::on_actionSet_Highlight_Color_triggered()
+{
+    display->kHighlight = QColorDialog::getColor(Qt::white, this);
+    keyboardThread.setHighlight(display->kHighlight);
+    keyboardThread.hfromset = 1;
+    display->fromkey = 1;
+    display->update();
 }

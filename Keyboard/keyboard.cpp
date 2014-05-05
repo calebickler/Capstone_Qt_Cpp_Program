@@ -6,6 +6,8 @@
 #define NUMKEYS 104
 
 int i;
+int idle;
+bool full;
 
 Keyboard::keyData keyStorage[NUMKEYS] = {            //KEYS                                                          ///INDEX
                                        0xA0,7,99,46,116, 0xC0,8,32,23,48, 0x1B,7,7,22,23, //left shift, tilde, escape                     :: 0,1,2
@@ -52,11 +54,26 @@ Keyboard::Keyboard() {
 void Keyboard::getKeys(){
         for(int j = 0; j < NUMKEYS; j++)
         {
+            if(keys[i-1].id == (keys[i-2]).id)
+            {
+                i--;
+            }
             if(GetAsyncKeyState(keyStorage[j].id))
             {
                 keys[i] = keyStorage[j];
+                idle = 0;
                 i++;
+            }
+            else
+            {
+                idle++;
+            }
+            if(i > 20)
+            {
+                i = 0;
+                full = true;
             }
         }
         Sleep(100);
+        //qDebug() << keys[i].id;
 }

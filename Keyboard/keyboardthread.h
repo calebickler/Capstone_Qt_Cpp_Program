@@ -14,6 +14,9 @@ public:
     void draw();
     QGraphicsScene *scene;
     void setTime(int);
+    void setHighlight(QColor);
+    void setLineColor(QColor);
+    int hfromset;
 };
 
 #endif // KEYBOARDTHREAD_H

@@ -53,38 +53,6 @@ color: rgb(112, 255, 102)</string>
     <property name="lineWidth">
      <number>1</number>
     </property>
-    <item>
-     <property name="text">
-      <string>CPU use</string>
-     </property>
-     <property name="background">
-      <brush brushstyle="NoBrush">
-       <color alpha="255">
-        <red>109</red>
-        <green>203</green>
-        <blue>92</blue>
-       </color>
-      </brush>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>CPU Speed</string>
-     </property>
-     <property name="whatsThis">
-      <string>CPUspeed</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Memory use</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>CPU temp</string>
-     </property>
-    </item>
    </widget>
    <widget class="QGraphicsView" name="keyboardView">
     <property name="geometry">
@@ -251,7 +219,14 @@ selection-background-color: rgb(212, 212, 212);</string>
      <addaction name="KeyboardTime8"/>
      <addaction name="KeyboardTime10"/>
     </widget>
+    <widget class="QMenu" name="menuColors">
+     <property name="title">
+      <string>Colors</string>
+     </property>
+     <addaction name="actionSet_Highlight_Color"/>
+    </widget>
     <addaction name="menuRefresh_Time"/>
+    <addaction name="menuColors"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAdd"/>
@@ -477,6 +452,11 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
    <property name="text">
     <string>10 Seconds</string>
+   </property>
+  </action>
+  <action name="actionSet_Highlight_Color">
+   <property name="text">
+    <string>Set Highlight Color</string>
    </property>
   </action>
  </widget>

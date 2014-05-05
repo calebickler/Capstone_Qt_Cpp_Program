@@ -16,6 +16,8 @@ public:
     Keyboard();
     int i;
     void getKeys();
+    int idle;
+    bool full;
     keyData keys[MAX];
 };
 #endif // KEYBOARD_H

@@ -18,7 +18,9 @@ public:
     QString font, graph, back;
     QString style, tempstyle;
     QString button1, button2, button3;
-    int fromsettings;
+    QColor fontcolor;
+    QColor kHighlight;
+    int fromsettings, fromkey;
 
 
 private slots:
