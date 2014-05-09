@@ -3,18 +3,11 @@
 #include <QGraphicsTextItem>
 #include <QDebug>
 
-QString title;
-int min;
-int max;
-
-Graph::Graph(QString titleIn, int minIn, int maxIn) {
-    title = titleIn;
-    min = minIn;
-    max = maxIn;
+Graph::Graph() {
 }
 
-void Graph::draw(double* dataArray, int numDisplayed, int index, Qt::GlobalColor grid, Qt::GlobalColor line) {
-    scene = new QGraphicsScene(0, 0, 371, 271);
+void Graph::draw(QGraphicsScene* scene, double* dataArray, int numDisplayed, int index, QColor grid, QColor line, QString title, int min, int max) {
+    //QGraphicsScene* scene = new QGraphicsScene(0, 0, 371, 271);
     //labels
     QFont titleFont("Times", 10, QFont::Bold);
     QGraphicsTextItem * titleItem = new QGraphicsTextItem;
@@ -108,5 +101,4 @@ void Graph::draw(double* dataArray, int numDisplayed, int index, Qt::GlobalColor
         }
         xDraw = (xDraw + xAdd);
     }
-
 }

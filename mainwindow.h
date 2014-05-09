@@ -71,8 +71,6 @@ private slots:
 
     void on_KeyboardTime10_triggered();
 
-    void on_actionSet_Line_Color_triggered();
-
     void on_actionSet_Highlight_Color_triggered();
 
 private:

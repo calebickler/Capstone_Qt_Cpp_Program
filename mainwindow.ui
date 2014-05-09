@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>887</width>
-    <height>836</height>
+    <width>1227</width>
+    <height>875</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -73,11 +73,63 @@ color: rgb(112, 255, 102)</string>
      <enum>QGraphicsView::NoDrag</enum>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="testGraphView">
+   <widget class="QGraphicsView" name="MemoryGraphView">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>280</y>
+      <x>730</x>
+      <y>230</y>
+      <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="CPUSpeedView">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>560</y>
+      <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="CPUTempView">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>550</y>
+      <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="CPUUseView">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>550</y>
+      <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="GPUTempView">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>250</y>
       <width>381</width>
       <height>281</height>
      </rect>
@@ -92,7 +144,7 @@ color: rgb(112, 255, 102)</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>887</width>
+     <width>1227</width>
      <height>21</height>
     </rect>
    </property>

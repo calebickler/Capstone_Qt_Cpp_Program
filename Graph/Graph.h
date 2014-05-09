@@ -6,9 +6,8 @@
 class Graph
 {
 public:
-    Graph(QString title, int minIn, int maxIn);
-    void draw(double* dataArray, int numDisplayed, int index, Qt::GlobalColor grid, Qt::GlobalColor line);
-    QGraphicsScene *scene;
+    Graph();
+    void draw(QGraphicsScene* scene, double* dataArray, int numDisplayed, int index, QColor grid, QColor line, QString title, int min, int max);
 };
 
 #endif // GRAPH_H

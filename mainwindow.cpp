@@ -43,7 +43,7 @@ CPUspeed cspeed;
 GPUtemp gpu;
 Settings set;
 OHM ohm;
-Graph testGraph("Test Graph", 0, 100);
+Graph grapher;
 
 //strings
 QString qcpuUse;
@@ -52,12 +52,19 @@ QString qcpuSpeed;
 QString qcpuTemp;
 QString qgpuTemp;
 
+//graphs
+QGraphicsScene* sceneMem;
+QGraphicsScene* sceneCPUS;
+QGraphicsScene* sceneCPUT;
+QGraphicsScene* sceneCPUU;
+QGraphicsScene* sceneGPUU;
+
 //metric storage array for graphing
 double memArr[MAX];
-int cpuUseArr[MAX];
+double cpuUseArr[MAX];
 double cpuSpeedArr[MAX];
-int cpuTempArr[MAX];
-int gpuTempArr[MAX];
+double cpuTempArr[MAX];
+double gpuTempArr[MAX];
 //metric loop counters
 int mu;
 int cu;
@@ -78,7 +85,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
+    sceneMem = new QGraphicsScene(0, 0, 371, 271);
+    sceneCPUS = new QGraphicsScene(0, 0, 371, 271);
+    sceneCPUT = new QGraphicsScene(0, 0, 371, 271);
+    sceneCPUU = new QGraphicsScene(0, 0, 371, 271);
+    sceneGPUU = new QGraphicsScene(0, 0, 371, 271);
 
     //if metric is on start thread
     cpuUthread.start();
@@ -99,51 +110,53 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         qDebug() << "Could not read display settings file.\n";
         c = 0;
-        return;
     }
+    else {
     if(c == 1)
-    {
-        display->fromsettings = 1;
-    }
-    QTextStream in(&mFile);
-    QString mText = in.readLine();
-    ui->mainList->setStyleSheet(mText);
-    display->style = mText;
-    display->button1 = in.readLine();
-    display->button2 = in.readLine();
-    display->button3 = in.readLine();
-    display->fontcolor.setNamedColor(in.readLine());
-    display->kHighlight.setNamedColor(in.readLine());
-    keyboardThread.setHighlight(display->kHighlight);
-    keyboardThread.hfromset = 1;
+        {
+            display->fromsettings = 1;
+        }
+        QTextStream in(&mFile);
+        QString mText = in.readLine();
+        ui->mainList->setStyleSheet(mText);
+        display->style = mText;
+        display->button1 = in.readLine();
+        display->button2 = in.readLine();
+        display->button3 = in.readLine();
+        display->fontcolor.setNamedColor(in.readLine());
+        display->kHighlight.setNamedColor(in.readLine());
+        keyboardThread.setHighlight(display->kHighlight);
+        keyboardThread.hfromset = 1;
 
-    mFile.close();
+        mFile.close();
+    }
 
     //load on/off settings
     fileName = "settings.ini";
     QFile mFile2(fileName);
     if(!mFile2.open(QFile::ReadOnly | QFile::Text))
     {
-        qDebug() << "Could not read file.\n";
-        return;
+        qDebug() << "Could not read settings file.\n";
     }
+    else {
 
-    QTextStream in2(&mFile2);
-    set.cpuSpeed = in2.readLine().toULong();
-    set.cpuUse = in2.readLine().toULong();
-    set.cpuTemp = in2.readLine().toULong();
-    set.memUse = in2.readLine().toULong();
-    set.gpuTemp = in2.readLine().toULong();
-    set.HLcpuUse = in2.readLine().toULong();
-    set.HLmemUsage = in2.readLine().toULong();
-    set.HLcpuSpeed = in2.readLine().toULong();
-    set.HLcpuTemp  = in2.readLine().toULong();
-    set.HLgpuTemp = in2.readLine().toULong();
-    set.refresh = in2.readLine().toULong();
-    set.Keyboard = in2.readLine().toULong();
-    fromfile = true;
+        QTextStream in2(&mFile2);
+        set.cpuSpeed = in2.readLine().toULong();
+        set.cpuUse = in2.readLine().toULong();
+        set.cpuTemp = in2.readLine().toULong();
+        set.memUse = in2.readLine().toULong();
+        set.gpuTemp = in2.readLine().toULong();
+        set.HLcpuUse = in2.readLine().toULong();
+        set.HLmemUsage = in2.readLine().toULong();
+        set.HLcpuSpeed = in2.readLine().toULong();
+        set.HLcpuTemp  = in2.readLine().toULong();
+        set.HLgpuTemp = in2.readLine().toULong();
+        set.refresh = in2.readLine().toULong();
+        set.Keyboard = in2.readLine().toULong();
+        fromfile = true;
 
-    mFile.close();
+        mFile.close();
+    }
 
     //open hardware monitor
     //XML editing
@@ -152,41 +165,42 @@ MainWindow::MainWindow(QWidget *parent) :
     QFile OHMconfig("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
     if(!OHMconfig.open(QFile::ReadWrite | QFile::Text))
     {
-       qDebug() << "Could not read file.\n";
-       return;
+       qDebug() << "Could not read OHMconfig file.\n";
     }
-    QTextStream OHMts(&OHMconfig);
-    //create temp file
-    QFile OHMnewConfig("debug/OpenHardwareMonitor/temp.txt");
-    if(!OHMnewConfig.open(QFile::ReadWrite | QFile::Text))
-    {
-       qDebug() << "Could not read file.\n";
-       return;
-    }
-    QTextStream OHMconNew(&OHMnewConfig);
-    //put approprite lines into temp
-    OHMconNew << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-    OHMconNew << "<configuration>\n";
-    OHMconNew << "  <appSettings>\n";
-    OHMconNew << "    <add key=\"minTrayMenuItem\" value=\"true\" />\n";
-    OHMconNew << "    <add key=\"startMinMenuItem\" value=\"true\" />\n";
-    OHMconNew.flush();
-    QString line;
-    int count = 0;
-    while(!OHMts.atEnd()) {
-        line = OHMts.readLine() + "\n";
-        if ((count > 2) && (line != "    <add key=\"minTrayMenuItem\" value=\"false\" />\n") && (line != "    <add key=\"startMinMenuItem\" value=\"false\" />\n") &&
-                (line != "    <add key=\"minTrayMenuItem\" value=\"true\" />\n") && (line != "    <add key=\"startMinMenuItem\" value=\"true\" />\n")) {
-            OHMconNew << line;
-            OHMconNew.flush();
+    else {
+        QTextStream OHMts(&OHMconfig);
+        //create temp file
+        QFile OHMnewConfig("debug/OpenHardwareMonitor/temp.txt");
+        if(!OHMnewConfig.open(QFile::ReadWrite | QFile::Text))
+        {
+           qDebug() << "Could not read temp file.\n";
         }
-        count++;
+        else {
+            QTextStream OHMconNew(&OHMnewConfig);
+            //put approprite lines into temp
+            OHMconNew << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+            OHMconNew << "<configuration>\n";
+            OHMconNew << "  <appSettings>\n";
+            OHMconNew << "    <add key=\"minTrayMenuItem\" value=\"true\" />\n";
+            OHMconNew << "    <add key=\"startMinMenuItem\" value=\"true\" />\n";
+            OHMconNew.flush();
+            QString line;
+            int count = 0;
+            while(!OHMts.atEnd()) {
+                line = OHMts.readLine() + "\n";
+                if ((count > 2) && (line != "    <add key=\"minTrayMenuItem\" value=\"false\" />\n") && (line != "    <add key=\"startMinMenuItem\" value=\"false\" />\n") &&
+                        (line != "    <add key=\"minTrayMenuItem\" value=\"true\" />\n") && (line != "    <add key=\"startMinMenuItem\" value=\"true\" />\n")) {
+                    OHMconNew << line;
+                    OHMconNew.flush();
+                }
+                count++;
+            }
+            OHMconfig.remove();
+            OHMnewConfig.rename("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
+            OHMnewConfig.close();
+            OHMconfig.close();
+        }
     }
-    OHMconfig.remove();
-    OHMnewConfig.rename("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
-    OHMnewConfig.close();
-    OHMconfig.close();
-
 
     OHMpro = new QProcess();
     OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
@@ -215,8 +229,30 @@ void MainWindow::updateProg() {
     ohm.update();
     ui->mainList->clear();
 
-    testGraph.draw(memArr,10, mu, Qt::green, Qt::red);
-    ui->testGraphView->setScene(testGraph.scene);
+    sceneMem->clear();
+    sceneCPUS->clear();
+    sceneCPUT->clear();
+    sceneCPUU->clear();
+    sceneGPUU->clear();
+
+    grapher.draw(sceneMem, memArr,10, mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
+    ui->MemoryGraphView->setScene(sceneMem);
+
+    grapher.draw(sceneCPUS, cpuSpeedArr,10, cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
+    ui->CPUSpeedView->setScene(sceneCPUS);
+
+
+    grapher.draw(sceneCPUT, cpuTempArr,10, ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
+    ui->CPUTempView->setScene(sceneCPUT);
+
+
+    grapher.draw(sceneCPUU, cpuUseArr,10, cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
+    ui->CPUUseView->setScene(sceneCPUU);
+
+
+    grapher.draw(sceneGPUU, gpuTempArr,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
+    ui->GPUTempView->setScene(sceneGPUU);
+
 
     if(set.Keyboard)
     {
