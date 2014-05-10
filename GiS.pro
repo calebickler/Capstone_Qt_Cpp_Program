@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     OHM.cpp \
     Keyboard/keyboard.cpp \
     Keyboard/keyboardthread.cpp \
-    Graph/Graph.cpp
+    Graph/Graph.cpp \
+    Macro/Macro.cpp
 
 HEADERS  += mainwindow.h \
     CPU\CPUusage.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     OHM.h \
     Keyboard/keyboard.h \
     Keyboard/keyboardthread.h \
-    Graph/Graph.h
+    Graph/Graph.h \
+    Macro/Macro.h
 
 FORMS    += mainwindow.ui \
     displaysettings.ui

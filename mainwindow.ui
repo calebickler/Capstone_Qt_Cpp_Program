@@ -57,8 +57,8 @@ color: rgb(112, 255, 102)</string>
    <widget class="QGraphicsView" name="keyboardView">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>70</y>
+      <x>240</x>
+      <y>20</y>
       <width>491</width>
       <height>151</height>
      </rect>
@@ -76,8 +76,8 @@ color: rgb(112, 255, 102)</string>
    <widget class="QGraphicsView" name="MemoryGraphView">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>230</y>
+      <x>590</x>
+      <y>270</y>
       <width>381</width>
       <height>281</height>
      </rect>
@@ -131,6 +131,19 @@ color: rgb(112, 255, 102)</string>
       <x>270</x>
       <y>250</y>
       <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="MacroView">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>10</y>
+      <width>241</width>
       <height>281</height>
      </rect>
     </property>

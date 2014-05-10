@@ -13,6 +13,7 @@
 #include "OHM.h"
 #include "Keyboard/keyboard.h"
 #include "Keyboard/keyboardthread.h"
+#include "Macro/Macro.h"
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
@@ -44,6 +45,7 @@ GPUtemp gpu;
 Settings set;
 OHM ohm;
 Graph grapher;
+Macro macro;
 
 //strings
 QString qcpuUse;
@@ -58,6 +60,7 @@ QGraphicsScene* sceneCPUS;
 QGraphicsScene* sceneCPUT;
 QGraphicsScene* sceneCPUU;
 QGraphicsScene* sceneGPUU;
+QGraphicsScene* sceneMacro;
 
 //metric storage array for graphing
 double memArr[MAX];
@@ -90,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
     sceneCPUT = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUU = new QGraphicsScene(0, 0, 371, 271);
     sceneGPUU = new QGraphicsScene(0, 0, 371, 271);
+    sceneMacro = new QGraphicsScene(0, 0, 241, 281);
 
     //if metric is on start thread
     cpuUthread.start();
@@ -252,6 +256,14 @@ void MainWindow::updateProg() {
 
     grapher.draw(sceneGPUU, gpuTempArr,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
     ui->GPUTempView->setScene(sceneGPUU);
+
+
+
+
+    sceneMacro->clear();
+    macro.draw(sceneMacro, Qt::red, display->fontcolor);
+    ui->MacroView->setScene(sceneMacro);
+
 
 
     if(set.Keyboard)
