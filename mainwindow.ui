@@ -6,9 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1227</width>
-    <height>875</height>
+    <width>1367</width>
+    <height>1022</height>
    </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -32,8 +35,8 @@ color: rgb(112, 255, 102)</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>8000</width>
-      <height>8000</height>
+      <width>250</width>
+      <height>3000</height>
      </rect>
     </property>
     <property name="font">
@@ -44,6 +47,9 @@ color: rgb(112, 255, 102)</string>
     <property name="toolTip">
      <string/>
     </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(70, 255, 60)</string>
     </property>
@@ -52,6 +58,18 @@ color: rgb(112, 255, 102)</string>
     </property>
     <property name="lineWidth">
      <number>1</number>
+    </property>
+    <property name="showDropIndicator" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="dragEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="dragDropMode">
+     <enum>QAbstractItemView::NoDragDrop</enum>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::NoSelection</enum>
     </property>
    </widget>
    <widget class="QGraphicsView" name="keyboardView">
@@ -134,15 +152,21 @@ color: rgb(112, 255, 102)</string>
       <height>281</height>
      </rect>
     </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="dragMode">
+     <enum>QGraphicsView::NoDrag</enum>
     </property>
    </widget>
    <widget class="QGraphicsView" name="MacroView">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>10</y>
+      <x>940</x>
+      <y>30</y>
       <width>241</width>
       <height>281</height>
      </rect>
@@ -157,7 +181,7 @@ color: rgb(112, 255, 102)</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1227</width>
+     <width>1367</width>
      <height>21</height>
     </rect>
    </property>

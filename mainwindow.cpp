@@ -21,6 +21,8 @@
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <QColorDialog>
+#include <QMouseEvent>
+#include <QCursor>
 #define MAX 10
 
 //local function prototypes
@@ -54,6 +56,8 @@ QString qcpuSpeed;
 QString qcpuTemp;
 QString qgpuTemp;
 
+QList<int> textDisplay;
+
 //graphs
 QGraphicsScene* sceneMem;
 QGraphicsScene* sceneCPUS;
@@ -82,12 +86,19 @@ boolean OHMoff = false;
 boolean OHMmessage = true;
 boolean fromfile = false;
 
+//moving Graphics
+int isSelected;
+int selected;
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    isSelected = 0;
+    selected = 0;
+
     sceneMem = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUS = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUT = new QGraphicsScene(0, 0, 371, 271);
@@ -225,13 +236,9 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateProg() {
+    updateList();
 
     keyboardThread.setLineColor(display->fontcolor);
-    //highlows
-    std::string high;
-    std::string low;
-    ohm.update();
-    ui->mainList->clear();
 
     sceneMem->clear();
     sceneCPUS->clear();
@@ -296,233 +303,7 @@ void MainWindow::updateProg() {
 
         fromfile = false;
     }
-    if (set.collecting) {
 
-        if (set.memUse || set.HLmemUsage) {
-            mem.getUsage();
-        }
-        //memory
-        if(set.memUse) {
-            memArr[mu] = mem.memoryUsage;
-            if(mu == 9)
-            {
-                mu = 0;
-            }
-            else
-            {
-                mu++;
-            }
-            ui->actionNumeric_Display->setChecked(1);
-            memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
-            qmemUse = QString::fromStdString(memUsage);
-            ui->mainList->addItem(qmemUse);
-        }
-        //memory HighLow
-        if(set.HLmemUsage) {
-            ui->actionSession_High_Low->setChecked(1);
-            high = "Memory Usage High: " + intToString(mem.HmemUsage) + "%";
-            low = "Memory Usage Low: " + intToString(mem.LmemUsage) + "%";
-            ui->mainList->addItem(QString::fromStdString(high));
-            ui->mainList->addItem(QString::fromStdString(low));
-        }
-
-
-        if (set.cpuUse || set.HLcpuUse) {
-            ui->mainList->addItem(" ");
-        }
-        //cpu use
-        if(set.cpuUse) {
-            cpuUseArr[cu] = cpuUthread.cpuUsage;
-            if(cu == 9)
-            {
-                cu = 0;
-            }
-            else
-            {
-                cu++;
-            }
-            ui->actionNumeric_Display_2->setChecked(1);
-            cpuUse = "CPU Usage: " + intToString(cpuUthread.cpuUsage) + "%";
-            qcpuUse = QString::fromStdString(cpuUse);
-            ui->mainList->addItem(qcpuUse);
-        }
-        //cpu use HighLow
-        if(set.HLcpuUse) {
-            ui->actionSession_High_Low_2->setChecked(1);
-            high = "CPU Usage High: " + intToString(cpuUthread.HcpuUse) + "%";
-            low = "CPU Usage Low: " + intToString(cpuUthread.LcpuUse) + "%";
-            ui->mainList->addItem(QString::fromStdString(high));
-            ui->mainList->addItem(QString::fromStdString(low));
-        }
-
-
-
-        if (set.cpuSpeed || set.HLcpuSpeed) {
-            ui->mainList->addItem(" ");
-            cspeed.getSpeed(ohm.CPUspeed);
-            if (cspeed.cpuSpeed < 1) {
-                if (ohm.loaded) {
-                    OHMoff = true;
-                    ohm.loaded = false;
-                    OHMmessage = true;
-                }
-            }
-            else {
-                OHMoff = false;
-            }
-        }
-
-        //cpuspeed
-        if(set.cpuSpeed) {
-            cpuSpeedArr[cs] = cspeed.cpuSpeed;
-            if(cs == 9)
-            {
-                cs = 0;
-            }
-            else
-            {
-                cs++;
-            }
-            ui->actionNumeric_Display_3->setChecked(1);
-            cpuSpeed = "CPU Speed: " + doubleToString(cspeed.cpuSpeed) + "Ghz";
-            qcpuSpeed = QString::fromStdString(cpuSpeed);
-            ui->mainList->addItem(qcpuSpeed);
-        }
-        //cpuspeed HighLow
-        if(set.HLcpuSpeed) {
-            ui->actionSession_High_Low_3->setChecked(1);
-            high = "CPU Speed High: " + doubleToString(cspeed.HcpuSpeed) + "Ghz";
-            low = "CPU Speed Low: " + doubleToString(cspeed.LcpuSpeed) + "Ghz";
-            ui->mainList->addItem(QString::fromStdString(high));
-            ui->mainList->addItem(QString::fromStdString(low));
-        }
-
-
-
-        if (set.cpuTemp || set.HLcpuTemp || set.cpuCoreTemp) {
-            ctemp.getTemp(ohm.CPUtemp);
-            /*if (ctemp.cpuHighTemp < 1) {
-                if (ohm.loaded) {
-                    OHMoff = true;
-                    OHMmessage = true;
-                    ohm.loaded = false;
-                }
-            }
-            else {
-                OHMoff = false;
-            }*/
-        }
-        if (set.cpuTemp || set.HLcpuTemp) {
-            ui->mainList->addItem(" ");
-        }
-        //cputemp
-        if(set.cpuTemp) {
-            cpuTempArr[ct] = ctemp.cpuHighTemp;
-            if(ct == 9)
-            {
-                ct = 0;
-            }
-            else
-            {
-                ct++;
-            }
-            ui->actionNumeric_Display_4->setChecked(1);
-            cpuTemp = "CPU Temp: " + intToString(ctemp.cpuHighTemp) + "°C";
-            qcpuTemp = QString::fromStdString(cpuTemp);
-            ui->mainList->addItem(qcpuTemp);
-        }
-        //cputemp HighLow
-        if(set.HLcpuTemp) {
-            ui->actionSession_High_Low_4->setChecked(1);
-            high = "CPU Temp High: " + intToString(ctemp.HcpuTemp) + "°C";
-            low = "CPU Temp Low: " + intToString(ctemp.LcpuTemp) + "°C";
-            ui->mainList->addItem(QString::fromStdString(high));
-            ui->mainList->addItem(QString::fromStdString(low));
-        }
-
-        if (set.cpuCoreTemp) {
-            ui->mainList->addItem(" ");
-        }
-        //cpu core temps
-        if(set.cpuCoreTemp) {
-            ui->actionNumeric_Display_6->setChecked(1);
-            if (ctemp.cpu0Temp != 0) {
-                cpuTemp = "CPU Core 1 Temp: " + intToString(ctemp.cpu0Temp) + "°C";
-                qcpuTemp = QString::fromStdString(cpuTemp);
-                ui->mainList->addItem(qcpuTemp);
-            }
-            if (ctemp.cpu1Temp != 0) {
-                cpuTemp = "CPU Core 2 Temp: " + intToString(ctemp.cpu1Temp) + "°C";
-                qcpuTemp = QString::fromStdString(cpuTemp);
-                ui->mainList->addItem(qcpuTemp);
-            }
-            if (ctemp.cpu2Temp != 0) {
-                cpuTemp = "CPU Core 3 Temp: " + intToString(ctemp.cpu2Temp) + "°C";
-                qcpuTemp = QString::fromStdString(cpuTemp);
-                ui->mainList->addItem(qcpuTemp);
-            }
-            if (ctemp.cpu3Temp != 0) {
-                cpuTemp = "CPU Core 4 Temp: " + intToString(ctemp.cpu3Temp) + "°C";
-                qcpuTemp = QString::fromStdString(cpuTemp);
-                ui->mainList->addItem(qcpuTemp);
-            }
-            if (ctemp.cpu4Temp != 0) {
-                cpuTemp = "CPU Core 5 Temp: " + intToString(ctemp.cpu4Temp) + "°C";
-                qcpuTemp = QString::fromStdString(cpuTemp);
-                ui->mainList->addItem(qcpuTemp);
-            }
-            if (ctemp.cpu5Temp != 0) {
-                cpuTemp = "CPU Core 6 Temp: " + intToString(ctemp.cpu5Temp) + "°C";
-                qcpuTemp = QString::fromStdString(cpuTemp);
-                ui->mainList->addItem(qcpuTemp);
-            }
-        }
-
-
-
-
-        if (set.gpuTemp || set.HLgpuTemp) {
-            ui->mainList->addItem(" ");
-            gpu.getTemp();
-        }
-
-        //gputemp
-        if(set.gpuTemp) {
-            gpuTempArr[gt] = gpu.gputemps[0];
-            if(gt == 9)
-            {
-                gt = 0;
-            }
-            else
-            {
-                gt++;
-            }
-            ui->actionNumeric_Display_5->setChecked(1);
-            if(gpu.gputemps[0] == 9999)
-            {
-                gpuTemp = "GPU not found. Please turn off.";
-                qgpuTemp = QString::fromStdString(gpuTemp);
-                ui->mainList->addItem(qgpuTemp);
-            }
-            else{
-                int j;
-                for(int i = 0; i < gpu.numgpu; i++)
-                {
-                    j = i + 1;
-                    gpuTemp = "GPU " + intToString(j) + " Temp: " + intToString(gpu.gputemps[i]) + "°C";
-                    qgpuTemp = QString::fromStdString(gpuTemp);
-                    ui->mainList->addItem(qgpuTemp);
-                }
-            }
-        }
-        //gputemp HighLow
-        if(set.HLgpuTemp) {
-            ui->actionSession_High_Low_5->setChecked(1);
-            high = "GPU Temp High: " + intToString(gpu.HgpuTemp) + "°C";
-            low = "GPU Temp Low: " + intToString(gpu.LgpuTemp) + "°C";
-            ui->mainList->addItem(QString::fromStdString(high));
-            ui->mainList->addItem(QString::fromStdString(low));
-        }
 
         if(set.updated) {
             set.updated = false;
@@ -581,8 +362,219 @@ void MainWindow::updateProg() {
         }
 
         ui->mainList->setStyleSheet(display->style);
+}
+
+void MainWindow::updateList() {
+    std::string high;
+    std::string low;
+    ohm.update();
+    ui->mainList->clear();
+    if (set.collecting) {
+
+        if (set.memUse || set.HLmemUsage) {
+            mem.getUsage();
+        }
+        if (set.gpuTemp || set.HLgpuTemp) {
+            gpu.getTemp();
+        }
+        if (set.cpuSpeed || set.HLcpuSpeed) {
+            cspeed.getSpeed(ohm.CPUspeed);
+            if (cspeed.cpuSpeed < 1) {
+                if (ohm.loaded) {
+                    OHMoff = true;
+                    ohm.loaded = false;
+                    OHMmessage = true;
+                }
+            }
+            else {
+                OHMoff = false;
+            }
+        }
+        if (set.cpuTemp || set.HLcpuTemp || set.cpuCoreTemp) {
+            ctemp.getTemp(ohm.CPUtemp);
+        }
+        if (set.cpuTemp || set.HLcpuTemp) {
+
+        }
+    }
+    /*
+     * 0 memory
+     * 1 mem highlow
+     * 2 cpu use
+     * 3 cpu use highlow
+     * 4 cpu speed
+     * 5 cpu speed highlow
+     * 6 cpu temp
+     * 7 cpu temp highlow
+     * 8 cpu core temps
+     * 9 gpu temp
+     * 10 gpu temp highlow
+     */
+
+    for (int i = 0; i < textDisplay.length(); i++)
+    {
+        switch (textDisplay.at(i)) {
+            case 0:
+                memArr[mu] = mem.memoryUsage;
+                if(mu == 9)
+                {
+                    mu = 0;
+                }
+                else
+                {
+                    mu++;
+                }
+                ui->actionNumeric_Display->setChecked(1);
+                memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
+                qmemUse = QString::fromStdString(memUsage);
+                ui->mainList->addItem(qmemUse);
+                break;
+            case 1:
+                ui->actionSession_High_Low->setChecked(1);
+                high = "Memory Usage High: " + intToString(mem.HmemUsage) + "%";
+                low = "Memory Usage Low: " + intToString(mem.LmemUsage) + "%";
+                ui->mainList->addItem(QString::fromStdString(high));
+                ui->mainList->addItem(QString::fromStdString(low));
+                break;
+            case 2:
+            cpuUseArr[cu] = cpuUthread.cpuUsage;
+            if(cu == 9)
+            {
+                cu = 0;
+            }
+            else
+            {
+                cu++;
+            }
+                ui->actionNumeric_Display_2->setChecked(1);
+                cpuUse = "CPU Usage: " + intToString(cpuUthread.cpuUsage) + "%";
+                qcpuUse = QString::fromStdString(cpuUse);
+                ui->mainList->addItem(qcpuUse);
+                break;
+            case 3:
+                ui->actionSession_High_Low_2->setChecked(1);
+                high = "CPU Usage High: " + intToString(cpuUthread.HcpuUse) + "%";
+                low = "CPU Usage Low: " + intToString(cpuUthread.LcpuUse) + "%";
+                ui->mainList->addItem(QString::fromStdString(high));
+                ui->mainList->addItem(QString::fromStdString(low));
+                break;
+            case 4:
+            cpuSpeedArr[cs] = cspeed.cpuSpeed;
+            if(cs == 9)
+            {
+                cs = 0;
+            }
+            else
+            {
+                cs++;
+            }
+                ui->actionNumeric_Display_3->setChecked(1);
+                cpuSpeed = "CPU Speed: " + doubleToString(cspeed.cpuSpeed) + "Ghz";
+                qcpuSpeed = QString::fromStdString(cpuSpeed);
+                ui->mainList->addItem(qcpuSpeed);
+                break;
+            case 5:
+                ui->actionSession_High_Low_3->setChecked(1);
+                high = "CPU Speed High: " + doubleToString(cspeed.HcpuSpeed) + "Ghz";
+                low = "CPU Speed Low: " + doubleToString(cspeed.LcpuSpeed) + "Ghz";
+                ui->mainList->addItem(QString::fromStdString(high));
+                ui->mainList->addItem(QString::fromStdString(low));
+                break;
+            case 6:
+                cpuTempArr[ct] = ctemp.cpuHighTemp;
+                if(ct == 9)
+                {
+                    ct = 0;
+                }
+                else
+                {
+                    ct++;
+                }
+                ui->actionNumeric_Display_4->setChecked(1);
+                cpuTemp = "CPU Temp: " + intToString(ctemp.cpuHighTemp) + "°C";
+                qcpuTemp = QString::fromStdString(cpuTemp);
+                ui->mainList->addItem(qcpuTemp);
+                break;
+            case 7:
+                ui->actionSession_High_Low_4->setChecked(1);
+                high = "CPU Temp High: " + intToString(ctemp.HcpuTemp) + "°C";
+                low = "CPU Temp Low: " + intToString(ctemp.LcpuTemp) + "°C";
+                ui->mainList->addItem(QString::fromStdString(high));
+                ui->mainList->addItem(QString::fromStdString(low));
+                break;
+            case 8:
+                ui->actionNumeric_Display_6->setChecked(1);
+                if (ctemp.cpu0Temp != 0) {
+                    cpuTemp = "CPU Core 1 Temp: " + intToString(ctemp.cpu0Temp) + "°C";
+                    qcpuTemp = QString::fromStdString(cpuTemp);
+                    ui->mainList->addItem(qcpuTemp);
+                }
+                if (ctemp.cpu1Temp != 0) {
+                    cpuTemp = "CPU Core 2 Temp: " + intToString(ctemp.cpu1Temp) + "°C";
+                    qcpuTemp = QString::fromStdString(cpuTemp);
+                    ui->mainList->addItem(qcpuTemp);
+                }
+                if (ctemp.cpu2Temp != 0) {
+                    cpuTemp = "CPU Core 3 Temp: " + intToString(ctemp.cpu2Temp) + "°C";
+                    qcpuTemp = QString::fromStdString(cpuTemp);
+                    ui->mainList->addItem(qcpuTemp);
+                }
+                if (ctemp.cpu3Temp != 0) {
+                    cpuTemp = "CPU Core 4 Temp: " + intToString(ctemp.cpu3Temp) + "°C";
+                    qcpuTemp = QString::fromStdString(cpuTemp);
+                    ui->mainList->addItem(qcpuTemp);
+                }
+                if (ctemp.cpu4Temp != 0) {
+                    cpuTemp = "CPU Core 5 Temp: " + intToString(ctemp.cpu4Temp) + "°C";
+                    qcpuTemp = QString::fromStdString(cpuTemp);
+                    ui->mainList->addItem(qcpuTemp);
+                }
+                if (ctemp.cpu5Temp != 0) {
+                    cpuTemp = "CPU Core 6 Temp: " + intToString(ctemp.cpu5Temp) + "°C";
+                    qcpuTemp = QString::fromStdString(cpuTemp);
+                    ui->mainList->addItem(qcpuTemp);
+                }
+                break;
+            case 9:
+                gpuTempArr[gt] = gpu.gputemps[0];
+                if(gt == 9)
+                {
+                    gt = 0;
+                }
+                else
+                {
+                    gt++;
+                }
+                ui->actionNumeric_Display_5->setChecked(1);
+                if(gpu.gputemps[0] == 9999)
+                {
+                    gpuTemp = "GPU not found. Please turn off.";
+                    qgpuTemp = QString::fromStdString(gpuTemp);
+                    ui->mainList->addItem(qgpuTemp);
+                }
+                else{
+                    int j;
+                    for(int i = 0; i < gpu.numgpu; i++)
+                    {
+                        j = i + 1;
+                        gpuTemp = "GPU " + intToString(j) + " Temp: " + intToString(gpu.gputemps[i]) + "°C";
+                        qgpuTemp = QString::fromStdString(gpuTemp);
+                        ui->mainList->addItem(qgpuTemp);
+                    }
+                }
+                break;
+            case 10:
+                ui->actionSession_High_Low_5->setChecked(1);
+                high = "GPU Temp High: " + intToString(gpu.HgpuTemp) + "°C";
+                low = "GPU Temp Low: " + intToString(gpu.LgpuTemp) + "°C";
+                ui->mainList->addItem(QString::fromStdString(high));
+                ui->mainList->addItem(QString::fromStdString(low));
+                break;
+        }
     }
 }
+
+
 
 std::string intToString(int i)
 {
@@ -597,13 +589,98 @@ std::string doubleToString(double i){
     return temp;
 }
 
+/*memorygraph 0
+ * cpuTemp 1
+ * cpuUse 2
+ * cpuSpeed 3
+ * gpuGraph 4
+ * keyboard 5
+ * macro 6
+ * autoclicker 7 */
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    if (isSelected == 0) {
+        if (event->button() == Qt::LeftButton && ui->MemoryGraphView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 0;
+        }
+        if (event->button() == Qt::LeftButton && ui->CPUTempView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 1;
+        }
+        if (event->button() == Qt::LeftButton && ui->CPUUseView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 2;
+        }
+        if (event->button() == Qt::LeftButton && ui->CPUSpeedView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 3;
+        }
+        if (event->button() == Qt::LeftButton && ui->GPUTempView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 4;
+        }
+        if (event->button() == Qt::LeftButton && ui->keyboardView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 5;
+        }
+        if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos())) {
+            this->setCursor(Qt::PointingHandCursor);
+            isSelected = 1;
+            selected = 6;
+        }
+    }
+    else {
+        switch(selected) {
+            case 0:
+                ui->MemoryGraphView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                isSelected = 0;
+                break;
+            case 1:
+                ui->CPUTempView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                isSelected = 0;
+                break;
+            case 2:
+                ui->CPUUseView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                isSelected = 0;
+                break;
+            case 3:
+                ui->CPUSpeedView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                isSelected = 0;
+                break;
+            case 4:
+                ui->GPUTempView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                isSelected = 0;
+                break;
+            case 5:
+                ui->keyboardView->setGeometry(event->x() - 30,event->y() - 30,486, 146);
+                isSelected = 0;
+                break;
+            case 6:
+                ui->MacroView->setGeometry(event->x() - 30,event->y() - 30,241, 281);
+                isSelected = 0;
+                break;
+        }
+    this->setCursor(Qt::ArrowCursor);
+    }
+}
+
+
 void MainWindow::on_actionNumeric_Display_triggered()
 {
     if (set.memUse) {
         set.memUse = false;
+        textDisplay.removeAt(textDisplay.indexOf(0));
         ui->actionNumeric_Display->setChecked(0);
     }
     else {
+        textDisplay.append(0);
         set.memUse = true;
         ui->actionNumeric_Display->setChecked(1);
     }
@@ -615,9 +692,11 @@ void MainWindow::on_actionNumeric_Display_2_triggered()
 {
     if (set.cpuUse) {
         set.cpuUse = false;
+        textDisplay.removeAt(textDisplay.indexOf(2));
         ui->actionNumeric_Display_2->setChecked(0);
     }
     else {
+        textDisplay.append(2);
         set.cpuUse = true;
         ui->actionNumeric_Display_2->setChecked(1);
     }
@@ -629,10 +708,12 @@ void MainWindow::on_actionNumeric_Display_3_triggered()
 {
     if (set.cpuSpeed) {
         set.cpuSpeed = false;
+        textDisplay.removeAt(textDisplay.indexOf(4));
         ui->actionNumeric_Display_3->setChecked(0);
     }
     else {
         set.cpuSpeed = true;
+        textDisplay.append(4);
         ui->actionNumeric_Display_3->setChecked(1);
     }
     set.updated = true;
@@ -643,10 +724,12 @@ void MainWindow::on_actionNumeric_Display_4_triggered()
 {
     if (set.cpuTemp) {
         set.cpuTemp = false;
+        textDisplay.removeAt(textDisplay.indexOf(6));
         ui->actionNumeric_Display_4->setChecked(0);
     }
     else {
         set.cpuTemp = true;
+        textDisplay.append(6);
         ui->actionNumeric_Display_4->setChecked(1);
     }
     set.updated = true;
@@ -657,10 +740,12 @@ void MainWindow::on_actionNumeric_Display_6_triggered()  //show indivudal cores
 {
     if (set.cpuCoreTemp) {
         set.cpuCoreTemp = false;
+        textDisplay.removeAt(textDisplay.indexOf(8));
         ui->actionNumeric_Display_6->setChecked(0);
     }
     else {
         set.cpuCoreTemp = true;
+        textDisplay.append(8);
         ui->actionNumeric_Display_6->setChecked(1);
     }
     set.updated = true;
@@ -671,10 +756,12 @@ void MainWindow::on_actionNumeric_Display_5_triggered()
 {
     if (set.gpuTemp) {
         set.gpuTemp = false;
+        textDisplay.removeAt(textDisplay.indexOf(9));
         ui->actionNumeric_Display_5->setChecked(0);
     }
     else {
         set.gpuTemp = true;
+        textDisplay.append(9);
         ui->actionNumeric_Display_5->setChecked(1);
     }
     set.updated = true;
@@ -769,10 +856,12 @@ void MainWindow::on_actionSession_High_Low_triggered()
 {
     if (set.HLmemUsage) {
         set.HLmemUsage = false;
+        textDisplay.removeAt(textDisplay.indexOf(1));
         ui->actionSession_High_Low->setChecked(0);
     }
     else {
         set.HLmemUsage = true;
+        textDisplay.append(1);
         ui->actionSession_High_Low->setChecked(1);
     }
     set.updated = true;
@@ -783,10 +872,12 @@ void MainWindow::on_actionSession_High_Low_2_triggered()
 {
     if (set.HLcpuUse) {
         set.HLcpuUse = false;
+        textDisplay.removeAt(textDisplay.indexOf(3));
         ui->actionSession_High_Low_2->setChecked(0);
     }
     else {
         set.HLcpuUse = true;
+        textDisplay.append(3);
         ui->actionSession_High_Low_2->setChecked(1);
     }
     set.updated = true;
@@ -797,10 +888,12 @@ void MainWindow::on_actionSession_High_Low_3_triggered()
 {
     if (set.HLcpuSpeed) {
         set.HLcpuSpeed = false;
+        textDisplay.removeAt(textDisplay.indexOf(5));
         ui->actionSession_High_Low_3->setChecked(0);
     }
     else {
         set.HLcpuSpeed = true;
+        textDisplay.append(5);
         ui->actionSession_High_Low_3->setChecked(1);
     }
     set.updated = true;
@@ -811,10 +904,12 @@ void MainWindow::on_actionSession_High_Low_4_triggered()
 {
     if (set.HLcpuTemp) {
         set.HLcpuTemp = false;
+        textDisplay.removeAt(textDisplay.indexOf(7));
         ui->actionSession_High_Low_4->setChecked(0);
     }
     else {
         set.HLcpuTemp = true;
+        textDisplay.append(7);
         ui->actionSession_High_Low_4->setChecked(1);
     }
     set.updated = true;
@@ -825,10 +920,12 @@ void MainWindow::on_actionSession_High_Low_5_triggered()
 {
     if (set.HLgpuTemp) {
         set.HLgpuTemp = false;
+        textDisplay.removeAt(textDisplay.indexOf(10));
         ui->actionSession_High_Low_5->setChecked(0);
     }
     else {
         set.HLgpuTemp = true;
+        textDisplay.append(10);
         ui->actionSession_High_Low_5->setChecked(1);
     }
     set.updated = true;

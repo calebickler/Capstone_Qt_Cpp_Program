@@ -21,6 +21,10 @@ public:
 private slots:
     void updateProg();
 
+    void updateList();
+
+    void mousePressEvent(QMouseEvent *event);
+
     void on_actionNumeric_Display_triggered();
 
     void on_actionNumeric_Display_2_triggered();
