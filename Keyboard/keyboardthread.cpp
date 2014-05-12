@@ -18,13 +18,14 @@ KeyboardThread::KeyboardThread()
 {
     refresh = 10000;//arbitrary 10 seconds for testing
     hfromset = 0;
+    lines.setRgb(70,255,69);
 
 }
 
 void KeyboardThread::run()
 {
     clock_t start;
-    double duration = 0;
+    //double duration = 0;
     while(true)
     {
         keys = "";
@@ -40,9 +41,10 @@ void KeyboardThread::run()
 
         start = clock();
         timerK = true;
+        Sleep(1000);
         while(timerK)
         {
-           duration = (clock() - start);
+           //duration = (clock() - start);
            k.getKeys();
            //switchString(k.keys[j].id);
            if(k.idle > 5000)

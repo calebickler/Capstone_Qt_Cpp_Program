@@ -9,6 +9,7 @@ public:
     int numgpu;
     int HgpuTemp;
     int LgpuTemp;
+    double array[20];
     void getTemp(void);
     int gpuType;
 };

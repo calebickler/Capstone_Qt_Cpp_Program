@@ -48,6 +48,14 @@ Keyboard::keyData keyStorage[NUMKEYS] = {            //KEYS                     
 
 Keyboard::Keyboard() {
     i = 0;
+
+    for (int i = 0; i < 100; i++) {
+        keys[i].id = 0;
+        keys[i].x = 0;
+        keys[i].y = 0;
+        keys[i].width = 0;
+        keys[i].height = 0;
+    }
 }
 
 
@@ -58,7 +66,7 @@ void Keyboard::getKeys(){
             {
                 i--;
             }
-            if(GetAsyncKeyState(keyStorage[j].id))
+            if(GetAsyncKeyState(keyStorage[j].id) & 0x8000)
             {
                 keys[i] = keyStorage[j];
                 idle = 0;

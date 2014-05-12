@@ -6,6 +6,7 @@ class CPUspeed
 public:
     CPUspeed();
     double cpuSpeed;
+    double array[20];
     double HcpuSpeed;
     double LcpuSpeed;
     void getSpeed(int speed);

@@ -12,6 +12,7 @@ public:
     long memoryUsage;
     int HmemUsage;
     int LmemUsage;
+    double array[20];
     void getUsage(void);
 };
 #endif // MEMORY_H

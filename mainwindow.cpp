@@ -23,7 +23,6 @@
 #include <QColorDialog>
 #include <QMouseEvent>
 #include <QCursor>
-#define MAX 10
 
 //local function prototypes
 std::string intToString(int i);
@@ -66,12 +65,6 @@ QGraphicsScene* sceneCPUU;
 QGraphicsScene* sceneGPUU;
 QGraphicsScene* sceneMacro;
 
-//metric storage array for graphing
-double memArr[MAX];
-double cpuUseArr[MAX];
-double cpuSpeedArr[MAX];
-double cpuTempArr[MAX];
-double gpuTempArr[MAX];
 //metric loop counters
 int mu;
 int cu;
@@ -246,22 +239,22 @@ void MainWindow::updateProg() {
     sceneCPUU->clear();
     sceneGPUU->clear();
 
-    grapher.draw(sceneMem, memArr,10, mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
+    grapher.draw(sceneMem, mem.array,10, mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
     ui->MemoryGraphView->setScene(sceneMem);
 
-    grapher.draw(sceneCPUS, cpuSpeedArr,10, cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
+    grapher.draw(sceneCPUS, cspeed.array,10, cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
     ui->CPUSpeedView->setScene(sceneCPUS);
 
 
-    grapher.draw(sceneCPUT, cpuTempArr,10, ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
+    grapher.draw(sceneCPUT, ctemp.array,10, ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
     ui->CPUTempView->setScene(sceneCPUT);
 
 
-    grapher.draw(sceneCPUU, cpuUseArr,10, cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
+    grapher.draw(sceneCPUU, cspeed.array,10, cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
     ui->CPUUseView->setScene(sceneCPUU);
 
 
-    grapher.draw(sceneGPUU, gpuTempArr,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
+    grapher.draw(sceneGPUU, gpu.array,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
     ui->GPUTempView->setScene(sceneGPUU);
 
 
@@ -415,7 +408,7 @@ void MainWindow::updateList() {
     {
         switch (textDisplay.at(i)) {
             case 0:
-                memArr[mu] = mem.memoryUsage;
+                mem.array[mu] = mem.memoryUsage;
                 if(mu == 9)
                 {
                     mu = 0;
@@ -437,7 +430,7 @@ void MainWindow::updateList() {
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 2:
-            cpuUseArr[cu] = cpuUthread.cpuUsage;
+            cpuUthread.array[cu] = cpuUthread.cpuUsage;
             if(cu == 9)
             {
                 cu = 0;
@@ -459,7 +452,7 @@ void MainWindow::updateList() {
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 4:
-            cpuSpeedArr[cs] = cspeed.cpuSpeed;
+            cspeed.array[cs] = cspeed.cpuSpeed;
             if(cs == 9)
             {
                 cs = 0;
@@ -481,7 +474,7 @@ void MainWindow::updateList() {
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 6:
-                cpuTempArr[ct] = ctemp.cpuHighTemp;
+                ctemp.array[ct] = ctemp.cpuHighTemp;
                 if(ct == 9)
                 {
                     ct = 0;
@@ -536,7 +529,7 @@ void MainWindow::updateList() {
                 }
                 break;
             case 9:
-                gpuTempArr[gt] = gpu.gputemps[0];
+                gpu.array[gt] = gpu.gputemps[0];
                 if(gt == 9)
                 {
                     gt = 0;

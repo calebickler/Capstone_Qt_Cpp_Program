@@ -9,6 +9,7 @@ public:
     int cpuUsage;
     int HcpuUse;
     int LcpuUse;
+    double array[20];
     void run();
 };
 

@@ -22,6 +22,7 @@ displaysettings::displaysettings(QWidget *parent) :
     ui(new Ui::displaysettings)
 {
     ui->setupUi(this);
+    fontcolor.setRgb(70,255,69);
 }
 
 displaysettings::~displaysettings()
