@@ -87,6 +87,15 @@ color: rgb(112, 255, 102)</string>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
     <property name="dragMode">
      <enum>QGraphicsView::NoDrag</enum>
     </property>
@@ -103,6 +112,15 @@ color: rgb(112, 255, 102)</string>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
    </widget>
    <widget class="QGraphicsView" name="CPUSpeedView">
     <property name="geometry">
@@ -115,6 +133,15 @@ color: rgb(112, 255, 102)</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
     </property>
    </widget>
    <widget class="QGraphicsView" name="CPUTempView">
@@ -129,6 +156,15 @@ color: rgb(112, 255, 102)</string>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
    </widget>
    <widget class="QGraphicsView" name="CPUUseView">
     <property name="geometry">
@@ -141,6 +177,15 @@ color: rgb(112, 255, 102)</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
     </property>
    </widget>
    <widget class="QGraphicsView" name="GPUTempView">
@@ -158,6 +203,15 @@ color: rgb(112, 255, 102)</string>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
     <property name="dragMode">
      <enum>QGraphicsView::NoDrag</enum>
     </property>
@@ -173,6 +227,15 @@ color: rgb(112, 255, 102)</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
     </property>
    </widget>
   </widget>
@@ -292,7 +355,11 @@ selection-background-color: rgb(212, 212, 212);</string>
     <addaction name="menuCPU_Core_Temps"/>
     <addaction name="separator"/>
     <addaction name="menuGPU_Temp"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_Blank_Line"/>
+    <addaction name="separator"/>
     <addaction name="actionKeyboard_Log"/>
+    <addaction name="actionMacro_Recorder"/>
    </widget>
    <widget class="QMenu" name="menuKeyboard">
     <property name="title">
@@ -399,6 +466,9 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionGraph_Display">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Graph Display</string>
    </property>
@@ -420,6 +490,9 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionGraph_Display_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Graph Display</string>
    </property>
@@ -441,6 +514,9 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionGraph_Display_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Graph Display</string>
    </property>
@@ -462,6 +538,9 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionGraph_Display_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Graph Display</string>
    </property>
@@ -483,6 +562,9 @@ selection-background-color: rgb(212, 212, 212);</string>
    </property>
   </action>
   <action name="actionGraph_Display_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Graph Display</string>
    </property>
@@ -546,6 +628,19 @@ selection-background-color: rgb(212, 212, 212);</string>
   <action name="actionSet_Highlight_Color">
    <property name="text">
     <string>Set Highlight Color</string>
+   </property>
+  </action>
+  <action name="actionMacro_Recorder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Macro Recorder</string>
+   </property>
+  </action>
+  <action name="actionAdd_Blank_Line">
+   <property name="text">
+    <string>Add Blank Line</string>
    </property>
   </action>
  </widget>

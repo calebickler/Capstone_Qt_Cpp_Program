@@ -15,6 +15,12 @@ Settings::Settings()
     HLcpuTemp = 1;
     HLgpuTemp = 1;
     Keyboard = 1;
+    memGraph = 1;
+    CPUUseGraph = 1;
+    CPUSpeedGraph = 1;
+    CPUTempGraph = 1;
+    GPUTempGraph = 1;
     updated = 0;
     refresh = 500;
+    macro = 1;
 }

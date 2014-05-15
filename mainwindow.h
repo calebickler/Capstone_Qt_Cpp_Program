@@ -77,6 +77,20 @@ private slots:
 
     void on_actionSet_Highlight_Color_triggered();
 
+    void on_actionGraph_Display_triggered();
+
+    void on_actionGraph_Display_2_triggered();
+
+    void on_actionGraph_Display_3_triggered();
+
+    void on_actionGraph_Display_4_triggered();
+
+    void on_actionGraph_Display_5_triggered();
+
+    void on_actionAdd_Blank_Line_triggered();
+
+    void on_actionMacro_Recorder_triggered();
+
 private:
     Ui::MainWindow *ui;
     displaysettings *display;

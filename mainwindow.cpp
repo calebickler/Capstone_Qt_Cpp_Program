@@ -85,10 +85,7 @@ int selected;
 
 
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     isSelected = 0;
     selected = 0;
 
@@ -109,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(500);
-    ui->KeyboardTime10->setChecked(1);//check keyboard refresh
+
     //load display settings//
     QString fileName = "displaysettings.ini";
     QFile mFile(fileName);
@@ -165,6 +162,35 @@ MainWindow::MainWindow(QWidget *parent) :
 
         mFile.close();
     }
+
+
+    //IF NO SETTINGS FOUND FOR QLIST
+    textDisplay.append(0);
+    textDisplay.append(1);
+    textDisplay.append(11);
+    textDisplay.append(2);
+    textDisplay.append(3);
+    textDisplay.append(11);
+    textDisplay.append(4);
+    textDisplay.append(5);
+    textDisplay.append(11);
+    textDisplay.append(6);
+    textDisplay.append(7);
+    textDisplay.append(8);
+    textDisplay.append(11);
+    textDisplay.append(9);
+    textDisplay.append(10);
+
+    //IF NO SETTINGS FOUND FOR GRAPHS
+        ui->actionGraph_Display->setChecked(1);
+        ui->actionGraph_Display_2->setChecked(1);
+        ui->actionGraph_Display_3->setChecked(1);
+        ui->actionGraph_Display_4->setChecked(1);
+        ui->actionGraph_Display_5->setChecked(1);
+
+    ui->actionMacro_Recorder->setChecked(1);
+    ui->KeyboardTime10->setChecked(1);
+
 
     //open hardware monitor
     //XML editing
@@ -233,29 +259,40 @@ void MainWindow::updateProg() {
 
     keyboardThread.setLineColor(display->fontcolor);
 
-    sceneMem->clear();
-    sceneCPUS->clear();
-    sceneCPUT->clear();
-    sceneCPUU->clear();
-    sceneGPUU->clear();
-
-    grapher.draw(sceneMem, mem.array,10, mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
-    ui->MemoryGraphView->setScene(sceneMem);
-
-    grapher.draw(sceneCPUS, cspeed.array,10, cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
-    ui->CPUSpeedView->setScene(sceneCPUS);
 
 
-    grapher.draw(sceneCPUT, ctemp.array,10, ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
-    ui->CPUTempView->setScene(sceneCPUT);
 
 
-    grapher.draw(sceneCPUU, cspeed.array,10, cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
-    ui->CPUUseView->setScene(sceneCPUU);
 
+    if (set.memGraph) {
+        sceneMem->clear();
+        grapher.draw(sceneMem, mem.array,10, mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
+        ui->MemoryGraphView->setScene(sceneMem);
+    }
 
-    grapher.draw(sceneGPUU, gpu.array,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
-    ui->GPUTempView->setScene(sceneGPUU);
+    if (set.CPUSpeedGraph) {
+        sceneCPUS->clear();
+        grapher.draw(sceneCPUS, cspeed.array,10, cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
+        ui->CPUSpeedView->setScene(sceneCPUS);
+    }
+
+    if (set.CPUTempGraph) {
+        sceneCPUT->clear();
+        grapher.draw(sceneCPUT, ctemp.array,10, ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
+        ui->CPUTempView->setScene(sceneCPUT);
+    }
+
+    if (set.CPUUseGraph) {
+        sceneCPUU->clear();
+        grapher.draw(sceneCPUU, cspeed.array,10, cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
+        ui->CPUUseView->setScene(sceneCPUU);
+    }
+
+    if (set.GPUTempGraph) {
+        sceneGPUU->clear();
+        grapher.draw(sceneGPUU, gpu.array,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
+        ui->GPUTempView->setScene(sceneGPUU);
+    }
 
 
 
@@ -364,30 +401,19 @@ void MainWindow::updateList() {
     ui->mainList->clear();
     if (set.collecting) {
 
-        if (set.memUse || set.HLmemUsage) {
+        if (set.memUse || set.HLmemUsage || set.memGraph) {
             mem.getUsage();
         }
-        if (set.gpuTemp || set.HLgpuTemp) {
-            gpu.getTemp();
-        }
-        if (set.cpuSpeed || set.HLcpuSpeed) {
+
+        if (set.cpuSpeed || set.HLcpuSpeed || set.CPUSpeedGraph) {
             cspeed.getSpeed(ohm.CPUspeed);
-            if (cspeed.cpuSpeed < 1) {
-                if (ohm.loaded) {
-                    OHMoff = true;
-                    ohm.loaded = false;
-                    OHMmessage = true;
-                }
-            }
-            else {
-                OHMoff = false;
-            }
         }
-        if (set.cpuTemp || set.HLcpuTemp || set.cpuCoreTemp) {
+        if (set.cpuTemp || set.HLcpuTemp || set.cpuCoreTemp || set.CPUTempGraph) {
             ctemp.getTemp(ohm.CPUtemp);
         }
-        if (set.cpuTemp || set.HLcpuTemp) {
 
+        if (set.gpuTemp || set.HLgpuTemp) {
+            gpu.getTemp();
         }
     }
     /*
@@ -402,6 +428,7 @@ void MainWindow::updateList() {
      * 8 cpu core temps
      * 9 gpu temp
      * 10 gpu temp highlow
+     * 11 Blank line
      */
 
     for (int i = 0; i < textDisplay.length(); i++)
@@ -563,6 +590,9 @@ void MainWindow::updateList() {
                 ui->mainList->addItem(QString::fromStdString(high));
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
+            case 11:
+                ui->mainList->addItem("");
+                break;
         }
     }
 }
@@ -593,40 +623,47 @@ std::string doubleToString(double i){
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (isSelected == 0) {
-        if (event->button() == Qt::LeftButton && ui->MemoryGraphView->geometry().contains(event->pos())) {
+        if (event->button() == Qt::LeftButton && ui->MemoryGraphView->geometry().contains(event->pos()) && ui->MemoryGraphView->isVisible()) {
             this->setCursor(Qt::PointingHandCursor);
             isSelected = 1;
             selected = 0;
         }
-        if (event->button() == Qt::LeftButton && ui->CPUTempView->geometry().contains(event->pos())) {
+        if (event->button() == Qt::LeftButton && ui->CPUTempView->geometry().contains(event->pos()) && ui->CPUTempView->isVisible()) {
             this->setCursor(Qt::PointingHandCursor);
             isSelected = 1;
             selected = 1;
         }
-        if (event->button() == Qt::LeftButton && ui->CPUUseView->geometry().contains(event->pos())) {
+        if (event->button() == Qt::LeftButton && ui->CPUUseView->geometry().contains(event->pos()) & ui->CPUUseView->isVisible()) {
             this->setCursor(Qt::PointingHandCursor);
             isSelected = 1;
             selected = 2;
         }
-        if (event->button() == Qt::LeftButton && ui->CPUSpeedView->geometry().contains(event->pos())) {
+        if (event->button() == Qt::LeftButton && ui->CPUSpeedView->geometry().contains(event->pos()) && ui->CPUSpeedView->isVisible()) {
             this->setCursor(Qt::PointingHandCursor);
             isSelected = 1;
             selected = 3;
         }
-        if (event->button() == Qt::LeftButton && ui->GPUTempView->geometry().contains(event->pos())) {
+        if (event->button() == Qt::LeftButton && ui->GPUTempView->geometry().contains(event->pos()) && ui->GPUTempView->isVisible()) {
             this->setCursor(Qt::PointingHandCursor);
             isSelected = 1;
             selected = 4;
         }
-        if (event->button() == Qt::LeftButton && ui->keyboardView->geometry().contains(event->pos())) {
+        if (event->button() == Qt::LeftButton && ui->keyboardView->geometry().contains(event->pos()) && ui->keyboardView->isVisible()) {
             this->setCursor(Qt::PointingHandCursor);
             isSelected = 1;
             selected = 5;
         }
-        if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos())) {
-            this->setCursor(Qt::PointingHandCursor);
-            isSelected = 1;
-            selected = 6;
+        if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos()) && ui->MacroView->isVisible()) {
+            if ((event->x() > (ui->MacroView->x() + 100 ) && event->x() < (ui->MacroView->x() + 140)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 140))) {
+                qDebug() << "Record";
+            }
+            else {
+                this->setCursor(Qt::PointingHandCursor);
+                isSelected = 1;
+                selected = 6;
+            }
+
+
         }
     }
     else {
@@ -1004,4 +1041,106 @@ void MainWindow::on_actionSet_Highlight_Color_triggered()
     keyboardThread.hfromset = 1;
     display->fromkey = 1;
     display->update();
+}
+
+void MainWindow::on_actionGraph_Display_triggered()
+{
+    if (set.memGraph) {
+        set.memGraph = false;
+        ui->MemoryGraphView->setVisible(false);
+        ui->actionGraph_Display->setChecked(0);
+    }
+    else {
+        set.memGraph = true;
+        ui->MemoryGraphView->setVisible(true);
+        ui->actionGraph_Display->setChecked(1);
+    }
+    set.updated = true;
+    updateProg();
+}
+
+void MainWindow::on_actionGraph_Display_2_triggered()
+{
+    // CPU use
+    if (set.CPUUseGraph) {
+        set.CPUUseGraph = false;
+        ui->CPUUseView->setVisible(false);
+        ui->actionGraph_Display_2->setChecked(0);
+    }
+    else {
+        set.CPUUseGraph = true;
+        ui->CPUUseView->setVisible(true);
+        ui->actionGraph_Display_2->setChecked(1);
+    }
+    set.updated = true;
+    updateProg();
+}
+
+void MainWindow::on_actionGraph_Display_3_triggered()
+{
+    if (set.CPUSpeedGraph) {
+        set.CPUSpeedGraph = false;
+        ui->CPUSpeedView->setVisible(false);
+        ui->actionGraph_Display_3->setChecked(0);
+    }
+    else {
+        set.CPUSpeedGraph = true;
+        ui->CPUSpeedView->setVisible(true);
+        ui->actionGraph_Display_3->setChecked(1);
+    }
+    set.updated = true;
+    updateProg();
+}
+
+void MainWindow::on_actionGraph_Display_4_triggered()
+{
+    if (set.CPUTempGraph) {
+        set.CPUTempGraph = false;
+        ui->CPUTempView->setVisible(false);
+        ui->actionGraph_Display_4->setChecked(0);
+    }
+    else {
+        set.CPUTempGraph = true;
+        ui->CPUTempView->setVisible(true);
+        ui->actionGraph_Display_4->setChecked(1);
+    }
+    set.updated = true;
+    updateProg();
+}
+
+void MainWindow::on_actionGraph_Display_5_triggered()
+{
+    if (set.GPUTempGraph) {
+        set.GPUTempGraph = false;
+        ui->GPUTempView->setVisible(false);
+        ui->actionGraph_Display_5->setChecked(0);
+    }
+    else {
+        set.GPUTempGraph = true;
+        ui->GPUTempView->setVisible(true);
+        ui->actionGraph_Display_5->setChecked(1);
+    }
+    set.updated = true;
+    updateProg();
+}
+
+void MainWindow::on_actionAdd_Blank_Line_triggered()
+{
+    textDisplay.append(11);
+}
+
+void MainWindow::on_actionMacro_Recorder_triggered()
+{
+    if(set.macro){
+        ui->actionMacro_Recorder->setChecked(0);
+        set.macro = false;
+        ui->MacroView->setVisible(false);
+    }
+    else {
+        ui->actionMacro_Recorder->setChecked(1);
+        set.macro = true;
+        ui->MacroView->setVisible(true);
+    }
+    set.updated = true;
+    updateProg();
 }
