@@ -655,15 +655,23 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         }
         if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos()) && ui->MacroView->isVisible()) {
             if ((event->x() > (ui->MacroView->x() + 100 ) && event->x() < (ui->MacroView->x() + 140)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 140))) {
-                qDebug() << "Record";
+                macro.recHit();
             }
             else {
-                this->setCursor(Qt::PointingHandCursor);
-                isSelected = 1;
-                selected = 6;
+                if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 220)) && (event->y() > (ui->MacroView->y() + 150 ) && event->y() < (ui->MacroView->y() + 210))) {
+                    macro.onHit();
+                }
+                else {
+                    if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 200)) && (event->y() > (ui->MacroView->y() + 220 ) && event->y() < (ui->MacroView->y() + 260))) {
+                        macro.offHit();
+                    }
+                    else {
+                        this->setCursor(Qt::PointingHandCursor);
+                        isSelected = 1;
+                        selected = 6;
+                    }
+                }
             }
-
-
         }
     }
     else {

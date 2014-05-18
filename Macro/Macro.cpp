@@ -9,8 +9,8 @@ Macro::Macro() {
 
 void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
     //size 241, 281
-    QBrush Ybrush(Qt::blue);
-    scene->setBackgroundBrush(Ybrush);
+    //QBrush Ybrush(Qt::blue);
+    //scene->setBackgroundBrush(Ybrush);
 
     QFont titleFont("Times", 10, QFont::Bold);
     QGraphicsTextItem * titleItem = new QGraphicsTextItem;
@@ -43,7 +43,7 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 
     QFont onFont("Times", 8, QFont::Bold);
     QGraphicsTextItem * onItem = new QGraphicsTextItem;
-    onItem->setPos(160,150);
+    onItem->setPos(168,160);
     onItem->setDefaultTextColor(Qt::black);
     onItem->setFont(onFont);
     onItem->setPlainText("On");
@@ -51,7 +51,7 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 
     QFont offFont("Times", 8, QFont::Bold);
     QGraphicsTextItem * offItem = new QGraphicsTextItem;
-    offItem->setPos(160,200);
+    offItem->setPos(168,210);
     offItem->setDefaultTextColor(Qt::black);
     offItem->setFont(offFont);
     offItem->setPlainText("Off");
@@ -64,10 +64,22 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 
     QFont recFont("Times", 8, QFont::Bold);
     QGraphicsTextItem * recItem = new QGraphicsTextItem;
-    recItem->setPos(100,100);
+    recItem->setPos(96,100);
     recItem->setDefaultTextColor(Qt::black);
     recItem->setFont(recFont);
-    recItem->setPlainText("Record");
+    recItem->setPlainText("Rec");
     scene->addItem(recItem);
 
+}
+
+void Macro::recHit() {
+    qDebug() << "Record";
+}
+
+void Macro::onHit() {
+    qDebug() << "On";
+}
+
+void Macro::offHit() {
+    qDebug() << "Off";
 }
