@@ -88,15 +88,15 @@ int selected;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     isSelected = 0;
     selected = 0;
-
+    installEventFilter(this);
     sceneMem = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUS = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUT = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUU = new QGraphicsScene(0, 0, 371, 271);
     sceneGPUU = new QGraphicsScene(0, 0, 371, 271);
     sceneMacro = new QGraphicsScene(0, 0, 241, 281);
-
     //if metric is on start thread
+    macro.start();
     cpuUthread.start();
     keyboardThread.start();
     //end threads
@@ -1151,4 +1151,20 @@ void MainWindow::on_actionMacro_Recorder_triggered()
     }
     set.updated = true;
     updateProg();
+}
+
+bool MainWindow::eventFilter(QObject *t, QEvent *e)
+{
+    if(e->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *k = static_cast<QKeyEvent*>(e);
+        if(set.macro)
+        {
+            if(macro.recording)
+            {
+                macro.keyPressed(k);
+            }
+        }
+    }
+    return QObject::eventFilter(t, e);
 }

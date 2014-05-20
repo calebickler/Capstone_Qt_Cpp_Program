@@ -22,7 +22,7 @@ private slots:
     void updateProg();
 
     void updateList();
-
+    bool eventFilter(QObject *t, QEvent *e);
     void mousePressEvent(QMouseEvent *event);
 
     void on_actionNumeric_Display_triggered();
