@@ -206,9 +206,18 @@ color: rgb(112, 255, 102)</string>
     <property name="backgroundBrush">
      <brush brushstyle="NoBrush">
       <color alpha="0">
-       <red>0</red>
-       <green>0</green>
-       <blue>0</blue>
+       <red>89</red>
+       <green>165</green>
+       <blue>101</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="foregroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>84</red>
+       <green>125</green>
+       <blue>72</blue>
       </color>
      </brush>
     </property>
@@ -357,6 +366,7 @@ selection-background-color: rgb(212, 212, 212);</string>
     <addaction name="menuGPU_Temp"/>
     <addaction name="separator"/>
     <addaction name="actionAdd_Blank_Line"/>
+    <addaction name="actionRemove_Blank_Line"/>
     <addaction name="separator"/>
     <addaction name="actionKeyboard_Log"/>
     <addaction name="actionMacro_Recorder"/>
@@ -641,6 +651,11 @@ selection-background-color: rgb(212, 212, 212);</string>
   <action name="actionAdd_Blank_Line">
    <property name="text">
     <string>Add Blank Line</string>
+   </property>
+  </action>
+  <action name="actionRemove_Blank_Line">
+   <property name="text">
+    <string>Remove Blank Line</string>
    </property>
   </action>
  </widget>

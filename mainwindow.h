@@ -23,6 +23,7 @@ private slots:
 
     void updateList();
     bool eventFilter(QObject *t, QEvent *e);
+    void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
 
     void on_actionNumeric_Display_triggered();
@@ -90,6 +91,8 @@ private slots:
     void on_actionAdd_Blank_Line_triggered();
 
     void on_actionMacro_Recorder_triggered();
+
+    void on_actionRemove_Blank_Line_triggered();
 
 private:
     Ui::MainWindow *ui;

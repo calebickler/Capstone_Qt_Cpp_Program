@@ -9,6 +9,8 @@ Graph::Graph() {
 void Graph::draw(QGraphicsScene* scene, double* dataArray, int numDisplayed, int index, QColor grid, QColor line, QString title, int min, int max) {
     //QGraphicsScene* scene = new QGraphicsScene(0, 0, 371, 271);
     //labels
+    scene->setBackgroundBrush(QBrush(Qt::transparent));
+
     QFont titleFont("Times", 10, QFont::Bold);
     QGraphicsTextItem * titleItem = new QGraphicsTextItem;
     titleItem->setPos(150,10);

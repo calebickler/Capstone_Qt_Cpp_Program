@@ -48,6 +48,7 @@ Macro::keys keyStuff[104] = {            //KEYS                                 
 Macro::Macro() {
     recording = 0;
     counter = 0;
+    activationKey = 1;//default
     loc = "debug/macros/";
 }
 
@@ -77,7 +78,9 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
     actItem->setPos(30,60);
     actItem->setDefaultTextColor(font);
     actItem->setFont(actFont);
-    actItem->setPlainText("Activation Key");
+    QChar key = static_cast<char>(keyStuff[activationKey].ascii);
+    QString sKey = key;
+    actItem->setPlainText("Activation Key: (" + sKey + ")");
     scene->addItem(actItem);
 
     QBrush onB(font);
@@ -101,10 +104,28 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
     offItem->setPlainText("Off");
     scene->addItem(offItem);
 
+    if (recording) {
+        QBrush recB(Qt::red);
+        QPen recP(Qt::red);
+        scene->addRect(100,100,20,20, recP, recB);
+    }
+    else {
+        QBrush recB(font);
+        QPen recP(font);
+        scene->addRect(100,100,20,20, recP, recB);
+    }
 
-    QBrush recB(Qt::red);
-    QPen recP(Qt::red);
-    scene->addRect(100,100,20,20, recP, recB);
+    QBrush loadB(font);
+    QPen loadP(font);
+    scene->addRect(168,98,25,25, loadP, loadB);
+
+    QFont loadFont("Times", 7, QFont::Bold);
+    QGraphicsTextItem * loadItem = new QGraphicsTextItem;
+    loadItem->setPos(165,101);
+    loadItem->setDefaultTextColor(Qt::black);
+    loadItem->setFont(loadFont);
+    loadItem->setPlainText("Load");
+    scene->addItem(loadItem);
 
     QFont recFont("Times", 8, QFont::Bold);
     QGraphicsTextItem * recItem = new QGraphicsTextItem;
@@ -248,4 +269,8 @@ void Macro::pressKey(int vkey)
         }
     }
 
+}
+
+void Macro::loadHit() {
+    qDebug() << "Load";
 }

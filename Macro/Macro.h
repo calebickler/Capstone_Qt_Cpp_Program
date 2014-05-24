@@ -17,10 +17,12 @@ public:
     void recHit();
     void onHit();
     void offHit();
+    void loadHit();
     void run();
     void record();
     int recording;
     int counter;
+    int activationKey;
     void pressKey(int);
     QString loc;
     void readFile();

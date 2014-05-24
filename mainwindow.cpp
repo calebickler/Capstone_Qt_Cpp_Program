@@ -77,6 +77,7 @@ displaysettings *display;
 QProcess *OHMpro;
 boolean OHMoff = false;
 boolean OHMmessage = true;
+boolean OHMloaded = false;
 boolean fromfile = false;
 
 //moving Graphics
@@ -102,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //end threads
     display = new displaysettings(this);
     ui->setupUi(this);
-    //setStyleSheet("background-color: black;");
+    //setStyleSheet("color: red;");
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(500);
@@ -375,9 +376,41 @@ void MainWindow::updateProg() {
             mFile.close();
         }
 
+        if (cspeed.cpuSpeed > 1) {
+            OHMloaded = true;
+        }
+
+        if (cspeed.cpuSpeed == 0 && OHMloaded) {
+            if (OHMoff == false) {
+                OHMoff = true;
+                OHMmessage = true;
+            }
+        }
+
         if (OHMoff) {
             if (OHMmessage) {
                 qDebug() << "ohm is off";
+                //graphs
+                set.CPUSpeedGraph = false;
+                set.CPUTempGraph = false;
+                ui->actionGraph_Display_3->setChecked(0);
+                ui->actionGraph_Display_4->setChecked(0);
+                ui->CPUSpeedView->setVisible(false);
+                ui->CPUTempView->setVisible(false);
+
+
+                textDisplay.removeAt(textDisplay.indexOf(4));
+                ui->actionNumeric_Display_3->setChecked(0);
+                textDisplay.removeAt(textDisplay.indexOf(5));
+                ui->actionSession_High_Low_3->setChecked(0);
+                textDisplay.removeAt(textDisplay.indexOf(7));
+                ui->actionSession_High_Low_4->setChecked(0);
+                textDisplay.removeAt(textDisplay.indexOf(8));
+                ui->actionNumeric_Display_6->setChecked(0);
+                textDisplay.removeAt(textDisplay.indexOf(6));
+                ui->actionNumeric_Display_4->setChecked(0);
+
+
                 set.cpuSpeed = false;
                 set.HLcpuSpeed = false;
                 set.HLcpuTemp = false;
@@ -390,7 +423,7 @@ void MainWindow::updateProg() {
                 OHMmessage = false;
             }
         }
-
+        ui->centralWidget->setStyleSheet(display->style);
         ui->mainList->setStyleSheet(display->style);
 }
 
@@ -621,6 +654,55 @@ std::string doubleToString(double i){
  * macro 6
  * autoclicker 7 */
 
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    //qDebug() << event->key();
+    if (isSelected == 1) {
+        int x = 0;
+        int y = 0;
+        if (event->key() == 0x57) {
+            y = -10;
+        }
+        if (event->key() == 0x53) {
+            y = 10;
+        }
+        if (event->key() == 0x41) {
+            x = -10;
+        }
+        if (event->key() == 0x44) {
+            x = 10;
+        }
+        if (event->key() == 16777220 ) {
+            isSelected = 0;
+            this->setCursor(Qt::ArrowCursor);
+        }
+        else {
+            switch(selected) {
+                case 0:
+                    ui->MemoryGraphView->setGeometry(ui->MemoryGraphView->x() + x, ui->MemoryGraphView->y() + y, 371, 271);
+                    break;
+                case 1:
+                    ui->CPUTempView->setGeometry(ui->CPUTempView->x() + x, ui->CPUTempView->y() + y, 371, 271);
+                    break;
+                case 2:
+                    ui->CPUUseView->setGeometry(ui->CPUUseView->x() + x, ui->CPUUseView->y() + y, 371, 271);
+                    break;
+                case 3:
+                    ui->CPUSpeedView->setGeometry(ui->CPUSpeedView->x() + x, ui->CPUSpeedView->y() + y, 371, 271);
+                    break;
+                case 4:
+                    ui->GPUTempView->setGeometry(ui->GPUTempView->x() + x, ui->GPUTempView->y() + y, 371, 271);
+                    break;
+                case 5:
+                    ui->keyboardView->setGeometry(ui->keyboardView->x() + x, ui->keyboardView->y() + y, 486, 146);
+                    break;
+                case 6:
+                    ui->MacroView->setGeometry(ui->MacroView->x() + x, ui->MacroView->y() + y, 241, 281);
+                    break;
+            }
+        }
+    }
+}
+
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (isSelected == 0) {
         if (event->button() == Qt::LeftButton && ui->MemoryGraphView->geometry().contains(event->pos()) && ui->MemoryGraphView->isVisible()) {
@@ -654,11 +736,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             selected = 5;
         }
         if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos()) && ui->MacroView->isVisible()) {
-            if ((event->x() > (ui->MacroView->x() + 100 ) && event->x() < (ui->MacroView->x() + 140)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 140))) {
+            if ((event->x() > (ui->MacroView->x() + 100 ) && event->x() < (ui->MacroView->x() + 120)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 140))) {
                 macro.recHit();
             }
             else {
-                if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 220)) && (event->y() > (ui->MacroView->y() + 150 ) && event->y() < (ui->MacroView->y() + 210))) {
+                if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 220)) && (event->y() > (ui->MacroView->y() + 170 ) && event->y() < (ui->MacroView->y() + 210))) {
                     macro.onHit();
                 }
                 else {
@@ -666,9 +748,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
                         macro.offHit();
                     }
                     else {
-                        this->setCursor(Qt::PointingHandCursor);
-                        isSelected = 1;
-                        selected = 6;
+                        if ((event->x() > (ui->MacroView->x() + 165 ) && event->x() < (ui->MacroView->x() + 195)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 145))) {
+                            macro.loadHit();
+                        }
+                        else {
+                            this->setCursor(Qt::PointingHandCursor);
+                            isSelected = 1;
+                            selected = 6;
+                        }
                     }
                 }
             }
@@ -985,6 +1072,7 @@ void MainWindow::on_actionKeyboard_Log_triggered()
     else {
         ui->actionKeyboard_Log->setChecked(1);
         set.Keyboard = true;
+        ui->keyboardView->setGeometry(200,200,486, 146);
         ui->menuKeyboard->setEnabled(true);
         ui->keyboardView->setVisible(true);
     }
@@ -1060,6 +1148,7 @@ void MainWindow::on_actionGraph_Display_triggered()
     }
     else {
         set.memGraph = true;
+        ui->MemoryGraphView->setGeometry(200,200,371, 271);
         ui->MemoryGraphView->setVisible(true);
         ui->actionGraph_Display->setChecked(1);
     }
@@ -1077,6 +1166,7 @@ void MainWindow::on_actionGraph_Display_2_triggered()
     }
     else {
         set.CPUUseGraph = true;
+        ui->CPUUseView->setGeometry(200,200,371, 271);
         ui->CPUUseView->setVisible(true);
         ui->actionGraph_Display_2->setChecked(1);
     }
@@ -1093,6 +1183,7 @@ void MainWindow::on_actionGraph_Display_3_triggered()
     }
     else {
         set.CPUSpeedGraph = true;
+        ui->CPUSpeedView->setGeometry(200,200,371, 271);
         ui->CPUSpeedView->setVisible(true);
         ui->actionGraph_Display_3->setChecked(1);
     }
@@ -1109,6 +1200,7 @@ void MainWindow::on_actionGraph_Display_4_triggered()
     }
     else {
         set.CPUTempGraph = true;
+        ui->CPUTempView->setGeometry(200,200,371, 271);
         ui->CPUTempView->setVisible(true);
         ui->actionGraph_Display_4->setChecked(1);
     }
@@ -1126,6 +1218,7 @@ void MainWindow::on_actionGraph_Display_5_triggered()
     else {
         set.GPUTempGraph = true;
         ui->GPUTempView->setVisible(true);
+        ui->GPUTempView->setGeometry(200,200,371, 271);
         ui->actionGraph_Display_5->setChecked(1);
     }
     set.updated = true;
@@ -1146,6 +1239,7 @@ void MainWindow::on_actionMacro_Recorder_triggered()
     }
     else {
         ui->actionMacro_Recorder->setChecked(1);
+        ui->MacroView->setGeometry(200,200,241, 281);
         set.macro = true;
         ui->MacroView->setVisible(true);
     }
@@ -1155,6 +1249,7 @@ void MainWindow::on_actionMacro_Recorder_triggered()
 
 bool MainWindow::eventFilter(QObject *t, QEvent *e)
 {
+
     if(e->type() == QEvent::KeyPress)
     {
         QKeyEvent *k = static_cast<QKeyEvent*>(e);
@@ -1167,4 +1262,9 @@ bool MainWindow::eventFilter(QObject *t, QEvent *e)
         }
     }
     return QObject::eventFilter(t, e);
+}
+
+void MainWindow::on_actionRemove_Blank_Line_triggered()
+{
+    textDisplay.removeAt(textDisplay.lastIndexOf(11));
 }
