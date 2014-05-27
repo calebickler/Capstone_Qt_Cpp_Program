@@ -48,7 +48,11 @@ Macro::keys keyStuff[104] = {            //KEYS                                 
 Macro::Macro() {
     recording = 0;
     counter = 0;
-    activationKey = 1;//default
+    delay = 500;
+    playing = 0;
+    on = 1;
+    off = 0;
+    activationKey = 32;//default
     loc = "debug/macros/";
 }
 
@@ -138,35 +142,39 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 }
 
 void Macro:: run() {
-    int i;
-    int j;
     while(true)
     {
-        if(recording == 0)
+        while(playing)
         {
-            counter = 0;
-            i = 0;
-            while(macro[i] != 0) //reads off first 100 keys
-            {
-                //qDebug() << macro[i];
-                pressKey(macro[i]);
-                i++;//keys are stored as ascii integers; see www.asciitable.com
-            }
-            //std::fill_n(macro, 1000, 0);
+            playMacro();
+            Sleep(delay);
         }
-        j++;
-        if(j > 104)
-        {
-            j = 0;
-        }
-        sleep(5);
     }
 }
 
 void Macro::keyPressed(QKeyEvent *e)
 {
-    macro[counter] = e->key();
-    counter++;
+    if(recording)
+    {
+        macro[counter] = e->key();
+        counter++;
+    }
+    else
+    {
+        if(e->key() == activationKey && on == 1)
+        {
+            if(playing)
+            {
+                playing = 0;
+                qDebug() << "not playing";
+            }
+            else
+            {
+                playing = 1;
+                qDebug() << "playing";
+            }
+        }
+    }
 }
 
 void Macro::recHit() {
@@ -242,11 +250,14 @@ void Macro::readFile()
 
 void Macro::onHit() {
     qDebug() << "On";
-    readFile();
+    on = 1;
+    off = 0;
 }
 
 void Macro::offHit() {
     qDebug() << "Off";
+    off = 1;
+    on = 0;
 }
 
 void Macro::pressKey(int vkey)
@@ -271,6 +282,19 @@ void Macro::pressKey(int vkey)
 
 }
 
+void Macro::playMacro(){
+    int i;
+    counter = 0;
+    i = 0;
+    while(macro[i] != 0) //reads off first 100 keys
+    {
+        //qDebug() << macro[i];
+        pressKey(macro[i]);
+        i++;//keys are stored as ascii integers; see www.asciitable.com
+    }
+}
+
 void Macro::loadHit() {
+    readFile();
     qDebug() << "Load";
 }

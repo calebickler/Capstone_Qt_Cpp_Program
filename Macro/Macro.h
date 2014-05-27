@@ -20,6 +20,10 @@ public:
     void loadHit();
     void run();
     void record();
+    void playMacro();
+    long delay;
+    int playing;
+    int on,off;
     int recording;
     int counter;
     int activationKey;

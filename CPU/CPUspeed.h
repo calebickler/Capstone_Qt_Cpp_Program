@@ -9,6 +9,7 @@ public:
     double array[20];
     double HcpuSpeed;
     double LcpuSpeed;
+    int cs;
     void getSpeed(int speed);
 };
 

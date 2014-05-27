@@ -65,13 +65,6 @@ QGraphicsScene* sceneCPUU;
 QGraphicsScene* sceneGPUU;
 QGraphicsScene* sceneMacro;
 
-//metric loop counters
-int mu;
-int cu;
-int cs;
-int ct;
-int gt;
-
 QTimer *timer;
 displaysettings *display;
 QProcess *OHMpro;
@@ -143,6 +136,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if(!mFile2.open(QFile::ReadOnly | QFile::Text))
     {
         qDebug() << "Could not read settings file.\n";
+        if(set.Keyboard)
+            ui->actionKeyboard_Log->setChecked(1);
+            ui->actionNumeric_Display->setChecked(1);
+            ui->actionSession_High_Low->setChecked(1);
+            ui->actionNumeric_Display_2->setChecked(1);
+            ui->actionSession_High_Low_2->setChecked(1);
+            ui->actionNumeric_Display_3->setChecked(1);
+            ui->actionSession_High_Low_3->setChecked(1);
+            ui->actionNumeric_Display_4->setChecked(1);
+            ui->actionSession_High_Low_4->setChecked(1);
+            ui->actionNumeric_Display_6->setChecked(1);
+            ui->actionNumeric_Display_5->setChecked(1);
+            ui->actionSession_High_Low_5->setChecked(1);
     }
     else {
 
@@ -159,9 +165,101 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         set.HLgpuTemp = in2.readLine().toULong();
         set.refresh = in2.readLine().toULong();
         set.Keyboard = in2.readLine().toULong();
+        set.memGraph = in2.readLine().toULong();
+        set.CPUSpeedGraph = in2.readLine().toULong();
+        set.CPUTempGraph = in2.readLine().toULong();
+        set.CPUUseGraph = in2.readLine().toULong();
+        set.GPUTempGraph = in2.readLine().toULong();
         fromfile = true;
 
         mFile.close();
+
+        switch(set.refresh)
+        {
+            case 500:
+                ui->action1_High->setChecked(1);
+                break;
+            case 750:
+                ui->action2->setChecked(1);
+                break;
+            case 1000:
+                ui->action3_Medium->setChecked(1);
+                break;
+            case 1250:
+                ui->action4->setChecked(1);
+                break;
+            case 1500:
+                ui->action5_Low->setChecked(1);
+                break;
+        }
+        if(set.Keyboard)
+            ui->actionKeyboard_Log->setChecked(1);
+        else
+            ui->actionKeyboard_Log->setChecked(0);
+        if(set.memUse)
+            ui->actionNumeric_Display->setChecked(1);
+        else
+            ui->actionNumeric_Display->setChecked(0);
+        if(set.HLmemUsage)
+            ui->actionSession_High_Low->setChecked(1);
+        else
+            ui->actionSession_High_Low->setChecked(0);
+        if(set.cpuUse)
+            ui->actionNumeric_Display_2->setChecked(1);
+        else
+            ui->actionNumeric_Display_2->setChecked(0);
+        if(set.HLcpuUse)
+            ui->actionSession_High_Low_2->setChecked(1);
+        else
+            ui->actionSession_High_Low_2->setChecked(0);
+        if(set.cpuSpeed)
+            ui->actionNumeric_Display_3->setChecked(1);
+        else
+            ui->actionNumeric_Display_3->setChecked(0);
+        if(set.HLcpuSpeed)
+            ui->actionSession_High_Low_3->setChecked(1);
+        else
+            ui->actionSession_High_Low_3->setChecked(0);
+        if(set.cpuTemp)
+            ui->actionNumeric_Display_4->setChecked(1);
+        else
+            ui->actionNumeric_Display_4->setChecked(0);
+        if(set.HLcpuTemp)
+            ui->actionSession_High_Low_4->setChecked(1);
+        else
+            ui->actionSession_High_Low_4->setChecked(0);
+        if(set.cpuCoreTemp)
+            ui->actionNumeric_Display_6->setChecked(1);
+        else
+            ui->actionNumeric_Display_6->setChecked(0);
+        if(set.gpuTemp)
+            ui->actionNumeric_Display_5->setChecked(1);
+        else
+            ui->actionNumeric_Display_5->setChecked(0);
+        if(set.HLgpuTemp)
+            ui->actionSession_High_Low_5->setChecked(1);
+        else
+            ui->actionSession_High_Low_5->setChecked(0);
+        if(set.memGraph)
+            ui->actionGraph_Display->setChecked(1);
+        else
+            ui->actionGraph_Display->setChecked(0);
+        if(set.CPUUseGraph)
+            ui->actionGraph_Display_2->setChecked(1);
+        else
+            ui->actionGraph_Display_2->setChecked(0);
+        if(set.CPUSpeedGraph)
+            ui->actionGraph_Display_3->setChecked(1);
+        else
+            ui->actionGraph_Display_3->setChecked(0);
+        if(set.CPUTempGraph)
+            ui->actionGraph_Display_4->setChecked(1);
+        else
+            ui->actionGraph_Display_4->setChecked(0);
+        if(set.GPUTempGraph)
+            ui->actionGraph_Display_5->setChecked(1);
+        else
+            ui->actionGraph_Display_5->setChecked(0);
     }
 
 
@@ -267,31 +365,31 @@ void MainWindow::updateProg() {
 
     if (set.memGraph) {
         sceneMem->clear();
-        grapher.draw(sceneMem, mem.array,10, mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
+        grapher.draw(sceneMem, mem.array,10, mem.mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
         ui->MemoryGraphView->setScene(sceneMem);
     }
 
     if (set.CPUSpeedGraph) {
         sceneCPUS->clear();
-        grapher.draw(sceneCPUS, cspeed.array,10, cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
+        grapher.draw(sceneCPUS, cspeed.array,10, cspeed.cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
         ui->CPUSpeedView->setScene(sceneCPUS);
     }
 
     if (set.CPUTempGraph) {
         sceneCPUT->clear();
-        grapher.draw(sceneCPUT, ctemp.array,10, ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
+        grapher.draw(sceneCPUT, ctemp.array,10, ctemp.ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
         ui->CPUTempView->setScene(sceneCPUT);
     }
 
     if (set.CPUUseGraph) {
         sceneCPUU->clear();
-        grapher.draw(sceneCPUU, cspeed.array,10, cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
+        grapher.draw(sceneCPUU, cpuUthread.array,10, cpuUthread.cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
         ui->CPUUseView->setScene(sceneCPUU);
     }
 
     if (set.GPUTempGraph) {
         sceneGPUU->clear();
-        grapher.draw(sceneGPUU, gpu.array,10, gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
+        grapher.draw(sceneGPUU, gpu.array,10, gpu.gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
         ui->GPUTempView->setScene(sceneGPUU);
     }
 
@@ -307,30 +405,12 @@ void MainWindow::updateProg() {
     if(set.Keyboard)
     {
         keyboardThread.draw();
-        ui->actionKeyboard_Log->setChecked(1);
         ui->keyboardView->setScene(keyboardThread.scene);
     }
     if(fromfile)
     {
         timer->start(set.refresh);
-        switch(set.refresh)
-        {
-            case 500:
-                ui->action1_High->setChecked(1);
-                break;
-            case 750:
-                ui->action2->setChecked(1);
-                break;
-            case 1000:
-                ui->action3_Medium->setChecked(1);
-                break;
-            case 1250:
-                ui->action4->setChecked(1);
-                break;
-            case 1500:
-                ui->action5_Low->setChecked(1);
-                break;
-        }
+
 
         fromfile = false;
     }
@@ -371,6 +451,16 @@ void MainWindow::updateProg() {
             out << set.refresh;
             out << "\n";
             out << set.Keyboard;
+            out << "\n";
+            out << set.memGraph;
+            out << "\n";
+            out << set.CPUSpeedGraph;
+            out << "\n";
+            out << set.CPUTempGraph;
+            out << "\n";
+            out << set.CPUUseGraph;
+            out << "\n";
+            out << set.GPUTempGraph;
 
             mFile.flush();
             mFile.close();
@@ -468,95 +558,50 @@ void MainWindow::updateList() {
     {
         switch (textDisplay.at(i)) {
             case 0:
-                mem.array[mu] = mem.memoryUsage;
-                if(mu == 9)
-                {
-                    mu = 0;
-                }
-                else
-                {
-                    mu++;
-                }
-                ui->actionNumeric_Display->setChecked(1);
                 memUsage = "Memory Usage: " + intToString(mem.memoryUsage) + "%";
                 qmemUse = QString::fromStdString(memUsage);
                 ui->mainList->addItem(qmemUse);
                 break;
             case 1:
-                ui->actionSession_High_Low->setChecked(1);
                 high = "Memory Usage High: " + intToString(mem.HmemUsage) + "%";
                 low = "Memory Usage Low: " + intToString(mem.LmemUsage) + "%";
                 ui->mainList->addItem(QString::fromStdString(high));
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 2:
-            cpuUthread.array[cu] = cpuUthread.cpuUsage;
-            if(cu == 9)
-            {
-                cu = 0;
-            }
-            else
-            {
-                cu++;
-            }
-                ui->actionNumeric_Display_2->setChecked(1);
                 cpuUse = "CPU Usage: " + intToString(cpuUthread.cpuUsage) + "%";
                 qcpuUse = QString::fromStdString(cpuUse);
                 ui->mainList->addItem(qcpuUse);
                 break;
             case 3:
-                ui->actionSession_High_Low_2->setChecked(1);
                 high = "CPU Usage High: " + intToString(cpuUthread.HcpuUse) + "%";
                 low = "CPU Usage Low: " + intToString(cpuUthread.LcpuUse) + "%";
                 ui->mainList->addItem(QString::fromStdString(high));
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 4:
-            cspeed.array[cs] = cspeed.cpuSpeed;
-            if(cs == 9)
-            {
-                cs = 0;
-            }
-            else
-            {
-                cs++;
-            }
-                ui->actionNumeric_Display_3->setChecked(1);
                 cpuSpeed = "CPU Speed: " + doubleToString(cspeed.cpuSpeed) + "Ghz";
                 qcpuSpeed = QString::fromStdString(cpuSpeed);
                 ui->mainList->addItem(qcpuSpeed);
                 break;
             case 5:
-                ui->actionSession_High_Low_3->setChecked(1);
                 high = "CPU Speed High: " + doubleToString(cspeed.HcpuSpeed) + "Ghz";
                 low = "CPU Speed Low: " + doubleToString(cspeed.LcpuSpeed) + "Ghz";
                 ui->mainList->addItem(QString::fromStdString(high));
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 6:
-                ctemp.array[ct] = ctemp.cpuHighTemp;
-                if(ct == 9)
-                {
-                    ct = 0;
-                }
-                else
-                {
-                    ct++;
-                }
-                ui->actionNumeric_Display_4->setChecked(1);
                 cpuTemp = "CPU Temp: " + intToString(ctemp.cpuHighTemp) + "°C";
                 qcpuTemp = QString::fromStdString(cpuTemp);
                 ui->mainList->addItem(qcpuTemp);
                 break;
             case 7:
-                ui->actionSession_High_Low_4->setChecked(1);
                 high = "CPU Temp High: " + intToString(ctemp.HcpuTemp) + "°C";
                 low = "CPU Temp Low: " + intToString(ctemp.LcpuTemp) + "°C";
                 ui->mainList->addItem(QString::fromStdString(high));
                 ui->mainList->addItem(QString::fromStdString(low));
                 break;
             case 8:
-                ui->actionNumeric_Display_6->setChecked(1);
                 if (ctemp.cpu0Temp != 0) {
                     cpuTemp = "CPU Core 1 Temp: " + intToString(ctemp.cpu0Temp) + "°C";
                     qcpuTemp = QString::fromStdString(cpuTemp);
@@ -589,16 +634,6 @@ void MainWindow::updateList() {
                 }
                 break;
             case 9:
-                gpu.array[gt] = gpu.gputemps[0];
-                if(gt == 9)
-                {
-                    gt = 0;
-                }
-                else
-                {
-                    gt++;
-                }
-                ui->actionNumeric_Display_5->setChecked(1);
                 if(gpu.gputemps[0] == 9999)
                 {
                     gpuTemp = "GPU not found. Please turn off.";
@@ -617,7 +652,6 @@ void MainWindow::updateList() {
                 }
                 break;
             case 10:
-                ui->actionSession_High_Low_5->setChecked(1);
                 high = "GPU Temp High: " + intToString(gpu.HgpuTemp) + "°C";
                 low = "GPU Temp Low: " + intToString(gpu.LgpuTemp) + "°C";
                 ui->mainList->addItem(QString::fromStdString(high));
@@ -1250,15 +1284,12 @@ void MainWindow::on_actionMacro_Recorder_triggered()
 bool MainWindow::eventFilter(QObject *t, QEvent *e)
 {
 
-    if(e->type() == QEvent::KeyPress)
+    if(set.macro)
     {
-        QKeyEvent *k = static_cast<QKeyEvent*>(e);
-        if(set.macro)
+        if(e->type() == QEvent::KeyPress)
         {
-            if(macro.recording)
-            {
-                macro.keyPressed(k);
-            }
+            QKeyEvent *k = static_cast<QKeyEvent*>(e);
+            macro.keyPressed(k);
         }
     }
     return QObject::eventFilter(t, e);

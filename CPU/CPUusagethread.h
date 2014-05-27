@@ -10,6 +10,7 @@ public:
     int HcpuUse;
     int LcpuUse;
     double array[20];
+    int cu;
     void run();
 };
 

@@ -91,4 +91,13 @@ void CPUtemp::getTemp(int temps[10]) {
     if (cpuHighTemp < LcpuTemp || LcpuTemp == 0) {
         LcpuTemp = cpuHighTemp;
     }
+    array[ct] = cpuHighTemp;
+    if(ct == 9)
+    {
+        ct = 0;
+    }
+    else
+    {
+        ct++;
+    }
 }

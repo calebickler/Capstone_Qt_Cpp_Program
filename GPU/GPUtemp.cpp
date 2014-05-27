@@ -72,4 +72,13 @@ void GPUtemp::getTemp(void)
    if (gputemps[0] < LgpuTemp) {
        LgpuTemp = gputemps[0];
    }
+   array[gt] = gputemps[0];
+   if(gt == 9)
+   {
+       gt = 0;
+   }
+   else
+   {
+       gt++;
+   }
 }

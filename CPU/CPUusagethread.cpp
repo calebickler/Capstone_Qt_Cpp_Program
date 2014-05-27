@@ -23,4 +23,13 @@ void CPUusagethread::run()
         }
         Sleep(500);
     }
+    array[cu] = cpuUsage;
+    if(cu == 9)
+    {
+        cu = 0;
+    }
+    else
+    {
+        cu++;
+    }
 }

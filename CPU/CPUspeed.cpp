@@ -20,4 +20,13 @@ void CPUspeed::getSpeed(int speed)
     if (cpuSpeed < LcpuSpeed && cpuSpeed > 0) {
         LcpuSpeed = cpuSpeed;
     }
+    array[cs] = cpuSpeed;
+    if(cs == 9)
+    {
+        cs = 0;
+    }
+    else
+    {
+        cs++;
+    }
 }

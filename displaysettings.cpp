@@ -12,6 +12,7 @@ QString graph;
 QString style;
 QString tempstyle;
 QColor fontcolor;
+QColor graphcolor;
 QColor kHighlight;
 QString button1, button2, button3;
 int fromsettings = 0;
@@ -91,6 +92,7 @@ void displaysettings::on_pushButton_2_clicked()
     button2 = QString::fromStdString(colorstyle);
     style = font + back + graph;
 }
+
 void displaysettings::update()
 {
     if(fromsettings == 1)
@@ -137,4 +139,32 @@ void displaysettings::on_buttonBox_accepted()
 
     mFile.flush();
     mFile.close();
+}
+
+void displaysettings::on_pushButton_3_clicked()
+{
+    QColor bgColor;
+    std::string colorstyle;
+    char* temp = new char[200];
+    bgColor = QColorDialog::getColor(Qt::white, this);
+    graphcolor = bgColor;
+    colorstyle = "background-color: rgb(";
+    graph = "color: rgb(";
+    sprintf(temp, "%d", bgColor.red());
+    colorstyle.append(temp);
+    graph.append(temp);
+    colorstyle.append(",");
+    graph.append(",");
+    sprintf(temp, "%d", bgColor.green());
+    colorstyle.append(temp);
+    graph.append(temp);
+    colorstyle.append(",");
+    graph.append(",");
+    sprintf(temp, "%d", bgColor.blue());
+    colorstyle.append(temp);
+    graph.append(temp);
+    colorstyle.append("); border: 1px solid black;");
+    graph.append(");");
+    ui->pushButton_3->setStyleSheet(QString::fromStdString(colorstyle));
+    button3 = QString::fromStdString(colorstyle);
 }

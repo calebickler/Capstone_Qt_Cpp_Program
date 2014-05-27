@@ -18,6 +18,7 @@ public:
     int cpu9Temp;
     int HcpuTemp;
     int LcpuTemp;
+    int ct;
     double array[20];
     void getTemp(int temps[10]);
 };
