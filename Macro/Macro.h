@@ -18,6 +18,7 @@ public:
     void onHit();
     void offHit();
     void loadHit();
+    void setActivation();
     void run();
     void record();
     void playMacro();

@@ -19,6 +19,7 @@ public:
     QString style, tempstyle;
     QString button1, button2, button3;
     QColor fontcolor;
+    QColor graphcolor;
     QColor kHighlight;
     int fromsettings, fromkey;
 

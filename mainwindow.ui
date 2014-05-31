@@ -247,6 +247,16 @@ color: rgb(112, 255, 102)</string>
      </brush>
     </property>
    </widget>
+   <widget class="QListWidget" name="MacroList">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>150</y>
+      <width>121</width>
+      <height>151</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -297,6 +307,7 @@ selection-background-color: rgb(212, 212, 212);</string>
     <addaction name="menuRefresh_Rate"/>
     <addaction name="actionDisplay_Settings"/>
     <addaction name="separator"/>
+    <addaction name="actionHelp"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAdd">
@@ -394,9 +405,17 @@ selection-background-color: rgb(212, 212, 212);</string>
     <addaction name="menuRefresh_Time"/>
     <addaction name="menuColors"/>
    </widget>
+   <widget class="QMenu" name="menuMacro">
+    <property name="title">
+     <string>Macro</string>
+    </property>
+    <addaction name="actionSet_Delay"/>
+    <addaction name="actionSet_Activation_Key"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAdd"/>
    <addaction name="menuKeyboard"/>
+   <addaction name="menuMacro"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -656,6 +675,21 @@ selection-background-color: rgb(212, 212, 212);</string>
   <action name="actionRemove_Blank_Line">
    <property name="text">
     <string>Remove Blank Line</string>
+   </property>
+  </action>
+  <action name="actionSet_Delay">
+   <property name="text">
+    <string>Set Delay</string>
+   </property>
+  </action>
+  <action name="actionSet_Activation_Key">
+   <property name="text">
+    <string>Set Activation Key</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

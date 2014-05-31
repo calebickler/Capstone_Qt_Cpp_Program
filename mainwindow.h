@@ -94,6 +94,14 @@ private slots:
 
     void on_actionRemove_Blank_Line_triggered();
 
+    void on_actionSet_Activation_Key_triggered();
+
+    void on_actionSet_Delay_triggered();
+
+    void help();
+
+    void on_actionHelp_triggered();
+
 private:
     Ui::MainWindow *ui;
     displaysettings *display;

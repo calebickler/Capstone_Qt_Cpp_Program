@@ -23,6 +23,7 @@
 #include <QColorDialog>
 #include <QMouseEvent>
 #include <QCursor>
+#include <QInputDialog>
 
 //local function prototypes
 std::string intToString(int i);
@@ -151,7 +152,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             ui->actionSession_High_Low_5->setChecked(1);
     }
     else {
-
+        c++;
         QTextStream in2(&mFile2);
         set.cpuSpeed = in2.readLine().toULong();
         set.cpuUse = in2.readLine().toULong();
@@ -240,26 +241,46 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             ui->actionSession_High_Low_5->setChecked(1);
         else
             ui->actionSession_High_Low_5->setChecked(0);
-        if(set.memGraph)
+        if(set.memGraph) {
             ui->actionGraph_Display->setChecked(1);
-        else
+            ui->MemoryGraphView->setVisible(true);
+        }
+        else {
             ui->actionGraph_Display->setChecked(0);
-        if(set.CPUUseGraph)
+            ui->MemoryGraphView->setVisible(false);
+        }
+        if(set.CPUUseGraph) {
             ui->actionGraph_Display_2->setChecked(1);
-        else
+            ui->CPUUseView->setVisible(true);
+        }
+        else {
             ui->actionGraph_Display_2->setChecked(0);
-        if(set.CPUSpeedGraph)
+            ui->CPUUseView->setVisible(false);
+        }
+        if(set.CPUSpeedGraph) {
             ui->actionGraph_Display_3->setChecked(1);
-        else
+            ui->CPUSpeedView->setVisible(true);
+        }
+        else {
             ui->actionGraph_Display_3->setChecked(0);
-        if(set.CPUTempGraph)
+            ui->CPUSpeedView->setVisible(false);
+        }
+        if(set.CPUTempGraph) {
             ui->actionGraph_Display_4->setChecked(1);
-        else
+            ui->CPUTempView->setVisible(true);
+        }
+        else {
             ui->actionGraph_Display_4->setChecked(0);
-        if(set.GPUTempGraph)
+            ui->CPUTempView->setVisible(false);
+        }
+        if(set.GPUTempGraph) {
             ui->actionGraph_Display_5->setChecked(1);
-        else
+            ui->GPUTempView->setVisible(true);
+        }
+        else {
             ui->actionGraph_Display_5->setChecked(0);
+            ui->GPUTempView->setVisible(false);
+        }
     }
 
 
@@ -280,12 +301,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     textDisplay.append(9);
     textDisplay.append(10);
 
-    //IF NO SETTINGS FOUND FOR GRAPHS
-        ui->actionGraph_Display->setChecked(1);
-        ui->actionGraph_Display_2->setChecked(1);
-        ui->actionGraph_Display_3->setChecked(1);
-        ui->actionGraph_Display_4->setChecked(1);
-        ui->actionGraph_Display_5->setChecked(1);
 
     ui->actionMacro_Recorder->setChecked(1);
     ui->KeyboardTime10->setChecked(1);
@@ -343,6 +358,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     WMIserver->start("WMIserver.exe");
 
     updateProg();
+    if (c < 2) {//one settings file is missing
+        help();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -354,56 +372,56 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateProg() {
-    updateList();
 
-    keyboardThread.setLineColor(display->fontcolor);
-
-
-
-
-
-
-    if (set.memGraph) {
-        sceneMem->clear();
-        grapher.draw(sceneMem, mem.array,10, mem.mu, display->fontcolor, Qt::red, "Memory Useage", 0, 100);
-        ui->MemoryGraphView->setScene(sceneMem);
-    }
-
-    if (set.CPUSpeedGraph) {
-        sceneCPUS->clear();
-        grapher.draw(sceneCPUS, cspeed.array,10, cspeed.cs, display->fontcolor, Qt::red, "CPU Speed", 0, 10);
-        ui->CPUSpeedView->setScene(sceneCPUS);
-    }
-
-    if (set.CPUTempGraph) {
-        sceneCPUT->clear();
-        grapher.draw(sceneCPUT, ctemp.array,10, ctemp.ct, display->fontcolor, Qt::red, "CPU Temperature", 0, 150);
-        ui->CPUTempView->setScene(sceneCPUT);
-    }
-
-    if (set.CPUUseGraph) {
-        sceneCPUU->clear();
-        grapher.draw(sceneCPUU, cpuUthread.array,10, cpuUthread.cu, display->fontcolor, Qt::red, "CPU Useage", 0, 100);
-        ui->CPUUseView->setScene(sceneCPUU);
-    }
-
-    if (set.GPUTempGraph) {
-        sceneGPUU->clear();
-        grapher.draw(sceneGPUU, gpu.array,10, gpu.gt, display->fontcolor, Qt::red, "GPU Temperature", 0, 150);
-        ui->GPUTempView->setScene(sceneGPUU);
+    if (set.collecting) {
+        updateList();
+        if (set.memGraph) {
+            sceneMem->clear();
+            grapher.draw(sceneMem, mem.array,10, mem.mu, display->graphcolor, display->fontcolor, "Memory Useage", 0, 100);
+            ui->MemoryGraphView->setScene(sceneMem);
+        }
+        if (set.CPUSpeedGraph) {
+            sceneCPUS->clear();
+            grapher.draw(sceneCPUS, cspeed.array,10, cspeed.cs, display->graphcolor, display->fontcolor, "CPU Speed", 0, 10);
+            ui->CPUSpeedView->setScene(sceneCPUS);
+        }
+        if (set.CPUTempGraph) {
+            sceneCPUT->clear();
+            grapher.draw(sceneCPUT, ctemp.array,10, ctemp.ct, display->graphcolor, display->fontcolor, "CPU Temperature", 0, 150);
+            ui->CPUTempView->setScene(sceneCPUT);
+        }
+        if (set.CPUUseGraph) {
+            sceneCPUU->clear();
+            grapher.draw(sceneCPUU, cpuUthread.array,10, cpuUthread.cu, display->graphcolor, display->fontcolor, "CPU Useage", 0, 100);
+            ui->CPUUseView->setScene(sceneCPUU);
+        }
+        if (set.GPUTempGraph) {
+            sceneGPUU->clear();
+            grapher.draw(sceneGPUU, gpu.array,10, gpu.gt, display->graphcolor, display->fontcolor, "GPU Temperature", 0, 150);
+            ui->GPUTempView->setScene(sceneGPUU);
+        }
     }
 
 
 
-
-    sceneMacro->clear();
-    macro.draw(sceneMacro, Qt::red, display->fontcolor);
-    ui->MacroView->setScene(sceneMacro);
 
 
 
     if(set.Keyboard)
     {
+        keyboardThread.setLineColor(display->fontcolor);
+        sceneMacro->clear();
+        macro.draw(sceneMacro, Qt::red, display->fontcolor);
+        ui->MacroView->setScene(sceneMacro);
+        ui->MacroList->clear();
+
+        for (int i; i < macro.counter; i++) {
+            QChar key = static_cast<char>(macro.macro[i]);
+            QString sKey = key;
+            ui->MacroList->addItem(sKey);
+        }
+        ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
+
         keyboardThread.draw();
         ui->keyboardView->setScene(keyboardThread.scene);
     }
@@ -506,15 +524,21 @@ void MainWindow::updateProg() {
                 set.HLcpuTemp = false;
                 set.cpuCoreTemp = false;
                 set.cpuTemp = false;
-                QMessageBox::information(
-                    this,
-                    tr("GiS"),
-                    tr("Open Hardware Monitor has closed. This process is needed to provide you with all posible metrics. To get them back you can either:\n1. Restart GiS\n2. Re-open Open Hardware Monitor (Note: Open Hardware Monitor process will not stop when GiS is closed if this is chosen)\nThen, add back the metrics you want.") );
+
+                QMessageBox* msgBox = new QMessageBox( this );
+                msgBox->setAttribute( Qt::WA_DeleteOnClose );
+                msgBox->setStandardButtons( QMessageBox::Ok );
+                msgBox->setWindowTitle( tr("GiS") );
+                msgBox->setText( tr("Open Hardware Monitor has closed. This process is needed to provide you with all posible metrics. To get them back you can either:\n1. Restart GiS\n2. Re-open Open Hardware Monitor (Note: Open Hardware Monitor process will not stop when GiS is closed if this is chosen)\nThen, add back the metrics you want.") );
+                msgBox->setModal( false );
+                //msgBox->serIcon
+                msgBox->open( this, SLOT(msgBoxClosed(QAbstractButton*)) );
                 OHMmessage = false;
             }
         }
         ui->centralWidget->setStyleSheet(display->style);
         ui->mainList->setStyleSheet(display->style);
+        ui->MacroView->setStyleSheet(display->style);
 }
 
 void MainWindow::updateList() {
@@ -735,6 +759,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             }
         }
     }
+    ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
@@ -828,6 +853,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         }
     this->setCursor(Qt::ArrowCursor);
     }
+    ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
 }
 
 
@@ -1298,4 +1324,32 @@ bool MainWindow::eventFilter(QObject *t, QEvent *e)
 void MainWindow::on_actionRemove_Blank_Line_triggered()
 {
     textDisplay.removeAt(textDisplay.lastIndexOf(11));
+}
+
+void MainWindow::on_actionSet_Activation_Key_triggered()
+{
+    macro.setActivation();
+}
+
+void MainWindow::on_actionSet_Delay_triggered()
+{
+    bool ok;
+    macro.delay = QInputDialog::getInt(this, tr("Set Macro Delay"), tr("Delay (ms):"), macro.delay, 0, 1000, 1, &ok);
+}
+
+void MainWindow::help() {
+    QMessageBox* msgBox = new QMessageBox( this );
+    msgBox->setAttribute( Qt::WA_DeleteOnClose );
+    msgBox->setStandardButtons( QMessageBox::Ok );
+    msgBox->setWindowTitle( tr("GiS") );
+    QFont hFont("Times", 12);
+    msgBox->setFont(hFont);
+    msgBox->setText( tr("Welcome to Gaming Information Suite.\nTo add information click on the add menu and choose what you would like to be displayed.\nTo move graphics around you can:\n\tLeft click anywhere on the graphic and left click again where you would like it placed.\n\tLeft click on a graphic then use WASD keys to move it around. Then hit enter to set location.\nTo change display options click the Display Settings option in the main menu.\nTo open this dialouge again click on help in the main menu.") );
+    msgBox->setModal( false );
+    //msgBox->serIcon
+    msgBox->open( this, SLOT(msgBoxClosed(QAbstractButton*)) );
+}
+
+void MainWindow::on_actionHelp_triggered() {
+    help();
 }

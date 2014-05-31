@@ -246,6 +246,7 @@ void Macro::readFile()
         macro[i] = in.readLine().toInt();
         i++;
     }
+    counter = i;
 }
 
 void Macro::onHit() {
@@ -297,4 +298,8 @@ void Macro::playMacro(){
 void Macro::loadHit() {
     readFile();
     qDebug() << "Load";
+}
+
+void Macro::setActivation() {
+    qDebug() << "set Activation";
 }
