@@ -49,6 +49,9 @@ OHM ohm;
 Graph grapher;
 Macro macro;
 
+QString buildtext;
+int textcount;
+
 //strings
 QString qcpuUse;
 QString qmemUse;
@@ -171,6 +174,43 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         set.CPUTempGraph = in2.readLine().toULong();
         set.CPUUseGraph = in2.readLine().toULong();
         set.GPUTempGraph = in2.readLine().toULong();
+        int p,r;
+        r = in2.readLine().toInt();
+        for(p = 0; p < r; p++)
+        {
+            textDisplay.append(in2.readLine().toInt());
+            qDebug() << textDisplay.at(p);
+        }
+        /**************Order of graph positions******************
+            out << ui->MemoryGraphView->x();
+            out << "\n";
+            out << ui->MemoryGraphView->y();
+            out << "\n";
+            out << ui->CPUTempView->x();
+            out << "\n";
+            out << ui->CPUTempView->y();
+            out << "\n";
+            out << ui->CPUUseView->x();
+            out << "\n";
+            out << ui->CPUUseView->y();
+            out << "\n";
+            out << ui->CPUSpeedView->x();
+            out << "\n";
+            out << ui->CPUSpeedView->y();
+            out << "\n";
+            out << ui->GPUTempView->x();
+            out << "\n";
+            out << ui->GPUTempView->y();
+            out << "\n";
+            out << ui->keyboardView->x();
+            out << "\n";
+            out << ui->keyboardView->y();
+            out << "\n";
+            out << ui->MacroView->x();
+            out << "\n";
+            out << ui->MacroView->y();
+            out << "\n";
+            */
         fromfile = true;
 
         mFile.close();
@@ -281,25 +321,30 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             ui->actionGraph_Display_5->setChecked(0);
             ui->GPUTempView->setVisible(false);
         }
+
+
     }
 
 
     //IF NO SETTINGS FOUND FOR QLIST
-    textDisplay.append(0);
-    textDisplay.append(1);
-    textDisplay.append(11);
-    textDisplay.append(2);
-    textDisplay.append(3);
-    textDisplay.append(11);
-    textDisplay.append(4);
-    textDisplay.append(5);
-    textDisplay.append(11);
-    textDisplay.append(6);
-    textDisplay.append(7);
-    textDisplay.append(8);
-    textDisplay.append(11);
-    textDisplay.append(9);
-    textDisplay.append(10);
+    if(!fromfile)
+       {
+        textDisplay.append(0);
+        textDisplay.append(1);
+        textDisplay.append(11);
+        textDisplay.append(2);
+        textDisplay.append(3);
+        textDisplay.append(11);
+        textDisplay.append(4);
+        textDisplay.append(5);
+        textDisplay.append(11);
+        textDisplay.append(6);
+        textDisplay.append(7);
+        textDisplay.append(8);
+        textDisplay.append(11);
+        textDisplay.append(9);
+        textDisplay.append(10);
+    }
 
 
     ui->actionMacro_Recorder->setChecked(1);
@@ -479,7 +524,42 @@ void MainWindow::updateProg() {
             out << set.CPUUseGraph;
             out << "\n";
             out << set.GPUTempGraph;
-
+            out << "\n";
+            out << textDisplay.length();
+            out << "\n";
+            foreach(const int x, textDisplay)
+            {
+                out << x;
+                out << "\n";
+            }
+            out << ui->MemoryGraphView->x();
+            out << "\n";
+            out << ui->MemoryGraphView->y();
+            out << "\n";
+            out << ui->CPUTempView->x();
+            out << "\n";
+            out << ui->CPUTempView->y();
+            out << "\n";
+            out << ui->CPUUseView->x();
+            out << "\n";
+            out << ui->CPUUseView->y();
+            out << "\n";
+            out << ui->CPUSpeedView->x();
+            out << "\n";
+            out << ui->CPUSpeedView->y();
+            out << "\n";
+            out << ui->GPUTempView->x();
+            out << "\n";
+            out << ui->GPUTempView->y();
+            out << "\n";
+            out << ui->keyboardView->x();
+            out << "\n";
+            out << ui->keyboardView->y();
+            out << "\n";
+            out << ui->MacroView->x();
+            out << "\n";
+            out << ui->MacroView->y();
+            out << "\n";
             mFile.flush();
             mFile.close();
         }
