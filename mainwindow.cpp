@@ -130,7 +130,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         display->kHighlight.setNamedColor(in.readLine());
         keyboardThread.setHighlight(display->kHighlight);
         keyboardThread.hfromset = 1;
-
+        display->graphcolor.setNamedColor(in.readLine());
         mFile.close();
     }
 
@@ -179,7 +179,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         for(p = 0; p < r; p++)
         {
             textDisplay.append(in2.readLine().toInt());
-            qDebug() << textDisplay.at(p);
         }
         /**************Order of graph positions******************
             out << ui->MemoryGraphView->x();
@@ -448,7 +447,26 @@ void MainWindow::updateProg() {
     }
 
 
-
+    if(set.macro)//macro widget is shown
+    {
+        if(!macro.recording)//macro is not recording
+        {
+            if(macro.on)//macro is listening for activation key
+            {
+                if(keyboardThread.checkKeys(macro.activationKey))
+                {
+                    if(macro.playing)
+                    {
+                        macro.playing = 0;
+                    }
+                    else
+                    {
+                        macro.playing = 1;
+                    }
+                }
+            }
+        }
+    }
 
 
 

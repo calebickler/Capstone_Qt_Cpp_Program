@@ -24,7 +24,7 @@ KeyboardThread::KeyboardThread()
 
 void KeyboardThread::run()
 {
-    clock_t start;
+    //clock_t start;
     //double duration = 0;
     while(true)
     {
@@ -39,7 +39,7 @@ void KeyboardThread::run()
             k.keys[i].height = 0;
         }
 
-        start = clock();
+        //start = clock();
         timerK = true;
         Sleep(1000);
         while(timerK)
@@ -56,6 +56,19 @@ void KeyboardThread::run()
            //qDebug() << keys;
         }
     }
+}
+
+bool KeyboardThread::checkKeys(int key)
+{
+    int i;
+    for(i = 0; i < MAX; i++)
+    {
+        if(k.keys[i].id == key)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void KeyboardThread::switchString(int num)

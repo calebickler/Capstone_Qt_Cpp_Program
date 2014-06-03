@@ -158,7 +158,7 @@ void Macro::keyPressed(QKeyEvent *e)
     {
         macro[counter] = e->key();
         counter++;
-    }
+    }/*
     else
     {
         if(e->key() == activationKey && on == 1)
@@ -174,7 +174,7 @@ void Macro::keyPressed(QKeyEvent *e)
                 qDebug() << "playing";
             }
         }
-    }
+    }*/
 }
 
 void Macro::recHit() {

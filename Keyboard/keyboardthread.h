@@ -15,6 +15,7 @@ public:
     QGraphicsScene *scene;
     void setTime(int);
     void setHighlight(QColor);
+    bool checkKeys(int);
     void setLineColor(QColor);
     int hfromset;
 };

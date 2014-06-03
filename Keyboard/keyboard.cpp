@@ -62,6 +62,7 @@ Keyboard::Keyboard() {
 void Keyboard::getKeys(){
         for(int j = 0; j < NUMKEYS; j++)
         {
+            idle++;
             if(keys[i-1].id == (keys[i-2]).id)
             {
                 i--;
@@ -71,10 +72,6 @@ void Keyboard::getKeys(){
                 keys[i] = keyStorage[j];
                 idle = 0;
                 i++;
-            }
-            else
-            {
-                idle++;
             }
             if(i > 20)
             {

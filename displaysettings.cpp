@@ -136,6 +136,8 @@ void displaysettings::on_buttonBox_accepted()
     out << fontcolor.name();
     out << "\n";
     out << kHighlight.name();
+    out << "\n";
+    out << graphcolor.name();
 
     mFile.flush();
     mFile.close();
