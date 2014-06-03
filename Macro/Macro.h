@@ -28,6 +28,7 @@ public:
     int recording;
     int counter;
     int activationKey;
+    bool activationKeyRec;
     void pressKey(int);
     QString loc;
     void readFile();

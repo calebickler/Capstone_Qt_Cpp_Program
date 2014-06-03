@@ -52,7 +52,8 @@ Macro::Macro() {
     playing = 0;
     on = 1;
     off = 0;
-    activationKey = 32;//default
+    activationKey = 96;//default
+    activationKeyRec = false;
     loc = "debug/macros/";
 }
 
@@ -69,22 +70,19 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
     titleItem->setPlainText("Macro Recorder");
     scene->addItem(titleItem);
 
-    QFont reckFont("Times", 8, QFont::Bold);
-    QGraphicsTextItem * reckItem = new QGraphicsTextItem;
-    reckItem->setPos(30,40);
-    reckItem->setDefaultTextColor(font);
-    reckItem->setFont(reckFont);
-    reckItem->setPlainText("Record Key");
-    scene->addItem(reckItem);
-
-    QFont actFont("Times", 8, QFont::Bold);
+    QFont actFont("Times", 9, QFont::Bold);
     QGraphicsTextItem * actItem = new QGraphicsTextItem;
-    actItem->setPos(30,60);
+    actItem->setPos(30,40);
     actItem->setDefaultTextColor(font);
     actItem->setFont(actFont);
-    QChar key = static_cast<char>(keyStuff[activationKey].ascii);
-    QString sKey = key;
-    actItem->setPlainText("Activation Key: (" + sKey + ")");
+    if (activationKeyRec == false) {
+        QChar key = static_cast<char>(activationKey);
+        QString sKey = key;
+        actItem->setPlainText("Activation Key: (" + sKey + ")");
+    }
+    else {
+        actItem->setPlainText("Activation Key: RECORDING");
+    }
     scene->addItem(actItem);
 
     QBrush onB(font);
@@ -92,18 +90,28 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
     scene->addRect(160,150,40,40, onP, onB);
     scene->addRect(160,200,40,40, onP, onB);
 
-    QFont onFont("Times", 8, QFont::Bold);
+    QFont onFont("Times", 11, QFont::Bold);
     QGraphicsTextItem * onItem = new QGraphicsTextItem;
-    onItem->setPos(168,160);
-    onItem->setDefaultTextColor(Qt::black);
+    onItem->setPos(166,158);
+    if (on) {
+        onItem->setDefaultTextColor(Qt::yellow);
+    }
+    else {
+       onItem->setDefaultTextColor(Qt::black);
+    }
     onItem->setFont(onFont);
     onItem->setPlainText("On");
     scene->addItem(onItem);
 
-    QFont offFont("Times", 8, QFont::Bold);
+    QFont offFont("Times", 11, QFont::Bold);
     QGraphicsTextItem * offItem = new QGraphicsTextItem;
-    offItem->setPos(168,210);
-    offItem->setDefaultTextColor(Qt::black);
+    offItem->setPos(166,208);
+    if (on) {
+        offItem->setDefaultTextColor(Qt::black);
+    }
+    else {
+       offItem->setDefaultTextColor(Qt::yellow);
+    }
     offItem->setFont(offFont);
     offItem->setPlainText("Off");
     scene->addItem(offItem);
@@ -111,21 +119,21 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
     if (recording) {
         QBrush recB(Qt::red);
         QPen recP(Qt::red);
-        scene->addRect(100,100,20,20, recP, recB);
+        scene->addRect(60,80,30,30, recP, recB);
     }
     else {
         QBrush recB(font);
         QPen recP(font);
-        scene->addRect(100,100,20,20, recP, recB);
+        scene->addRect(60,80,30,30, recP, recB);
     }
 
     QBrush loadB(font);
     QPen loadP(font);
-    scene->addRect(168,98,25,25, loadP, loadB);
+    scene->addRect(140,80,30,30, loadP, loadB);
 
     QFont loadFont("Times", 7, QFont::Bold);
     QGraphicsTextItem * loadItem = new QGraphicsTextItem;
-    loadItem->setPos(165,101);
+    loadItem->setPos(140,85);
     loadItem->setDefaultTextColor(Qt::black);
     loadItem->setFont(loadFont);
     loadItem->setPlainText("Load");
@@ -133,7 +141,7 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 
     QFont recFont("Times", 8, QFont::Bold);
     QGraphicsTextItem * recItem = new QGraphicsTextItem;
-    recItem->setPos(96,100);
+    recItem->setPos(61,83);
     recItem->setDefaultTextColor(Qt::black);
     recItem->setFont(recFont);
     recItem->setPlainText("Rec");
@@ -240,12 +248,13 @@ void Macro::readFile()
     }
     QTextStream in(&mFile);
     int i = 0;
-    std::fill_n(macro, 1000, 0);
+    //std::fill_n(macro, 1000, 0);
     while(!in.atEnd())
     {
         macro[i] = in.readLine().toInt();
         i++;
     }
+
     counter = i;
 }
 

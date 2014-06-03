@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     sceneCPUT = new QGraphicsScene(0, 0, 371, 271);
     sceneCPUU = new QGraphicsScene(0, 0, 371, 271);
     sceneGPUU = new QGraphicsScene(0, 0, 371, 271);
-    sceneMacro = new QGraphicsScene(0, 0, 241, 281);
+    sceneMacro = new QGraphicsScene(0, 0, 236, 261);
     //if metric is on start thread
     macro.start();
     cpuUthread.start();
@@ -449,6 +449,18 @@ void MainWindow::updateProg() {
 
     if(set.macro)//macro widget is shown
     {
+        sceneMacro->clear();
+        macro.draw(sceneMacro, Qt::red, display->fontcolor);
+        ui->MacroView->setScene(sceneMacro);
+        ui->MacroList->clear();
+        ui->MacroList->addItem(macro.loc);
+        for (int i = 0; i < macro.counter; i++) {
+            QChar key = static_cast<char>(macro.macro[i]);
+            QString sKey = key;
+            ui->MacroList->addItem(sKey);
+        }
+        ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
+
         if(!macro.recording)//macro is not recording
         {
             if(macro.on)//macro is listening for activation key
@@ -473,18 +485,6 @@ void MainWindow::updateProg() {
     if(set.Keyboard)
     {
         keyboardThread.setLineColor(display->fontcolor);
-        sceneMacro->clear();
-        macro.draw(sceneMacro, Qt::red, display->fontcolor);
-        ui->MacroView->setScene(sceneMacro);
-        ui->MacroList->clear();
-
-        for (int i; i < macro.counter; i++) {
-            QChar key = static_cast<char>(macro.macro[i]);
-            QString sKey = key;
-            ui->MacroList->addItem(sKey);
-        }
-        ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
-
         keyboardThread.draw();
         ui->keyboardView->setScene(keyboardThread.scene);
     }
@@ -812,6 +812,11 @@ std::string doubleToString(double i){
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     //qDebug() << event->key();
+    if (macro.activationKeyRec == true) {
+        macro.activationKey = event->key();
+        macro.activationKeyRec = false;
+        qDebug() << event->key();
+    }
     if (isSelected == 1) {
         int x = 0;
         int y = 0;
@@ -834,25 +839,25 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         else {
             switch(selected) {
                 case 0:
-                    ui->MemoryGraphView->setGeometry(ui->MemoryGraphView->x() + x, ui->MemoryGraphView->y() + y, 371, 271);
+                    ui->MemoryGraphView->setGeometry(ui->MemoryGraphView->x() + x, ui->MemoryGraphView->y() + y, 381, 281);
                     break;
                 case 1:
-                    ui->CPUTempView->setGeometry(ui->CPUTempView->x() + x, ui->CPUTempView->y() + y, 371, 271);
+                    ui->CPUTempView->setGeometry(ui->CPUTempView->x() + x, ui->CPUTempView->y() + y, 381, 281);
                     break;
                 case 2:
-                    ui->CPUUseView->setGeometry(ui->CPUUseView->x() + x, ui->CPUUseView->y() + y, 371, 271);
+                    ui->CPUUseView->setGeometry(ui->CPUUseView->x() + x, ui->CPUUseView->y() + y, 381, 281);
                     break;
                 case 3:
-                    ui->CPUSpeedView->setGeometry(ui->CPUSpeedView->x() + x, ui->CPUSpeedView->y() + y, 371, 271);
+                    ui->CPUSpeedView->setGeometry(ui->CPUSpeedView->x() + x, ui->CPUSpeedView->y() + y, 381, 281);
                     break;
                 case 4:
-                    ui->GPUTempView->setGeometry(ui->GPUTempView->x() + x, ui->GPUTempView->y() + y, 371, 271);
+                    ui->GPUTempView->setGeometry(ui->GPUTempView->x() + x, ui->GPUTempView->y() + y, 381, 281);
                     break;
                 case 5:
-                    ui->keyboardView->setGeometry(ui->keyboardView->x() + x, ui->keyboardView->y() + y, 486, 146);
+                    ui->keyboardView->setGeometry(ui->keyboardView->x() + x, ui->keyboardView->y() + y, 496, 156);
                     break;
                 case 6:
-                    ui->MacroView->setGeometry(ui->MacroView->x() + x, ui->MacroView->y() + y, 241, 281);
+                    ui->MacroView->setGeometry(ui->MacroView->x() + x, ui->MacroView->y() + y, 251, 291);
                     break;
             }
         }
@@ -893,19 +898,19 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             selected = 5;
         }
         if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos()) && ui->MacroView->isVisible()) {
-            if ((event->x() > (ui->MacroView->x() + 100 ) && event->x() < (ui->MacroView->x() + 120)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 140))) {
+            if ((event->x() > (ui->MacroView->x() + 60 ) && event->x() < (ui->MacroView->x() + 90)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 130))) {
                 macro.recHit();
             }
             else {
-                if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 220)) && (event->y() > (ui->MacroView->y() + 170 ) && event->y() < (ui->MacroView->y() + 210))) {
+                if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 205)) && (event->y() > (ui->MacroView->y() + 180 ) && event->y() < (ui->MacroView->y() + 220))) {
                     macro.onHit();
                 }
                 else {
-                    if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 200)) && (event->y() > (ui->MacroView->y() + 220 ) && event->y() < (ui->MacroView->y() + 260))) {
+                    if ((event->x() > (ui->MacroView->x() + 160 ) && event->x() < (ui->MacroView->x() + 205)) && (event->y() > (ui->MacroView->y() + 230 ) && event->y() < (ui->MacroView->y() + 270))) {
                         macro.offHit();
                     }
                     else {
-                        if ((event->x() > (ui->MacroView->x() + 165 ) && event->x() < (ui->MacroView->x() + 195)) && (event->y() > (ui->MacroView->y() + 100 ) && event->y() < (ui->MacroView->y() + 145))) {
+                        if ((event->x() > (ui->MacroView->x() + 140 ) && event->x() < (ui->MacroView->x() + 170)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 130))) {
                             macro.loadHit();
                         }
                         else {
@@ -921,31 +926,31 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     else {
         switch(selected) {
             case 0:
-                ui->MemoryGraphView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                ui->MemoryGraphView->setGeometry(event->x() - 30,event->y() - 30,381, 281);
                 isSelected = 0;
                 break;
             case 1:
-                ui->CPUTempView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                ui->CPUTempView->setGeometry(event->x() - 30,event->y() - 30,381, 281);
                 isSelected = 0;
                 break;
             case 2:
-                ui->CPUUseView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                ui->CPUUseView->setGeometry(event->x() - 30,event->y() - 30,381, 281);
                 isSelected = 0;
                 break;
             case 3:
-                ui->CPUSpeedView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                ui->CPUSpeedView->setGeometry(event->x() - 30,event->y() - 30,381, 281);
                 isSelected = 0;
                 break;
             case 4:
-                ui->GPUTempView->setGeometry(event->x() - 30,event->y() - 30,371, 271);
+                ui->GPUTempView->setGeometry(event->x() - 30,event->y() - 30,381, 281);
                 isSelected = 0;
                 break;
             case 5:
-                ui->keyboardView->setGeometry(event->x() - 30,event->y() - 30,486, 146);
+                ui->keyboardView->setGeometry(event->x() - 30,event->y() - 30,496, 156);
                 isSelected = 0;
                 break;
             case 6:
-                ui->MacroView->setGeometry(event->x() - 30,event->y() - 30,241, 281);
+                ui->MacroView->setGeometry(event->x() - 30,event->y() - 30,251, 291);
                 isSelected = 0;
                 break;
         }
@@ -1230,7 +1235,7 @@ void MainWindow::on_actionKeyboard_Log_triggered()
     else {
         ui->actionKeyboard_Log->setChecked(1);
         set.Keyboard = true;
-        ui->keyboardView->setGeometry(200,200,486, 146);
+        ui->keyboardView->setGeometry(200,200,496, 156);
         ui->menuKeyboard->setEnabled(true);
         ui->keyboardView->setVisible(true);
     }
@@ -1306,7 +1311,7 @@ void MainWindow::on_actionGraph_Display_triggered()
     }
     else {
         set.memGraph = true;
-        ui->MemoryGraphView->setGeometry(200,200,371, 271);
+        ui->MemoryGraphView->setGeometry(200,200,381, 281);
         ui->MemoryGraphView->setVisible(true);
         ui->actionGraph_Display->setChecked(1);
     }
@@ -1324,7 +1329,7 @@ void MainWindow::on_actionGraph_Display_2_triggered()
     }
     else {
         set.CPUUseGraph = true;
-        ui->CPUUseView->setGeometry(200,200,371, 271);
+        ui->CPUUseView->setGeometry(200,200,381, 281);
         ui->CPUUseView->setVisible(true);
         ui->actionGraph_Display_2->setChecked(1);
     }
@@ -1341,7 +1346,7 @@ void MainWindow::on_actionGraph_Display_3_triggered()
     }
     else {
         set.CPUSpeedGraph = true;
-        ui->CPUSpeedView->setGeometry(200,200,371, 271);
+        ui->CPUSpeedView->setGeometry(200,200,381, 281);
         ui->CPUSpeedView->setVisible(true);
         ui->actionGraph_Display_3->setChecked(1);
     }
@@ -1358,7 +1363,7 @@ void MainWindow::on_actionGraph_Display_4_triggered()
     }
     else {
         set.CPUTempGraph = true;
-        ui->CPUTempView->setGeometry(200,200,371, 271);
+        ui->CPUTempView->setGeometry(200,200,381, 281);
         ui->CPUTempView->setVisible(true);
         ui->actionGraph_Display_4->setChecked(1);
     }
@@ -1376,7 +1381,7 @@ void MainWindow::on_actionGraph_Display_5_triggered()
     else {
         set.GPUTempGraph = true;
         ui->GPUTempView->setVisible(true);
-        ui->GPUTempView->setGeometry(200,200,371, 271);
+        ui->GPUTempView->setGeometry(200,200,381, 281);
         ui->actionGraph_Display_5->setChecked(1);
     }
     set.updated = true;
@@ -1397,7 +1402,7 @@ void MainWindow::on_actionMacro_Recorder_triggered()
     }
     else {
         ui->actionMacro_Recorder->setChecked(1);
-        ui->MacroView->setGeometry(200,200,241, 281);
+        ui->MacroView->setGeometry(200,200,251, 291);
         set.macro = true;
         ui->MacroView->setVisible(true);
     }
@@ -1426,6 +1431,7 @@ void MainWindow::on_actionRemove_Blank_Line_triggered()
 
 void MainWindow::on_actionSet_Activation_Key_triggered()
 {
+    macro.activationKeyRec = true;
     macro.setActivation();
 }
 

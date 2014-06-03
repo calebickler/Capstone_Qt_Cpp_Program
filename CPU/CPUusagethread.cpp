@@ -21,15 +21,15 @@ void CPUusagethread::run()
         if (cpuUsage < LcpuUse) {
             LcpuUse = cpuUsage;
         }
+        array[cu] = cpuUsage;
+        if(cu == 9)
+        {
+            cu = 0;
+        }
+        else
+        {
+            cu++;
+        }
         Sleep(500);
-    }
-    array[cu] = cpuUsage;
-    if(cu == 9)
-    {
-        cu = 0;
-    }
-    else
-    {
-        cu++;
     }
 }
