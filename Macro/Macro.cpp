@@ -241,6 +241,8 @@ void Macro::readFile()
 
     QFile mFile(loc);
 
+    qDebug() << mFile.fileName();
+
     if(!mFile.open(QFile::ReadOnly | QFile::Text))
     {
         qDebug() << "Could not read from file.\n";

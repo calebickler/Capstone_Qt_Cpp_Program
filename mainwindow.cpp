@@ -180,36 +180,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         {
             textDisplay.append(in2.readLine().toInt());
         }
-        /**************Order of graph positions******************
-            out << ui->MemoryGraphView->x();
-            out << "\n";
-            out << ui->MemoryGraphView->y();
-            out << "\n";
-            out << ui->CPUTempView->x();
-            out << "\n";
-            out << ui->CPUTempView->y();
-            out << "\n";
-            out << ui->CPUUseView->x();
-            out << "\n";
-            out << ui->CPUUseView->y();
-            out << "\n";
-            out << ui->CPUSpeedView->x();
-            out << "\n";
-            out << ui->CPUSpeedView->y();
-            out << "\n";
-            out << ui->GPUTempView->x();
-            out << "\n";
-            out << ui->GPUTempView->y();
-            out << "\n";
-            out << ui->keyboardView->x();
-            out << "\n";
-            out << ui->keyboardView->y();
-            out << "\n";
-            out << ui->MacroView->x();
-            out << "\n";
-            out << ui->MacroView->y();
-            out << "\n";
-            */
+        ui->MemoryGraphView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+
+        ui->CPUTempView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+
+        ui->CPUUseView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+
+        ui->CPUSpeedView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+
+        ui->GPUTempView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+
+        ui->keyboardView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 496, 156);
+
+        ui->MacroView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 251, 291);
+
         fromfile = true;
 
         mFile.close();
@@ -453,7 +437,8 @@ void MainWindow::updateProg() {
         macro.draw(sceneMacro, Qt::red, display->fontcolor);
         ui->MacroView->setScene(sceneMacro);
         ui->MacroList->clear();
-        ui->MacroList->addItem(macro.loc);
+        QString name = macro.loc;
+        ui->MacroList->addItem(name.right((name.length() - name.lastIndexOf("\/")) - 1));
         for (int i = 0; i < macro.counter; i++) {
             QChar key = static_cast<char>(macro.macro[i]);
             QString sKey = key;
@@ -898,7 +883,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             selected = 5;
         }
         if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos()) && ui->MacroView->isVisible()) {
-            if ((event->x() > (ui->MacroView->x() + 60 ) && event->x() < (ui->MacroView->x() + 90)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 130))) {
+            if ((event->x() > (ui->MacroView->x() + 60 ) && event->x() < (ui->MacroView->x() + 110)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 150))) {
                 macro.recHit();
             }
             else {
@@ -910,7 +895,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
                         macro.offHit();
                     }
                     else {
-                        if ((event->x() > (ui->MacroView->x() + 140 ) && event->x() < (ui->MacroView->x() + 170)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 130))) {
+                        if ((event->x() > (ui->MacroView->x() + 140 ) && event->x() < (ui->MacroView->x() + 190)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 150))) {
                             macro.loadHit();
                         }
                         else {
@@ -1399,12 +1384,14 @@ void MainWindow::on_actionMacro_Recorder_triggered()
         ui->actionMacro_Recorder->setChecked(0);
         set.macro = false;
         ui->MacroView->setVisible(false);
+        ui->MacroList->setVisible(false);
     }
     else {
         ui->actionMacro_Recorder->setChecked(1);
         ui->MacroView->setGeometry(200,200,251, 291);
         set.macro = true;
         ui->MacroView->setVisible(true);
+        ui->MacroList->setVisible(true);
     }
     set.updated = true;
     updateProg();
