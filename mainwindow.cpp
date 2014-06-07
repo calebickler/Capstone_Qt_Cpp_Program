@@ -904,6 +904,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         }
         if (event->button() == Qt::LeftButton && ui->MacroView->geometry().contains(event->pos()) && ui->MacroView->isVisible()) {
             if ((event->x() > (ui->MacroView->x() + 60 ) && event->x() < (ui->MacroView->x() + 110)) && (event->y() > (ui->MacroView->y() + 80 ) && event->y() < (ui->MacroView->y() + 150))) {
+                ui->MacroList->clear();
+                macro.loc = "";
                 macro.recHit();
             }
             else {

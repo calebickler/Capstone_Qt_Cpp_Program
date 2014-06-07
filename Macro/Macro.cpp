@@ -201,7 +201,9 @@ void Macro::recHit() {
     else
     {
         recording = 1;
+        counter = 0;
         qDebug() << "Record On";
+
     }
 }
 
@@ -288,6 +290,7 @@ void Macro::pressKey(int vkey)
             ip.ki.wVk = keyStuff[j].vk;
             ip.ki.dwFlags = 0;
             SendInput(1, &ip, sizeof(INPUT));
+            counter++;
         }
     }
 
