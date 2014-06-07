@@ -302,9 +302,13 @@ void Macro::playMacro(){
     i = 0;
     while(macro[i] != 0) //reads off first 100 keys
     {
-        pressKey(macro[i]);
-        Sleep(delay);
-        i++;//keys are stored as ascii integers; see www.asciitable.com
+        if(playing)
+        {
+            pressKey(macro[i]);
+            Sleep(delay);
+            i++;//keys are stored as ascii integers; see www.asciitable.com
+        }
+        else return;
     }
     playing = 0;
 }
