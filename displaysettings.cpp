@@ -12,11 +12,15 @@ QString graph;
 QString style;
 QString tempstyle;
 QColor fontcolor;
+QColor tempfcolor;
 QColor graphcolor;
+QColor tempgcolor;
 QColor kHighlight;
+QColor tempkcolor;
 QString button1, button2, button3;
 int fromsettings = 0;
 int fromkey = 0;
+int ok = 1;
 
 displaysettings::displaysettings(QWidget *parent) :
     QDialog(parent),
@@ -57,12 +61,15 @@ void displaysettings::on_pushButton_clicked()
     font.append(");");
     ui->pushButton->setStyleSheet(QString::fromStdString(colorstyle));
     button1 = QString::fromStdString(colorstyle);
-    style = font + back + graph;
+    style = font + back;
 }
 
 void displaysettings::on_buttonBox_rejected()
 {
     style = tempstyle;
+    kHighlight = temphcolor;
+    graphcolor = tempgcolor;
+    fontcolor = tempfcolor;
 }
 
 void displaysettings::on_pushButton_2_clicked()
@@ -90,21 +97,40 @@ void displaysettings::on_pushButton_2_clicked()
     back.append(");");
     ui->pushButton_2->setStyleSheet(QString::fromStdString(colorstyle));
     button2 = QString::fromStdString(colorstyle);
-    style = font + back + graph;
+    style = font + back;
 }
 
 void displaysettings::update()
 {
     if(fromsettings == 1)
     {
-        ui->pushButton->setStyleSheet(button1);
-        ui->pushButton_2->setStyleSheet(button2);
-        ui->pushButton_3->setStyleSheet(button3);
-        font = QString::fromStdString((button1.toStdString().substr(11, button1.toStdString().find(";"))));
-        font.append(";");
-        back = QString::fromStdString((button2.toStdString().substr(0, button2.toStdString().find(";"))));
-        back.append(";");
-        graph = button3;
+        if(button1.length() <= 60 && button1.length() >= 54)
+        {
+            ui->pushButton->setStyleSheet(button1);
+        }
+        else{ok = 0;}
+        if(button2.length() <= 60 && button2.length() >= 54)
+        {
+            ui->pushButton_2->setStyleSheet(button2);
+        }
+        else{ok = 0;}
+        if(button3.length() <= 60 && button3.length() >= 54)
+        {
+            ui->pushButton_3->setStyleSheet(button3);
+        }
+        else{ok = 0;}
+        if(ok)
+        {
+            font = QString::fromStdString((button1.toStdString().substr(11, button1.toStdString().find(";"))));
+            font.append(";");
+            back = QString::fromStdString((button2.toStdString().substr(0, button2.toStdString().find(";"))));
+            back.append(";");
+            graph = button3;
+        }
+        else
+        {
+
+        }
     }
     if(fromkey == 1)
     {
@@ -115,7 +141,7 @@ void displaysettings::update()
 
 void displaysettings::on_buttonBox_accepted()
 {
-    QString fileName = "displaysettings.ini";
+    QString fileName = "displaysettings";
 
     QFile mFile(fileName);
 

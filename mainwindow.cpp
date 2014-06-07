@@ -58,6 +58,7 @@ QString qmemUse;
 QString qcpuSpeed;
 QString qcpuTemp;
 QString qgpuTemp;
+int corrupt;
 
 QList<int> textDisplay;
 
@@ -106,12 +107,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timer->start(500);
 
     //load display settings//
-    QString fileName = "displaysettings.ini";
+    QString fileName = "displaysettings";
     QFile mFile(fileName);
     int c = 1;
     if(!mFile.open(QFile::ReadOnly | QFile::Text))
     {
         qDebug() << "Could not read display settings file.\n";
+        display->style = "color: rgb(124,255,37);background-color: rgb(0,0,0);";
+        display->button1 = "background-color: rgb(124,255,37); border: 1px solid black;";
+        display->button2 = "background-color: rgb(0,0,0); border: 1px solid black;";
+        display->button3 = display->button1;
+        display->fontcolor.setNamedColor("#7cff25");
+        display->kHighlight.setNamedColor("#FFFFFF");
+        keyboardThread.setHighlight(display->kHighlight);
+        display->graphcolor = display->fontcolor;
+        display->update();
         c = 0;
     }
     else {
@@ -121,21 +131,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         }
         QTextStream in(&mFile);
         QString mText = in.readLine();
-        ui->mainList->setStyleSheet(mText);
-        display->style = mText;
-        display->button1 = in.readLine();
-        display->button2 = in.readLine();
-        display->button3 = in.readLine();
-        display->fontcolor.setNamedColor(in.readLine());
-        display->kHighlight.setNamedColor(in.readLine());
-        keyboardThread.setHighlight(display->kHighlight);
-        keyboardThread.hfromset = 1;
-        display->graphcolor.setNamedColor(in.readLine());
+        if(mText.length() >= 47 && mText.length() <= 59)
+        {
+            ui->mainList->setStyleSheet(mText);
+            display->style = mText;
+            display->button1 = in.readLine();
+            display->button2 = in.readLine();
+            display->button3 = in.readLine();
+            display->fontcolor.setNamedColor(in.readLine());
+            display->kHighlight.setNamedColor(in.readLine());
+            keyboardThread.setHighlight(display->kHighlight);
+            keyboardThread.hfromset = 1;
+            display->graphcolor.setNamedColor(in.readLine());
+            display->update();
+        }
+        else{qDebug() << "corrupt file";}
         mFile.close();
     }
 
     //load on/off settings
-    fileName = "settings.ini";
+    fileName = "settings";
     QFile mFile2(fileName);
     if(!mFile2.open(QFile::ReadOnly | QFile::Text))
     {
@@ -157,23 +172,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     else {
         c++;
         QTextStream in2(&mFile2);
-        set.cpuSpeed = in2.readLine().toULong();
-        set.cpuUse = in2.readLine().toULong();
-        set.cpuTemp = in2.readLine().toULong();
-        set.memUse = in2.readLine().toULong();
-        set.gpuTemp = in2.readLine().toULong();
-        set.HLcpuUse = in2.readLine().toULong();
-        set.HLmemUsage = in2.readLine().toULong();
-        set.HLcpuSpeed = in2.readLine().toULong();
-        set.HLcpuTemp  = in2.readLine().toULong();
-        set.HLgpuTemp = in2.readLine().toULong();
-        set.refresh = in2.readLine().toULong();
-        set.Keyboard = in2.readLine().toULong();
-        set.memGraph = in2.readLine().toULong();
-        set.CPUSpeedGraph = in2.readLine().toULong();
-        set.CPUTempGraph = in2.readLine().toULong();
-        set.CPUUseGraph = in2.readLine().toULong();
-        set.GPUTempGraph = in2.readLine().toULong();
+        set.cpuSpeed = myInt(in2.readLine(), 0, 1);
+        set.cpuUse = myInt(in2.readLine(), 0, 1);
+        set.cpuTemp = myInt(in2.readLine(), 0, 1);
+        set.memUse = myInt(in2.readLine(), 0, 1);
+        set.gpuTemp = myInt(in2.readLine(), 0, 1);
+        set.HLcpuUse = myInt(in2.readLine(), 0, 1);
+        set.HLmemUsage = myInt(in2.readLine(), 0, 1);
+        set.HLcpuSpeed = myInt(in2.readLine(), 0, 1);
+        set.HLcpuTemp  = myInt(in2.readLine(), 0, 1);
+        set.HLgpuTemp = myInt(in2.readLine(), 0, 1);
+        set.refresh = myInt(in2.readLine(), 500, 1500);
+        set.Keyboard = myInt(in2.readLine(), 0, 1);
+        set.memGraph = myInt(in2.readLine(), 0, 1);
+        set.CPUSpeedGraph = myInt(in2.readLine(), 0, 1);
+        set.CPUTempGraph = myInt(in2.readLine(), 0, 1);
+        set.CPUUseGraph = myInt(in2.readLine(), 0, 1);
+        set.GPUTempGraph = myInt(in2.readLine(), 0, 1);
+        set.macro = myInt(in2.readLine(), 0, 1);
         int p,r;
         r = in2.readLine().toInt();
         for(p = 0; p < r; p++)
@@ -438,7 +454,7 @@ void MainWindow::updateProg() {
         ui->MacroView->setScene(sceneMacro);
         ui->MacroList->clear();
         QString name = macro.loc;
-        ui->MacroList->addItem(name.right((name.length() - name.lastIndexOf("\/")) - 1));
+        ui->MacroList->addItem(name.right((name.length() - name.lastIndexOf("/")) - 1));
         for (int i = 0; i < macro.counter; i++) {
             QChar key = static_cast<char>(macro.macro[i]);
             QString sKey = key;
@@ -484,7 +500,7 @@ void MainWindow::updateProg() {
 
         if(set.updated) {
             set.updated = false;
-            QString fileName = "settings.ini";
+            QString fileName = "settings";
 
             QFile mFile(fileName);
 
@@ -527,6 +543,8 @@ void MainWindow::updateProg() {
             out << set.CPUUseGraph;
             out << "\n";
             out << set.GPUTempGraph;
+            out << "\n";
+            out << set.macro;
             out << "\n";
             out << textDisplay.length();
             out << "\n";
@@ -1119,6 +1137,9 @@ void MainWindow::on_action1_High_triggered()
 
 void MainWindow::on_actionDisplay_Settings_triggered()
 {
+    display->tempfcolor = display->fontcolor;
+    display->tempgcolor = display->graphcolor;
+    display->temphcolor = display->kHighlight;
     display->tempstyle = ui->mainList->styleSheet();
     display->setModal(false);
     display->update();
@@ -1443,4 +1464,28 @@ void MainWindow::help() {
 
 void MainWindow::on_actionHelp_triggered() {
     help();
+}
+
+int MainWindow::myInt(QString s, int lower, int upper)
+{
+    int temp;
+    bool ok;
+    temp = s.toInt(&ok);
+    if(ok)
+    {
+        if(temp >= lower && temp <= upper)
+        {
+            return temp;
+        }
+        else
+        {
+            qDebug() << "file is corrupt";
+            return upper;
+        }
+    }
+    else
+    {
+        qDebug() << "file is corrupt";
+        return upper;
+    }
 }

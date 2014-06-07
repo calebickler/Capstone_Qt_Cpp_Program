@@ -152,10 +152,9 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 void Macro:: run() {
     while(true)
     {
-        while(playing)
+        if(playing)
         {
             playMacro();
-            Sleep(delay);
         }
     }
 }
@@ -300,10 +299,11 @@ void Macro::playMacro(){
     i = 0;
     while(macro[i] != 0) //reads off first 100 keys
     {
-        //qDebug() << macro[i];
         pressKey(macro[i]);
+        Sleep(delay);
         i++;//keys are stored as ascii integers; see www.asciitable.com
     }
+    playing = 0;
 }
 
 void Macro::loadHit() {

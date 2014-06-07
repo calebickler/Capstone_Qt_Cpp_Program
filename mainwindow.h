@@ -102,6 +102,8 @@ private slots:
 
     void on_actionHelp_triggered();
 
+    int myInt(QString, int, int);
+
 private:
     Ui::MainWindow *ui;
     displaysettings *display;

@@ -21,6 +21,7 @@ public:
     QColor fontcolor;
     QColor graphcolor;
     QColor kHighlight;
+    QColor tempfcolor, tempgcolor, temphcolor;
     int fromsettings, fromkey;
 
 
