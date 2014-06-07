@@ -121,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         display->kHighlight.setNamedColor("#FFFFFF");
         keyboardThread.setHighlight(display->kHighlight);
         display->graphcolor = display->fontcolor;
+        display->fromsettings = 1;
         display->update();
         c = 0;
     }
@@ -866,6 +867,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         }
     }
     ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
+    set.updated = 1;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
@@ -960,6 +962,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     this->setCursor(Qt::ArrowCursor);
     }
     ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
+    set.updated = 1;
 }
 
 
@@ -1137,6 +1140,8 @@ void MainWindow::on_action1_High_triggered()
 
 void MainWindow::on_actionDisplay_Settings_triggered()
 {
+    qDebug() << display->back;
+    qDebug() << display->font;
     display->tempfcolor = display->fontcolor;
     display->tempgcolor = display->graphcolor;
     display->temphcolor = display->kHighlight;

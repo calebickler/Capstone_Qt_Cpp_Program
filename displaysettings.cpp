@@ -129,7 +129,7 @@ void displaysettings::update()
         }
         else
         {
-
+            qDebug() << "display settings file corrupt";
         }
     }
     if(fromkey == 1)
