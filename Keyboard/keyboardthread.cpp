@@ -47,7 +47,7 @@ void KeyboardThread::run()
            //duration = (clock() - start);
            k.getKeys();
            //switchString(k.keys[j].id);
-           if(k.idle > 5000)
+           if(k.idle > refresh)
            {
                 timerK = false;
                 k.idle = 0;
