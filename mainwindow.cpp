@@ -192,10 +192,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         set.GPUTempGraph = myInt(in2.readLine(), 0, 1);
         set.macro = myInt(in2.readLine(), 0, 1);
         int p,r;
-        r = in2.readLine().toInt();
+        r = myInt(in2.readLine(),0,5000);
         for(p = 0; p < r; p++)
         {
-            textDisplay.append(in2.readLine().toInt());
+            textDisplay.append(myInt(in2.readLine(),0,11));
         }
         ui->MemoryGraphView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 381, 281);
 
