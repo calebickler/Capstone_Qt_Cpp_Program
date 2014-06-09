@@ -398,7 +398,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
 
     OHMpro = new QProcess();
-    OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
+    OHMpro->start("/OpenHardwareMonitor/OpenHardwareMonitor.exe");
 
 
     QProcess *WMIserver = new QProcess();

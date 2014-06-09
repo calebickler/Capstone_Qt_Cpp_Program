@@ -83,7 +83,7 @@ void KeyboardThread::switchString(int num)
 void KeyboardThread::draw() {
 
 
-    QPixmap pixmapObject("debug/keyboard.png");
+    QPixmap pixmapObject("keyboard.png");
     QGraphicsPixmapItem * keypic = new QGraphicsPixmapItem();
     keypic->setPixmap(pixmapObject.scaledToWidth(486,Qt::SmoothTransformation));
     QBitmap mask = pixmapObject.createMaskFromColor(Qt::black,Qt::MaskOutColor);
