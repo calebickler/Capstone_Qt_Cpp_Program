@@ -141,32 +141,7 @@ void displaysettings::update()
 
 void displaysettings::on_buttonBox_accepted()
 {
-    QString fileName = "displaysettings";
-
-    QFile mFile(fileName);
-
-    if(!mFile.open(QFile::WriteOnly | QFile::Text))
-    {
-        qDebug() << "Could not write to file.\n";
-        return;
-    }
-    QTextStream out(&mFile);
-    out << style;
-    out << "\n";
-    out << button1;
-    out << "\n";
-    out << button2;
-    out << "\n";
-    out << button3;
-    out << "\n";
-    out << fontcolor.name();
-    out << "\n";
-    out << kHighlight.name();
-    out << "\n";
-    out << graphcolor.name();
-
-    mFile.flush();
-    mFile.close();
+    writeFile();
 }
 
 void displaysettings::on_pushButton_3_clicked()
@@ -195,4 +170,33 @@ void displaysettings::on_pushButton_3_clicked()
     graph.append(");");
     ui->pushButton_3->setStyleSheet(QString::fromStdString(colorstyle));
     button3 = QString::fromStdString(colorstyle);
+}
+
+void displaysettings::writeFile(){
+    QString fileName = "displaysettings";
+
+    QFile mFile(fileName);
+
+    if(!mFile.open(QFile::WriteOnly | QFile::Text))
+    {
+        qDebug() << "Could not write to file.\n";
+        return;
+    }
+    QTextStream out(&mFile);
+    out << style;
+    out << "\n";
+    out << button1;
+    out << "\n";
+    out << button2;
+    out << "\n";
+    out << button3;
+    out << "\n";
+    out << fontcolor.name();
+    out << "\n";
+    out << kHighlight.name();
+    out << "\n";
+    out << graphcolor.name();
+
+    mFile.flush();
+    mFile.close();
 }

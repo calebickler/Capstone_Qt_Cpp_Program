@@ -104,6 +104,8 @@ private slots:
 
     int myInt(QString, int, int);
 
+    void writeFile();
+
 private:
     Ui::MainWindow *ui;
     displaysettings *display;

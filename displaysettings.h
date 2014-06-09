@@ -23,6 +23,7 @@ public:
     QColor kHighlight;
     QColor tempfcolor, tempgcolor, temphcolor;
     int fromsettings, fromkey;
+    void writeFile();
 
 
 private slots:

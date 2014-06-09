@@ -124,6 +124,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         display->fromsettings = 1;
         display->update();
         c = 0;
+        display->writeFile();
     }
     else {
     if(c == 1)
@@ -156,6 +157,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if(!mFile2.open(QFile::ReadOnly | QFile::Text))
     {
         qDebug() << "Could not read settings file.\n";
+        writeFile();
         if(set.Keyboard)
             ui->actionKeyboard_Log->setChecked(1);
             ui->actionNumeric_Display->setChecked(1);
@@ -483,89 +485,7 @@ void MainWindow::updateProg() {
 
         if(set.updated) {
             set.updated = false;
-            QString fileName = "settings";
-
-            QFile mFile(fileName);
-
-            if(!mFile.open(QFile::WriteOnly | QFile::Text))
-            {
-                qDebug() << "Could not write to file.\n";
-                return;
-            }
-            QTextStream out(&mFile);
-            out << set.cpuSpeed;
-            out << "\n";
-            out << set.cpuUse;
-            out << "\n";
-            out << set.cpuTemp;
-            out << "\n";
-            out << set.memUse;
-            out << "\n";
-            out << set.gpuTemp;
-            out << "\n";
-            out << set.HLcpuUse;
-            out << "\n";
-            out << set.HLmemUsage;
-            out << "\n";
-            out << set.HLcpuSpeed;
-            out << "\n";
-            out << set.HLcpuTemp;
-            out << "\n";
-            out << set.HLgpuTemp;
-            out << "\n";
-            out << set.refresh;
-            out << "\n";
-            out << set.Keyboard;
-            out << "\n";
-            out << set.memGraph;
-            out << "\n";
-            out << set.CPUSpeedGraph;
-            out << "\n";
-            out << set.CPUTempGraph;
-            out << "\n";
-            out << set.CPUUseGraph;
-            out << "\n";
-            out << set.GPUTempGraph;
-            out << "\n";
-            out << set.macro;
-            out << "\n";
-            out << textDisplay.length();
-            out << "\n";
-            foreach(const int x, textDisplay)
-            {
-                out << x;
-                out << "\n";
-            }
-            out << ui->MemoryGraphView->y();
-            out << "\n";
-            out << ui->MemoryGraphView->x();
-            out << "\n";
-            out << ui->CPUTempView->y();
-            out << "\n";
-            out << ui->CPUTempView->x();
-            out << "\n";
-            out << ui->CPUUseView->y();
-            out << "\n";
-            out << ui->CPUUseView->x();
-            out << "\n";
-            out << ui->CPUSpeedView->y();
-            out << "\n";
-            out << ui->CPUSpeedView->x();
-            out << "\n";
-            out << ui->GPUTempView->y();
-            out << "\n";
-            out << ui->GPUTempView->x();
-            out << "\n";
-            out << ui->keyboardView->y();
-            out << "\n";
-            out << ui->keyboardView->x();
-            out << "\n";
-            out << ui->MacroView->y();
-            out << "\n";
-            out << ui->MacroView->x();
-            out << "\n";
-            mFile.flush();
-            mFile.close();
+            writeFile();
         }
 
         if (cspeed.cpuSpeed > 1) {
@@ -1488,3 +1408,89 @@ int MainWindow::myInt(QString s, int lower, int upper)
     }
 }
 
+void MainWindow::writeFile()
+{
+    QString fileName = "settings";
+
+    QFile mFile(fileName);
+
+    if(!mFile.open(QFile::WriteOnly | QFile::Text))
+    {
+        qDebug() << "Could not write to file.\n";
+        return;
+    }
+    QTextStream out(&mFile);
+    out << set.cpuSpeed;
+    out << "\n";
+    out << set.cpuUse;
+    out << "\n";
+    out << set.cpuTemp;
+    out << "\n";
+    out << set.memUse;
+    out << "\n";
+    out << set.gpuTemp;
+    out << "\n";
+    out << set.HLcpuUse;
+    out << "\n";
+    out << set.HLmemUsage;
+    out << "\n";
+    out << set.HLcpuSpeed;
+    out << "\n";
+    out << set.HLcpuTemp;
+    out << "\n";
+    out << set.HLgpuTemp;
+    out << "\n";
+    out << set.refresh;
+    out << "\n";
+    out << set.Keyboard;
+    out << "\n";
+    out << set.memGraph;
+    out << "\n";
+    out << set.CPUSpeedGraph;
+    out << "\n";
+    out << set.CPUTempGraph;
+    out << "\n";
+    out << set.CPUUseGraph;
+    out << "\n";
+    out << set.GPUTempGraph;
+    out << "\n";
+    out << set.macro;
+    out << "\n";
+    out << textDisplay.length();
+    out << "\n";
+    foreach(const int x, textDisplay)
+    {
+        out << x;
+        out << "\n";
+    }
+    out << ui->MemoryGraphView->y();
+    out << "\n";
+    out << ui->MemoryGraphView->x();
+    out << "\n";
+    out << ui->CPUTempView->y();
+    out << "\n";
+    out << ui->CPUTempView->x();
+    out << "\n";
+    out << ui->CPUUseView->y();
+    out << "\n";
+    out << ui->CPUUseView->x();
+    out << "\n";
+    out << ui->CPUSpeedView->y();
+    out << "\n";
+    out << ui->CPUSpeedView->x();
+    out << "\n";
+    out << ui->GPUTempView->y();
+    out << "\n";
+    out << ui->GPUTempView->x();
+    out << "\n";
+    out << ui->keyboardView->y();
+    out << "\n";
+    out << ui->keyboardView->x();
+    out << "\n";
+    out << ui->MacroView->y();
+    out << "\n";
+    out << ui->MacroView->x();
+    out << "\n";
+    mFile.flush();
+    mFile.close();
+}
