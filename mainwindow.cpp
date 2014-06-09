@@ -1447,7 +1447,6 @@ void MainWindow::on_actionRemove_Blank_Line_triggered()
 void MainWindow::on_actionSet_Activation_Key_triggered()
 {
     macro.activationKeyRec = true;
-    macro.setActivation();
 }
 
 void MainWindow::on_actionSet_Delay_triggered()

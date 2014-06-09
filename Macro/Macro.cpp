@@ -200,6 +200,7 @@ void Macro::recHit() {
     }
     else
     {
+        std::fill(macro, macro+1000, 0);
         recording = 1;
         counter = 0;
         qDebug() << "Record On";
@@ -259,6 +260,9 @@ void Macro::readFile()
     }
 
     counter = i;
+
+    mFile.flush();
+    mFile.close();
 }
 
 void Macro::onHit() {
@@ -302,13 +306,9 @@ void Macro::playMacro(){
     i = 0;
     while(macro[i] != 0) //reads off first 100 keys
     {
-        if(playing)
-        {
             pressKey(macro[i]);
             Sleep(delay);
             i++;//keys are stored as ascii integers; see www.asciitable.com
-        }
-        else return;
     }
     playing = 0;
 }
@@ -316,8 +316,4 @@ void Macro::playMacro(){
 void Macro::loadHit() {
     readFile();
     qDebug() << "Load";
-}
-
-void Macro::setActivation() {
-    qDebug() << "set Activation";
 }
