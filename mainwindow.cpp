@@ -157,7 +157,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if(!mFile2.open(QFile::ReadOnly | QFile::Text))
     {
         qDebug() << "Could not read settings file.\n";
-        writeFile();
         if(set.Keyboard)
             ui->actionKeyboard_Log->setChecked(1);
             ui->actionNumeric_Display->setChecked(1);
@@ -346,6 +345,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         textDisplay.append(11);
         textDisplay.append(9);
         textDisplay.append(10);
+        writeFile();
     }
 
 
@@ -357,7 +357,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //XML editing
     //rewrite entire file emitting any of our settings
     //open config
-    QFile OHMconfig("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
+    QFile OHMconfig("OpenHardwareMonitor/OpenHardwareMonitor.config");
     if(!OHMconfig.open(QFile::ReadWrite | QFile::Text))
     {
        qDebug() << "Could not read OHMconfig file.\n";
@@ -365,7 +365,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     else {
         QTextStream OHMts(&OHMconfig);
         //create temp file
-        QFile OHMnewConfig("debug/OpenHardwareMonitor/temp.txt");
+        QFile OHMnewConfig("OpenHardwareMonitor/temp.txt");
         if(!OHMnewConfig.open(QFile::ReadWrite | QFile::Text))
         {
            qDebug() << "Could not read temp file.\n";
@@ -391,7 +391,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 count++;
             }
             OHMconfig.remove();
-            OHMnewConfig.rename("debug/OpenHardwareMonitor/OpenHardwareMonitor.config");
+            OHMnewConfig.rename("OpenHardwareMonitor/OpenHardwareMonitor.config");
             OHMnewConfig.close();
             OHMconfig.close();
         }
@@ -1377,7 +1377,7 @@ void MainWindow::help() {
     msgBox->setText( tr("Welcome to Gaming Information Suite.\nTo add information click on the add menu and choose what you would like to be displayed.\nTo move graphics around you can:\n\tLeft click anywhere on the graphic and left click again where you would like it placed.\n\tLeft click on a graphic then use WASD keys to move it around. Then hit enter to set location.\nTo change display options click the Display Settings option in the main menu.\nTo open this dialouge again click on help in the main menu.") );
     msgBox->setModal( false );
     //msgBox->serIcon
-    msgBox->open( this, SLOT(msgBoxClosed(QAbstractButton*)) );
+    //msgBox->open( this, SLOT(msgBoxClosed(QAbstractButton*)) );
 }
 
 void MainWindow::on_actionHelp_triggered() {

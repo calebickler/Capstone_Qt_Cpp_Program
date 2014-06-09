@@ -55,7 +55,7 @@ Macro::Macro() {
     activationKey = 96;//default
     activationKeyRec = false;
     winActivationKey = 192;
-    loc = "debug/macros/";
+    loc = "macros/";
 }
 
 void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
@@ -225,7 +225,7 @@ void Macro::recHit() {
 
 void Macro::writeFile(QString s)
 {
-        loc = "debug/macros/";
+        loc = "macros/";
         int i;
         s.append(".macro");
         loc.append(s);
@@ -254,7 +254,7 @@ void Macro::writeFile(QString s)
 
 void Macro::readFile()
 {
-    loc = QFileDialog::getOpenFileName(0, "/debug/macros", tr("*.macro"));
+    loc = QFileDialog::getOpenFileName(0, "/macros", tr("*.macro"));
 
     QFile mFile(loc);
 
