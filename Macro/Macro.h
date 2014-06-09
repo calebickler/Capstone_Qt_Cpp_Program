@@ -27,6 +27,7 @@ public:
     int recording;
     int counter;
     int activationKey;
+    int winActivationKey;
     bool activationKeyRec;
     void pressKey(int);
     QString loc;
@@ -35,6 +36,7 @@ public:
     void keyPressed(QKeyEvent *e);
     int macro[1000];
     keys keyStorage[104];
+    //keys keyStuff[104];
 };
 
 #endif // MACRO_H

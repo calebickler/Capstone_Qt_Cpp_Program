@@ -801,6 +801,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (macro.activationKeyRec == true) {
         macro.activationKey = event->key();
         macro.activationKeyRec = false;
+        int j;
+        for(j = 0; j < 104; j++)
+        {
+            if(macro.activationKey == macro.keyStorage[j].ascii)
+            {
+                macro.winActivationKey = macro.keyStorage[j].vk;
+                j = 110;
+            }
+        }
+        macro.activationKeyRec = false;
         qDebug() << event->key();
     }
     if (isSelected == 1) {

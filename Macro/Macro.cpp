@@ -54,6 +54,7 @@ Macro::Macro() {
     off = 0;
     activationKey = 96;//default
     activationKeyRec = false;
+    winActivationKey = 192;
     loc = "debug/macros/";
 }
 
@@ -157,7 +158,7 @@ void Macro:: run() {
         if(on)
         {
             hit = false;
-            if(GetAsyncKeyState(activationKey)) {
+            if(GetAsyncKeyState(winActivationKey)) {
                 if (canHit) {hit = true;}
                 canHit = false;
             }
@@ -304,10 +305,10 @@ void Macro::pressKey(int vkey)
     {
         if(vkey == keyStuff[j].ascii)
         {
-            qDebug() << keyStuff[j].ascii;
             ip.ki.wVk = keyStuff[j].vk;
             ip.ki.dwFlags = 0;
             SendInput(1, &ip, sizeof(INPUT));
+            return;
         }
     }
 
@@ -318,6 +319,7 @@ void Macro::playMacro(){
     i = 0;
     while(macro[i] != 0) //reads off first 100 keys
     {
+            qDebug() << macro[i];
             pressKey(macro[i]);
             Sleep(delay);
             i++;//keys are stored as ascii integers; see www.asciitable.com
