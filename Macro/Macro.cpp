@@ -155,7 +155,7 @@ void Macro:: run() {
     while(true)
     {
         hit = false;
-        if(GetAsyncKeyState(0x51)) {
+        if(GetAsyncKeyState(activationKey)) {
             if (canHit) {hit = true;}
             canHit = false;
         }
@@ -166,6 +166,7 @@ void Macro:: run() {
             qDebug() << "playing";
             playMacro();
         }
+        Sleep(100);
     }
 }
 
