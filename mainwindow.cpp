@@ -106,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(timer, SIGNAL(timeout()), this, SLOT(updateProg()));
     timer->start(500);
 
+
     //load display settings//
     QString fileName = "displaysettings";
     QFile mFile(fileName);

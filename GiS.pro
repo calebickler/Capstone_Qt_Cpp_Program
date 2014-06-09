@@ -47,6 +47,8 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     displaysettings.ui
 
+win32:RC_ICONS += 32x32icon.ico
+
 win32: LIBS += -L$$PWD/Libraries/Sigar/sigar-bin/lib/ -lsigar-x86-winnt
 
 INCLUDEPATH += $$PWD/Libraries/Sigar/sigar-bin/include
