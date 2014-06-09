@@ -154,17 +154,20 @@ void Macro:: run() {
     boolean canHit = 1;
     while(true)
     {
-        hit = false;
-        if(GetAsyncKeyState(activationKey)) {
-            if (canHit) {hit = true;}
-            canHit = false;
-        }
-        else {
-            canHit = true;
-        }
-        if (hit) {
-            qDebug() << "playing";
-            playMacro();
+        if(on)
+        {
+            hit = false;
+            if(GetAsyncKeyState(activationKey)) {
+                if (canHit) {hit = true;}
+                canHit = false;
+            }
+            else {
+                canHit = true;
+            }
+            if (hit) {
+                qDebug() << "playing";
+                playMacro();
+            }
         }
         Sleep(100);
     }
@@ -305,7 +308,6 @@ void Macro::pressKey(int vkey)
             ip.ki.wVk = keyStuff[j].vk;
             ip.ki.dwFlags = 0;
             SendInput(1, &ip, sizeof(INPUT));
-            counter++;
         }
     }
 
@@ -313,7 +315,6 @@ void Macro::pressKey(int vkey)
 
 void Macro::playMacro(){
     int i;
-    counter = 0;
     i = 0;
     while(macro[i] != 0) //reads off first 100 keys
     {
