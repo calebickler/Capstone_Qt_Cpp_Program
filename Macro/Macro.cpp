@@ -150,10 +150,20 @@ void Macro::draw(QGraphicsScene* scene, QColor background, QColor font) {
 }
 
 void Macro:: run() {
+    boolean hit = 0;
+    boolean canHit = 1;
     while(true)
     {
-        if(playing)
-        {
+        hit = false;
+        if(GetAsyncKeyState(0x51)) {
+            if (canHit) {hit = true;}
+            canHit = false;
+        }
+        else {
+            canHit = true;
+        }
+        if (hit) {
+            qDebug() << "playing";
             playMacro();
         }
     }

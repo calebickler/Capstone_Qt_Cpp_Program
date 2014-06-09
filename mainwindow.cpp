@@ -462,24 +462,6 @@ void MainWindow::updateProg() {
             ui->MacroList->addItem(sKey);
         }
         ui->MacroList->setGeometry(ui->MacroView->x() + 20, ui->MacroView->y() + 130, 121, 151);
-
-        if(!macro.recording)//macro is not recording
-        {
-            if(macro.on)//macro is listening for activation key
-            {
-                if(keyboardThread.checkKeys(macro.activationKey))
-                {
-                    if(macro.playing)
-                    {
-                        macro.playing = 0;
-                    }
-                    else
-                    {
-                        macro.playing = 1;
-                    }
-                }
-            }
-        }
     }
 
 
@@ -1495,3 +1477,4 @@ int MainWindow::myInt(QString s, int lower, int upper)
         return upper;
     }
 }
+
