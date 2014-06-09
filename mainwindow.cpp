@@ -197,19 +197,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         {
             textDisplay.append(in2.readLine().toInt());
         }
-        ui->MemoryGraphView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+        ui->MemoryGraphView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 381, 281);
 
-        ui->CPUTempView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+        ui->CPUTempView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 381, 281);
 
-        ui->CPUUseView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+        ui->CPUUseView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 381, 281);
 
-        ui->CPUSpeedView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+        ui->CPUSpeedView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 381, 281);
 
-        ui->GPUTempView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 381, 281);
+        ui->GPUTempView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 381, 281);
 
-        ui->keyboardView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 496, 156);
+        ui->keyboardView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 496, 156);
 
-        ui->MacroView->setGeometry(in2.readLine().toULong(), in2.readLine().toULong(), 251, 291);
+        ui->MacroView->setGeometry(myInt(in2.readLine(),0,5000), myInt(in2.readLine(),0,5000), 251, 291);
 
         fromfile = true;
 
