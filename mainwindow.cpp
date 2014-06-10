@@ -399,7 +399,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
 
     OHMpro = new QProcess();
-    OHMpro->start("/OpenHardwareMonitor/OpenHardwareMonitor.exe");
+    OHMpro->start("OpenHardwareMonitor/OpenHardwareMonitor.exe");
 
 
     QProcess *WMIserver = new QProcess();
@@ -1378,7 +1378,7 @@ void MainWindow::help() {
     msgBox->setText( tr("Welcome to Gaming Information Suite.\nTo add information click on the add menu and choose what you would like to be displayed.\nTo move graphics around you can:\n\tLeft click anywhere on the graphic and left click again where you would like it placed.\n\tLeft click on a graphic then use WASD keys to move it around. Then hit enter to set location.\nTo change display options click the Display Settings option in the main menu.\nTo open this dialouge again click on help in the main menu.") );
     msgBox->setModal( false );
     //msgBox->serIcon
-    //msgBox->open( this, SLOT(msgBoxClosed(QAbstractButton*)) );
+    msgBox->open( this, SLOT(msgBoxClosed(QAbstractButton*)) );
 }
 
 void MainWindow::on_actionHelp_triggered() {
@@ -1399,13 +1399,15 @@ int MainWindow::myInt(QString s, int lower, int upper)
         else
         {
             qDebug() << "file is corrupt";
-            return upper;
+            if(upper < 2000)return upper;
+            else return lower;
         }
     }
     else
     {
         qDebug() << "file is corrupt";
-        return upper;
+        if(upper < 2000)return upper;
+        else return lower;
     }
 }
 

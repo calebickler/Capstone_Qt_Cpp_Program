@@ -4,7 +4,7 @@ Memory::Memory(){
     memoryUsage = 0;
     HmemUsage = 0;
     LmemUsage = 1000;
-    int mu = 0;
+    mu = 0;
 }
 
 void Memory::getUsage(void)
