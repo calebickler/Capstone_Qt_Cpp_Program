@@ -9,7 +9,7 @@ class Macro : public QThread
 public:
     Macro();
     struct keys{
-        short vk;
+        int vk;
         int ascii;
     };
 
@@ -35,8 +35,6 @@ public:
     void writeFile(QString);
     void keyPressed(QKeyEvent *e);
     int macro[1000];
-    keys keyStorage[104];
-    //keys keyStuff[104];
 };
 
 #endif // MACRO_H
