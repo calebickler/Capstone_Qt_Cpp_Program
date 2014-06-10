@@ -18,6 +18,7 @@ GPUtemp::GPUtemp()
     numgpu = 0;
     HgpuTemp = 0;
     LgpuTemp = 1000;
+    gpuType = 0;
 }
 
 void GPUtemp::getTemp(void)
@@ -30,6 +31,7 @@ void GPUtemp::getTemp(void)
        ret = NvAPI_Initialize();
 
        NvU32 cnt;
+       cnt = 0;
 
        NvPhysicalGpuHandle phys;
 
